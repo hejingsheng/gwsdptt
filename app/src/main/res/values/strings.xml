@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">ptt</string>
+    <string name="login">登录</string>
+    <string name="qgroup">查询群组</string>
+    <string name="swhgroup">切组</string>
+    <string name="qmember">查询成员</string>
+    <string name="logout">注销</string>
+    <string name="reqmic">请麦</string>
+    <string name="tempcall">临时呼叫</string>
+    <string name="startmsg">启动消息</string>
+    <string name="sengmsg">发送消息</string>
+    <string name="getweather">查询天气</string>
+    <string name="voicecall">语音呼叫</string>
+    <string name="dropmic">丢麦</string>
+    <string name="channel">频道</string>
+    <string name="push">推流</string>
+    <string name="pull">拉流</string>
+    <string name="meeting">会议</string>
+</resources>

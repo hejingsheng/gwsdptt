@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GroupActivity extends AppCompatActivity {
+public class GroupActivity extends BaseActivity {
 
     private static final String TAG = "GW_GroupActivity";
 
@@ -151,20 +151,6 @@ public class GroupActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-    private void showAlert(String message) {
-        new AlertDialog.Builder(this)
-                .setTitle("pointer")
-                .setMessage(message)
-                .setPositiveButton("confirm", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss(); // 关闭对话框
-                    }
-                })
-                .setNegativeButton("cancel", null)
-                .show();
     }
 
 }

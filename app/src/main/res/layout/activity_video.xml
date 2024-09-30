@@ -1,6 +1,78 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/editView"
+        android:orientation="vertical">
+
+        <com.gwsd.rtc.view.GWRtcSurfaceVideoRender
+            android:id="@+id/videoviewlocal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+
+        <com.gwsd.rtc.view.GWRtcSurfaceVideoRender
+            android:id="@+id/videoviewremote"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/editView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottomBtnView">
+
+        <EditText
+            android:id="@+id/videoRemoteId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="please input remote user id"
+            android:textSize="20dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottomBtnView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/videopull"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="pull" />
+
+
+        <Button
+            android:id="@+id/videocall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="call" />
+
+        <Button
+            android:id="@+id/videoaccept"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="accept" />
+
+        <Button
+            android:id="@+id/videohangup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="hangup" />
+    </LinearLayout>
+    
+    
+</RelativeLayout>

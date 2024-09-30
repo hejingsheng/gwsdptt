@@ -199,93 +199,157 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         }
     }
 
+    public void pullVideo(String remoteid, boolean silent, boolean record, GWVideoEngine.GWVideoPriority priority, GWVideoEngine.GWVideoResolution resolution) {
+        if (!userInfo.isOnline()) {
+            log("user not login!!!");
+            return;
+        }
+        gwVideoEngine.videoPull(String.valueOf(userInfo.getId()), userInfo.getName(), remoteid, silent, record, priority, resolution);
+    }
+
+    public void acceptPullVideo(int cameraNum, boolean virtualCamera) {
+        if (!userInfo.isOnline()) {
+            log("user not login!!!");
+            return;
+        }
+        gwVideoEngine.videoAcceptPull(userInfo.getAccount(), String.valueOf(userInfo.getId()), userInfo.getName(), cameraNum, virtualCamera);
+    }
+
+    public void callVideo(String remoteid, boolean record, GWVideoEngine.GWVideoResolution resolution) {
+        if (!userInfo.isOnline()) {
+            log("user not login!!!");
+            return;
+        }
+        gwVideoEngine.videoCall(userInfo.getAccount(), String.valueOf(userInfo.getId()), userInfo.getName(), remoteid, record, resolution);
+    }
+
+    public void acceptCallVideo() {
+        if (!userInfo.isOnline()) {
+            log("user not login!!!");
+            return;
+        }
+        gwVideoEngine.videoAcceptCall(userInfo.getAccount(), String.valueOf(userInfo.getId()), userInfo.getName());
+    }
+
+    public void hangupVideo() {
+        if (!userInfo.isOnline()) {
+            log("user not login!!!");
+            return;
+        }
+        gwVideoEngine.videoHangup(userInfo.getAccount(), String.valueOf(userInfo.getId()), userInfo.getName());
+    }
+
+    public void joinVideoMeeting() {
+        if (!userInfo.isOnline()) {
+            log("user not login!!!");
+            return;
+        }
+        gwVideoEngine.videoJoinMeeting(userInfo.getAccount(), String.valueOf(userInfo.getId()), userInfo.getName());
+    }
+
+    public void rejectVideoMeeting(String creater, String reason) {
+        if (!userInfo.isOnline()) {
+            log("user not login!!!");
+            return;
+        }
+        gwVideoEngine.videoRejectMeeting(String.valueOf(userInfo.getId()), userInfo.getName(), creater, reason);
+    }
+
+    public void leaveVideoMeeting() {
+        if (!userInfo.isOnline()) {
+            log("user not login!!!");
+            return;
+        }
+        gwVideoEngine.videoLeaveMeeting();
+    }
+
     @Override
     public void onVideoEvent(String s) {
-
+        // not process
     }
 
     @Override
     public void onVideoPull(String s, String s1, int i, boolean b) {
-
+        videoObserver.onVideoPull(s, s1, i, b);
     }
 
     @Override
     public void onVideoCall(String s, String s1) {
-
+        videoObserver.onVideoCall(s, s1);
     }
 
     @Override
     public void onVideoMeetingInvite(String s, String s1) {
-
+        videoObserver.onVideoMeetingInvite(s , s1);
     }
 
     @Override
     public void onVideoMeetingCancel() {
-
+        videoObserver.onVideoMeetingCancel();
     }
 
     @Override
     public void onVideoMeetingSpeak() {
-
+        videoObserver.onVideoMeetingSpeak();
     }
 
     @Override
     public void onVideoMeetingMute() {
-
+        videoObserver.onVideoMeetingMute();
     }
 
     @Override
     public void onVideoMeetingUserJoin(long l, String s, String s1, boolean b) {
-
+        videoObserver.onVideoMeetingUserJoin(l, s, s1, b);
     }
 
     @Override
     public void onVideoMeetingSelfJoin() {
-
+        videoObserver.onVideoMeetingSelfJoin();
     }
 
     @Override
     public void onVideoMeetingUserLeave(long l) {
-
+        videoObserver.onVideoMeetingUserLeave(l);
     }
 
     @Override
     public void onVideoMeetingKickout() {
-
+        videoObserver.onVideoMeetingKickout();
     }
 
     @Override
     public void onLocalStreamReady() {
-
+        videoObserver.onLocalStreamReady();
     }
 
     @Override
     public void onRemoteStreamReady(boolean b, long l) {
-
+        videoObserver.onRemoteStreamReady(b, l);
     }
 
     @Override
     public void onRemoteStreamRemove() {
-
+        videoObserver.onRemoteStreamRemove();
     }
 
     @Override
     public void onLocalStreamRemove() {
-
+        videoObserver.onLocalStreamRemove();
     }
 
     @Override
     public void onVideoData(byte[] bytes, int i, int i1, int i2, int i3) {
-
+        videoObserver.onVideoData(bytes, i, i1, i2, i3);
     }
 
     @Override
     public void onHangup(String s) {
-
+        videoObserver.onHangup(s);
     }
 
     @Override
     public void onError(int i, String s) {
-
+        videoObserver.onError(i, s);
     }
 }

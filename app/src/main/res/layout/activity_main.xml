@@ -1,166 +1,92 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:focusable="false"
+        android:text="sdkVersion:"
+        android:id="@+id/sdkVersion"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:focusable="false"
+        android:text="demoVersion:"
+        android:id="@+id/demoVersion"
+        />
 
     <EditText
         android:id="@+id/loginUserName"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="gwsd03"/>
+        android:hint="Username"
+        android:text=""/>
 
     <EditText
         android:id="@+id/loginUserPass"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@+id/loginUserName"
-        android:text="111111"/>
+        android:hint="Password"
+        android:text=""/>
 
     <Button
-        android:id="@+id/loginbutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/querygroup"
-        android:layout_alignBottom="@+id/querygroup"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="20dp"
-        android:text="@string/login" />
-
-    <Button
-        android:id="@+id/querygroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/loginbutton"
-        android:layout_below="@+id/loginUserPass"
-        android:text="@string/qgroup" />
-
-    <Button
-        android:id="@+id/switchgroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/querygroup"
-        android:layout_below="@+id/loginUserPass"
-        android:text="@string/swhgroup" />
-
-    <Button
-        android:id="@+id/querymember"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/loginbutton"
-        android:layout_alignRight="@+id/loginbutton"
-        android:text="@string/qmember" />
-
-    <Button
-        android:id="@+id/ulogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/querymember"
-        android:layout_below="@+id/querygroup"
-        android:text="@string/logout" />
-
-    <Button
-        android:id="@+id/ureqmic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/switchgroup"
-        android:layout_toRightOf="@+id/ulogout"
-        android:text="@string/reqmic" />
-
-    <Button
-        android:id="@+id/udropmic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/querymember"
-        android:layout_alignRight="@+id/loginbutton"
-        android:text="@string/dropmic" />
-
-    <Button
-        android:id="@+id/utempcall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ulogout"
-        android:layout_toRightOf="@+id/udropmic"
-        android:text="@string/tempcall" />
-
-    <Button
-        android:id="@+id/ustartmsg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ureqmic"
-        android:layout_toRightOf="@+id/utempcall"
-        android:text="@string/startmsg" />
-
-    <Button
-        android:id="@+id/usendmsg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/udropmic"
-        android:layout_alignRight="@+id/loginbutton"
-        android:text="@string/sengmsg" />
-
-    <Button
-        android:id="@+id/ugetweather"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/utempcall"
-        android:layout_toRightOf="@+id/usendmsg"
-        android:text="@string/getweather" />
-
-    <Button
-        android:id="@+id/uvoicecall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ustartmsg"
-        android:layout_toRightOf="@+id/ugetweather"
-        android:text="@string/voicecall" />
-
-    <Button
-        android:id="@+id/videocall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/usendmsg"
-        android:layout_alignRight="@+id/loginbutton"
-        android:text="call" />
-
-    <Button
-        android:id="@+id/videoaccept"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ugetweather"
-        android:layout_toRightOf="@+id/usendmsg"
-        android:text="accept" />
-
-    <Button
-        android:id="@+id/videohangup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/uvoicecall"
-        android:layout_toRightOf="@+id/ugetweather"
-        android:text="handup" />
-
-    <LinearLayout
+        android:id="@+id/btnlogin"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/videohangup"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:text="login" />
 
-<!--        <com.gwsd.rtc.view.GWRtcSurfaceVideoRender-->
-<!--            android:id="@+id/videoviewlocal"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_weight="1" />-->
+    <Button
+        android:id="@+id/btngroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="PTT Group Base Test" />
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"/>
+    <Button
+        android:id="@+id/btnmember"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="PTT Member Base Test" />
 
-<!--        <com.gwsd.rtc.view.GWRtcSurfaceVideoRender-->
-<!--            android:id="@+id/videoviewremote"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_weight="1" />-->
+    <Button
+        android:id="@+id/btnmsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="PTT Msg Base Test" />
+
+    <Button
+        android:id="@+id/btnHalfDuplexCall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="PTT Half Duplex Call Test" />
+
+    <Button
+        android:id="@+id/btnFullDuplexCall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="PTT Full Duplex Call Test" />
+
+    <Button
+        android:id="@+id/btnVideo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="PTT Video Test" />
+
+    <Button
+        android:id="@+id/btnOther"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="PTT Other Test" />
+
+    <Button
+        android:id="@+id/btnlogout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="logout" />
 
 
-    </LinearLayout>
-
-
-</RelativeLayout>
+</LinearLayout>

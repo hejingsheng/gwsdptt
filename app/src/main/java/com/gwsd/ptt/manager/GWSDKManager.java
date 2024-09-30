@@ -65,12 +65,12 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         this.context = context;
         gwPttEngine = GWPttEngine.INSTANCE(context);
         gwVideoEngine = GWVideoEngine.INSTANCE();
-        log("current sdk version:"+gwPttEngine.pttGetVersion());
         gwPttEngine.pttInit(this, this, null);
         gwPttEngine.pttConfigServer(0,"43.250.33.13", 23003);
         gwPttEngine.pttConfigServer(1,"43.250.33.13", 51883);
         gwPttEngine.pttConfigServer(2,"43.250.33.13", 50001);
         gwPttEngine.pttConfigServer(3,"43.250.33.13", 8188);
+        log("current sdk version:"+gwPttEngine.pttGetVersion());
         userInfo = new GWPttUserInfo();
     }
 
@@ -86,6 +86,9 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         return userInfo;
     }
 
+    public String getVersion(){
+        return gwPttEngine.pttGetVersion();
+    }
     public void login(String account, String password, String imei, String iccid) {
         gwPttEngine.pttLogin(account, password, imei, iccid);
         userInfo.setAccount(account);
@@ -99,6 +102,18 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
 
     public void queryGroup() {
         gwPttEngine.pttQueryGroup();
+    }
+    public void queryMember(long gid,int type){
+        gwPttEngine.pttQueryMember(gid,type);
+    }
+    public void temCall(int[] var1, int var2){
+        gwPttEngine.pttTempGroup(var1,var2);
+    }
+    public void pttDown(){
+        gwPttEngine.pttSpeak(GWType.GW_SPEAK_TYPE.GW_PTT_SPEAK_START,System.currentTimeMillis());
+    }
+    public void pttUp(){
+        gwPttEngine.pttSpeak(GWType.GW_SPEAK_TYPE.GW_PTT_SPEAK_END,System.currentTimeMillis());
     }
 
     @Override

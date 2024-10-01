@@ -55,7 +55,25 @@
             android:text=""
             />
     </LinearLayout>
+
 </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_height="wrap_content"
+            android:text="wait for speak..."
+            android:textSize="20sp"
+            android:gravity="center"
+            android:id="@+id/speaker"
+            />
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_marginTop="5dp"
@@ -73,6 +91,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:text="joingroup" />
+
+        <Button
+            android:id="@+id/btnSpeak"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="speak" />
 
     </LinearLayout>
 

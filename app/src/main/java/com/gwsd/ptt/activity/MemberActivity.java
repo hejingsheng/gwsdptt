@@ -32,9 +32,8 @@ public class MemberActivity extends BaseActivity {
     TextView tVselectMember;
     TextView tVcurrentGroupGid;
     Button btnQueryMember;
-    Button btnTemCall;
-    Button btnPttDown;
-    Button btnPttUp;
+    Button btnTempGroup;
+    Button btnSpeak;
 
     Toolbar toolbar;
     MemberAdapter adapter;
@@ -42,6 +41,8 @@ public class MemberActivity extends BaseActivity {
     GWSDKManager gwsdkManager;
 
     private RecyclerView recyclerView;
+
+    private boolean speak = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,12 +88,11 @@ public class MemberActivity extends BaseActivity {
         tVselectMember = findViewById(R.id.memId);
         tVcurrentGroupGid = findViewById(R.id.groupId);
         btnQueryMember = findViewById(R.id.queryMember);
-        btnTemCall = findViewById(R.id.temCall);
-        btnPttDown = findViewById(R.id.pttDown);
-        btnPttUp = findViewById(R.id.pttUp);
+        btnTempGroup = findViewById(R.id.tempGroup);
+        btnSpeak = findViewById(R.id.speak);
 
         toolbar = findViewById(R.id.toolbar);
-        recyclerView = findViewById(R.id.groupRecycleView);
+        recyclerView = findViewById(R.id.memberRecycleView);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
@@ -106,14 +106,20 @@ public class MemberActivity extends BaseActivity {
         btnQueryMember.setOnClickListener(v -> gwsdkManager.queryMember(1,1));
         toolbar.setNavigationOnClickListener(v -> finish());
         int[] memberList = new int [] {1,2,3};
-        btnTemCall.setOnClickListener(v -> gwsdkManager.temCall(memberList,1));
-        btnPttDown.setOnClickListener(v -> gwsdkManager.pttDown());
-        btnPttUp.setOnClickListener(v-> gwsdkManager.pttUp());
+        btnTempGroup.setOnClickListener(v -> gwsdkManager.temCall(memberList,1));
+        btnSpeak.setOnClickListener(v -> {
+            if (!speak) {
+                gwsdkManager.startSpeak();
+            } else {
+                gwsdkManager.stopSpeak();
+            }
+            speak = !speak;
+        });
     }
 
     private void initData() {
         adapter = new MemberAdapter();
-        gwsdkManager = GWSDKManager.INSTANCE(this);
+        gwsdkManager = GWSDKManager.INSTANCE(getApplicationContext());
         gwsdkManager.registerPttObserver(new GWSDKManager.GWSDKPttEngineObserver() {
             @Override
             public void onPttEvent(int event, String data, int var3) {

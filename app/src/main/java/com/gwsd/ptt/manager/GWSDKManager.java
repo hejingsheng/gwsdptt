@@ -22,6 +22,7 @@ import com.gwsd.bean.GWTempGroupBean;
 import com.gwsd.bean.GWTempGroupNotifyBean;
 import com.gwsd.bean.GWType;
 import com.gwsd.ptt.bean.GWPttUserInfo;
+import com.gwsd.rtc.view.GWRtcSurfaceVideoRender;
 
 public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVideoEventHandler {
 
@@ -63,13 +64,13 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
 
     private GWSDKManager(Context context) {
         this.context = context;
-        gwPttEngine = GWPttEngine.INSTANCE(context);
+        gwPttEngine = GWPttEngine.INSTANCE(this.context);
         gwVideoEngine = GWVideoEngine.INSTANCE();
         gwPttEngine.pttInit(this, this, null);
         gwPttEngine.pttConfigServer(0,"43.250.33.13", 23003);
         gwPttEngine.pttConfigServer(1,"43.250.33.13", 51883);
         gwPttEngine.pttConfigServer(2,"43.250.33.13", 50001);
-        gwPttEngine.pttConfigServer(3,"43.250.33.13", 8188);
+        gwPttEngine.pttConfigServer(3,"114.116.246.85", 8188);
         log("current sdk version:"+gwPttEngine.pttGetVersion());
         userInfo = new GWPttUserInfo();
     }
@@ -109,11 +110,14 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
     public void temCall(int[] var1, int var2){
         gwPttEngine.pttTempGroup(var1,var2);
     }
-    public void pttDown(){
+    public void startSpeak(){
         gwPttEngine.pttSpeak(GWType.GW_SPEAK_TYPE.GW_PTT_SPEAK_START,System.currentTimeMillis());
     }
-    public void pttUp(){
+    public void stopSpeak(){
         gwPttEngine.pttSpeak(GWType.GW_SPEAK_TYPE.GW_PTT_SPEAK_END,System.currentTimeMillis());
+    }
+    public void startMsgService(int groups[], int type[], int num) {
+        gwPttEngine.pttRegOfflineMsg(groups, type, num);
     }
 
     @Override
@@ -261,6 +265,18 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
             return;
         }
         gwVideoEngine.videoLeaveMeeting();
+    }
+
+    public void attachLocalVideoView(GWRtcSurfaceVideoRender render) {
+        gwVideoEngine.videoAttachLocalView(render);
+    }
+
+    public void attachRemoteVideoView(GWRtcSurfaceVideoRender render, long userid) {
+        gwVideoEngine.videoAttachRemoteView(render, userid);
+    }
+
+    public void clearVideoView(GWRtcSurfaceVideoRender render) {
+        gwVideoEngine.videoClearView(render);
     }
 
     @Override

@@ -37,6 +37,7 @@ public class GroupActivity extends BaseActivity {
 
     Button btnQueryGroup;
     Button btnJoinGroup;
+    Button btnSpeak;
 
     Toolbar toolbar;
 
@@ -47,6 +48,8 @@ public class GroupActivity extends BaseActivity {
     Map<Long, String> groupMap;
 
     private GWSDKManager gwsdkManager;
+
+    private boolean speak = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +96,7 @@ public class GroupActivity extends BaseActivity {
         tVGroupId = findViewById(R.id.groupId);
         btnQueryGroup = findViewById(R.id.btnQueryGroup);
         btnJoinGroup = findViewById(R.id.btnJoinGroup);
+        btnSpeak = findViewById(R.id.btnSpeak);
         toolbar = findViewById(R.id.toolbar);
         recyclerView = findViewById(R.id.groupRecycleView);
         tVGroupId.setText(String.valueOf(gwsdkManager.getUserInfo().getCurrentGroupGid()));
@@ -108,11 +112,19 @@ public class GroupActivity extends BaseActivity {
         btnQueryGroup.setOnClickListener(v -> gwsdkManager.queryGroup());
         toolbar.setNavigationOnClickListener(v -> finish());
         btnJoinGroup.setOnClickListener(v -> gwsdkManager.joinGroup(adapter.getSelectedGid(),adapter.getSelectedType()));
+        btnSpeak.setOnClickListener(v -> {
+            if (!speak) {
+                gwsdkManager.startSpeak();
+            } else {
+                gwsdkManager.stopSpeak();
+            }
+            speak = !speak;
+        });
     }
 
     private void initData() {
         adapter = new GroupAdapter();
-        gwsdkManager = GWSDKManager.INSTANCE(this);
+        gwsdkManager = GWSDKManager.INSTANCE(getApplicationContext());
         gwsdkManager.registerPttObserver(new GWSDKManager.GWSDKPttEngineObserver() {
             @Override
             public void onPttEvent(int event, String data, int var3) {

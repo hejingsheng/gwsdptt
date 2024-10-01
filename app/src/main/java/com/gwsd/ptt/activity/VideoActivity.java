@@ -1,8 +1,11 @@
 package com.gwsd.ptt.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.gwsd.GWVideoEngine;
 import com.gwsd.ptt.R;
@@ -24,6 +27,11 @@ public class VideoActivity extends BaseActivity {
     EditText editRemoteId;
 
     boolean isVideoCall = false;
+
+    public static void startAct(Context context) {
+        Intent intent = new Intent(context, VideoActivity.class);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,16 +85,27 @@ public class VideoActivity extends BaseActivity {
     }
 
     private void initData() {
-        gwsdkManager = GWSDKManager.INSTANCE(this);
+        gwsdkManager = GWSDKManager.INSTANCE(getApplicationContext());
+        int[] a=new int[0];
+        int[] b=new int[0];
+        gwsdkManager.startMsgService(a, b, 0);
         gwsdkManager.registerVideoObserver(new GWSDKManager.GWSDKVideoEngineObserver() {
             @Override
             public void onVideoPull(String s, String s1, int i, boolean b) {
                 isVideoCall = false;
+                runOnUiThread(()->{
+                    String msg = "recv user "+s1+" video pull request";
+                    showToast(msg);
+                });
             }
 
             @Override
             public void onVideoCall(String s, String s1) {
                 isVideoCall = true;
+                runOnUiThread(()->{
+                    String msg = "recv user "+s1+" video call request";
+                    showToast(msg);
+                });
             }
 
             @Override
@@ -131,22 +150,34 @@ public class VideoActivity extends BaseActivity {
 
             @Override
             public void onLocalStreamReady() {
-
+                runOnUiThread(()->{
+                    gwsdkManager.attachLocalVideoView(gwRtcSurfaceVideoRenderLocal);
+                });
             }
 
             @Override
-            public void onRemoteStreamReady(boolean b, long l) {
-
+            public void onRemoteStreamReady(boolean video, long uid) {
+                runOnUiThread(()->{
+                    if (video) {
+                        gwsdkManager.attachRemoteVideoView(gwRtcSurfaceVideoRenderRemote, uid);
+                    } else {
+                        showToast("remote stream ready not have video");
+                    }
+                });
             }
 
             @Override
             public void onRemoteStreamRemove() {
-
+                runOnUiThread(()->{
+                    gwsdkManager.clearVideoView(gwRtcSurfaceVideoRenderRemote);
+                });
             }
 
             @Override
             public void onLocalStreamRemove() {
-
+                runOnUiThread(()->{
+                    gwsdkManager.attachLocalVideoView(gwRtcSurfaceVideoRenderLocal);
+                });
             }
 
             @Override
@@ -155,8 +186,10 @@ public class VideoActivity extends BaseActivity {
             }
 
             @Override
-            public void onHangup(String s) {
-
+            public void onHangup(String remoteid) {
+                runOnUiThread(()->{
+                    showToast("remote user hangup video:"+remoteid);
+                });
             }
 
             @Override

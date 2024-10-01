@@ -15,7 +15,7 @@ import com.gwsd.bean.GWType;
 import com.gwsd.ptt.R;
 import com.gwsd.ptt.manager.GWSDKManager;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private static final String TAG = "GW_MainActivity";
     private static final String VERSION = "V_0.0.1";
@@ -114,10 +114,13 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, MemberActivity.class);
             startActivity(intent);
         });
+        btnVideo.setOnClickListener(v -> {
+            VideoActivity.startAct(this);
+        });
     }
 
     private void initData(){
-        gwsdkManager = GWSDKManager.INSTANCE(this);
+        gwsdkManager = GWSDKManager.INSTANCE(getApplicationContext());
         gwsdkManager.registerPttObserver(new GWSDKManager.GWSDKPttEngineObserver() {
             @Override
             public void onPttEvent(int event, String data, int data1) {
@@ -125,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                     GWLoginResultBean gwLoginResultBean = JSON.parseObject(data, GWLoginResultBean.class);
                     if (gwLoginResultBean.getResult() == 0) {
                         runOnUiThread(() -> {
-
+                            showToast("user:"+gwLoginResultBean.getName()+" login success");
                         });
                     }
                 } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_LOGOUT) {

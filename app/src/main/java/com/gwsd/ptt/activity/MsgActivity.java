@@ -1,56 +1,53 @@
 package com.gwsd.ptt.activity;
 
-import android.content.Context;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.provider.MediaStore;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.gwsd.bean.GWMsgBaseBean;
-import com.gwsd.bean.GWMsgResponseBean;
-import com.gwsd.bean.GWPatrolMsgBean;
+import com.gwsd.bean.GWDuplexBean;
+import com.gwsd.bean.GWMsgBean;
+import com.gwsd.bean.GWMsgNoticeBean;
 import com.gwsd.bean.GWType;
 import com.gwsd.ptt.R;
 import com.gwsd.ptt.manager.GWSDKManager;
 
 public class MsgActivity extends BaseActivity {
+    private static final String TAG = "GWMsg_Activity";
 
-    RadioButton radioBtnUser;
-    RadioButton radioBtnGroup;
-    RadioGroup recvTypeRadio;
-
-    RadioButton radioBtnText;
-    RadioButton radioBtnPhoto;
-    RadioButton radioBtnVoice;
-    RadioButton radioBtnVideo;
-    RadioGroup msgTypeRadio;
+    EditText eTreceiveId;
+    EditText eTType;
+    EditText eTregisterId;
 
     Button btnSend;
+    Button btnPhoto;
+    Button btnVoice;
+    Button btnVideo;
+    Button btnRegister;
 
-    TextView textRecvView;
-    EditText editRemoteid;
-    EditText editContentOrUrl;
+    TextView tVsendMsg;
+    TextView tVreciveMsg;
 
-    int recvType;
-    int msgType;
+    Toolbar toolbar;
 
-    public static void startAct(Context context) {
-        Intent intent = new Intent(context, MsgActivity.class);
-        context.startActivity(intent);
-    }
+    GWSDKManager gwsdkManager;
+    private static final int IMAGE_REQUEST_CODE = 100;
+    private static final int VIDEO_REQUEST_CODE = 101;
+    private static final int AUDIO_REQUEST_CODE = 102;
+    int msgType = 1103;
+    Uri uri;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_msg);
 
@@ -59,93 +56,147 @@ public class MsgActivity extends BaseActivity {
         initEvent();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart=");
+    }
+            @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume=");
+            }
+
+            @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause");
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop");
+            }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy");
+    }
+
+    private void initView() {
+        eTreceiveId = findViewById(R.id.receiveId);
+        eTType = findViewById(R.id.sendType);
+
+        eTregisterId = findViewById(R.id.registerId);
+        btnSend = findViewById(R.id.send);
+        btnPhoto = findViewById(R.id.selectPhoto);
+        btnVoice = findViewById(R.id.selectVoice);
+        btnVideo = findViewById(R.id.btnVideo);
+
+        btnRegister = findViewById(R.id.registerMsg);
+
+        tVsendMsg = findViewById(R.id.sendMsg);
+        tVreciveMsg = findViewById(R.id.receivedMsg);
+        toolbar = findViewById(R.id.toolbar);
+
+    }
+
+    private void initEvent() {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
+        btnSend.setOnClickListener(v ->{
+            int sendId = gwsdkManager.getUserInfo().getId();
+            String name = gwsdkManager.getUserInfo().getName();
+            int type = Integer.parseInt(eTType.getText().toString());
+            String content = tVsendMsg.getText().toString();
+            String msg = content.replace("send content:\n", "").trim();
+            String var7 = "";
+            int receiveId = Integer.parseInt(eTreceiveId.getText().toString());
+            gwsdkManager.sendMsg(sendId,name,type,receiveId,msgType,msg,var7,(char)1);
+            msgType =1103;
+            uri = null;
+        });
+        btnPhoto.setOnClickListener(v ->{
+            selectImage();
+        });
+        btnVoice.setOnClickListener(v ->{
+            selectAudio();
+        });
+        btnVideo.setOnClickListener(v ->{
+            selectVideo();
+        });
+        btnRegister.setOnClickListener(v->{
+        });
+                }
     private void initData() {
-        gwsdkManager = GWSDKManager.INSTANCE(getApplicationContext());
+        gwsdkManager = GWSDKManager.INSTANCE(this);
         gwsdkManager.registerPttObserver(new GWSDKManager.GWSDKPttEngineObserver() {
             @Override
-            public void onPttEvent(int var1, String var2, int var3) {
-
+            public void onPttEvent(int event, String data, int var3) {
             }
 
             @Override
             public void onMsgEvent(int status, String data) {
-                runOnUiThread(()->{
-                    String tmp = "recv msg status:"+status+" data:"+data;
-                    textRecvView.setText(tmp);
-                });
-            }
-        });
-        int[] a=new int[0];
-        int[] b=new int[0];
-        gwsdkManager.startMsgService(a, b, 0);
-    }
-
-    private void initView() {
-        radioBtnUser = findViewById(R.id.radio_btn_user);
-        radioBtnGroup = findViewById(R.id.radio_btn_group);
-        recvTypeRadio = findViewById(R.id.recvTypeRadio);
-
-        radioBtnText = findViewById(R.id.radio_btn_text);
-        radioBtnPhoto = findViewById(R.id.radio_btn_photo);
-        radioBtnVoice = findViewById(R.id.radio_btn_voice);
-        radioBtnVideo = findViewById(R.id.radio_btn_video);
-        msgTypeRadio = findViewById(R.id.msgTypeRadio);
-
-        btnSend = findViewById(R.id.btnSend);
-
-        textRecvView = findViewById(R.id.viewRecvMsg);
-        editRemoteid = findViewById(R.id.viewRemoteId);
-        editContentOrUrl = findViewById(R.id.editContentView);
-
-        radioBtnUser.setChecked(true);
-        recvType = GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER;
-        radioBtnText.setChecked(true);
-        msgType = GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_TEXT;
-    }
-
-    private void initEvent() {
-        recvTypeRadio.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.radio_btn_user) {
-                    recvType = GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER;
-                } else if (checkedId == R.id.radio_btn_group) {
-                    recvType = GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_GROUP;
+                Log.d(TAG, "msg status=" + status +  "data=" + data);
+                if (status == GWType.GW_MSG_STATUS.GW_MSG_STATUS_ERROR){
+                    showAlert("send error");
+                }else if (status == GWType.GW_MSG_STATUS.GW_MSG_STATUS_SUCC){
+                    GWMsgBean gwMsgBean = JSON.parseObject(data,GWMsgBean.class);
+                    if (gwMsgBean.getData().getContent() != null){
+                        showAlert("send success");
+                        tVsendMsg.setText("send content:\n" + gwMsgBean.getData().getContent());
+                    }
+                }else if (status == GWType.GW_MSG_STATUS.GW_MSG_STATUS_DATA){
+                    GWMsgNoticeBean gwMsgBean = JSON.parseObject(data,GWMsgNoticeBean.class);
+                    if (gwMsgBean.getData().getContent() != null){
+                        showAlert("send success");
+                        tVreciveMsg.setText("receive content:\n" + gwMsgBean.getData().getContent());
+                    }
                 }
             }
         });
 
-        msgTypeRadio.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.radio_btn_text) {
-                    msgType = GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_TEXT;
-                } else if (checkedId == R.id.radio_btn_photo) {
-                    msgType = GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_PHOTO;
-                } else if (checkedId == R.id.radio_btn_voice) {
-                    msgType = GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_VOICE;
-                } else if (checkedId == R.id.radio_btn_video) {
-                    msgType = GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_VIDEO;
-                }
-            }
-        });
-
-        btnSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendMsg();
-            }
-        });
     }
 
-    private void sendMsg() {
-        String remoteid = editRemoteid.getText().toString();
-        String content = editContentOrUrl.getText().toString();
-        if (TextUtils.isEmpty(remoteid) || TextUtils.isEmpty(content)) {
-            showToast("please input id and content");
-            return;
+    private void selectImage() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, IMAGE_REQUEST_CODE);
+    }
+    private void selectVideo() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, VIDEO_REQUEST_CODE);
+            }
+
+    private void selectAudio() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, AUDIO_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && data != null) {
+            uri = data.getData();
+            switch (requestCode) {
+                case IMAGE_REQUEST_CODE:
+                    // ¥¶¿ÌÕº∆¨ URI
+                    Log.d(TAG, "Selected Image URI: " + uri);
+                    msgType = 1104;
+                    break;
+                case VIDEO_REQUEST_CODE:
+                    Log.d(TAG, "Selected Video URI: " + uri);
+                    msgType = 1105;
+                    break;
+                case AUDIO_REQUEST_CODE:
+                    Log.d(TAG, "Selected Audio URI: " + uri);
+                    msgType = 1106;
+                    break;
+            }
         }
-        gwsdkManager.sendMsg(recvType, Integer.valueOf(remoteid), msgType, content);
     }
 
 }

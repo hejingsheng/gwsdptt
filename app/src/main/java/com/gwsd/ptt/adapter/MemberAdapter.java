@@ -9,45 +9,50 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.gwsd.bean.GWGroupListBean;
 import com.gwsd.ptt.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MemberAdapter extends RecyclerView.Adapter <MemberAdapter.ViewHolder>{
 
-    private List<GWGroupListBean.GWGroupBean> groups = new ArrayList<>();
+    private Map<Integer, String> membersMap = new HashMap<>();
     private int selectedPosition = -1; // 当前选中的位置
+    private List<Integer> uidList = new ArrayList<>(); // 用于存储 UID 列表
 
-    public void setGroups(List<GWGroupListBean.GWGroupBean> groups) {
-        this.groups = groups;
-        Log.d("GroupAdapter", "Group size: " + groups.size());
+    public void setMembers(Map<Integer, String> membersMap) {
+        this.membersMap = membersMap;
+        uidList.clear();
+        uidList.addAll(membersMap.keySet());
+        Log.d("MemberAdapter", "setMembers size: " + membersMap.size());
         notifyDataSetChanged();
     }
 
     @Override
-    public MemberAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.group_recyclelist_item, parent, false);
-        return new MemberAdapter.ViewHolder(view);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.member_recyclelist_item, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(MemberAdapter.ViewHolder holder, int position) {
-        GWGroupListBean.GWGroupBean group = groups.get(position);
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        int uid = uidList.get(position);
+        String name = membersMap.get(uid);
 
         // 设置 CheckBox 状态
         holder.checkBox.setChecked(position == selectedPosition);
         holder.count.setText(String.valueOf(position + 1));
-        holder.groupName.setText(group.getName());
-        holder.groupId.setText(String.valueOf(group.getGid()));
+        holder.memName.setText(name);
+        holder.memId.setText(String.valueOf(uid));
 
         // 设置 CheckBox 的点击事件
         holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 selectedPosition = position;
                 notifyDataSetChanged();
-                Log.d("GroupAdapter", "Selected gid: " + group.getGid());
+                Log.d("MemberAdapter", "Selected uid: " + uid);
             } else {
                 if (selectedPosition == position) {
                     selectedPosition = -1;
@@ -58,35 +63,36 @@ public class MemberAdapter extends RecyclerView.Adapter <MemberAdapter.ViewHolde
 
     @Override
     public int getItemCount() {
-        return groups.size();
+        return membersMap.size(); // 返回 map 的大小
     }
 
-    public long getSelectedGid() {
+    public int getSelectedUid() {
         if (selectedPosition != -1) {
-            return groups.get(selectedPosition).getGid(); // 返回选中项的 gid
+            return uidList.get(selectedPosition);
         }
         return -1;
     }
 
-    public int getSelectedType() {
+    public String getSelectedName() {
         if (selectedPosition != -1) {
-            return groups.get(selectedPosition).getType(); // 返回选中项的 gid
+            int selectedUid = uidList.get(selectedPosition); // 获取选中项的 UID
+            return membersMap.get(selectedUid); // 返回对应的名字
         }
-        return -1;
+        return null;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         CheckBox checkBox;
         TextView count;
-        TextView groupName;
-        TextView groupId;
+        TextView memName;
+        TextView memId;
 
         public ViewHolder(View itemView) {
             super(itemView);
             checkBox = itemView.findViewById(R.id.checkBox);
             count = itemView.findViewById(R.id.count);
-            groupName = itemView.findViewById(R.id.groupName);
-            groupId = itemView.findViewById(R.id.groupId);
+            memName = itemView.findViewById(R.id.memName);
+            memId = itemView.findViewById(R.id.memId);
         }
     }
 }

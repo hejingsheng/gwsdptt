@@ -107,14 +107,20 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
     public void queryMember(long gid,int type){
         gwPttEngine.pttQueryMember(gid,type);
     }
-    public void tempGroup(int[] var1, int var2){
+    public void temCall(int[] var1, int var2){
         gwPttEngine.pttTempGroup(var1,var2);
     }
-    public void startSpeak(){
+    public void pttDown(){
         gwPttEngine.pttSpeak(GWType.GW_SPEAK_TYPE.GW_PTT_SPEAK_START,System.currentTimeMillis());
     }
-    public void stopSpeak(){
+    public void pttUp(){
         gwPttEngine.pttSpeak(GWType.GW_SPEAK_TYPE.GW_PTT_SPEAK_END,System.currentTimeMillis());
+    }
+    public void fullDuplex(int uid,int action){
+        gwPttEngine.pttDuplexCall(uid,action);
+    }
+    public  void loginOut(){
+        gwPttEngine.pttLogout();
     }
     public void startMsgService(int groups[], int type[], int num) {
         gwPttEngine.pttRegOfflineMsg(groups, type, num);

@@ -47,10 +47,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Current Gid:"
+                android:text="Current group name:"
                 android:layout_marginStart="5dp" />
             <TextView
-                android:id="@+id/groupId"
+                android:id="@+id/groupName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=""
@@ -86,17 +86,41 @@
             android:layout_marginStart="10dp"
             android:text="queryMember" />
         <Button
-            android:id="@+id/tempGroup"
+            android:id="@+id/temCall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="tempGroup" />
+            android:text="temCall" />
 
         <Button
-            android:id="@+id/speak"
+            android:id="@+id/exitTemCall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="speak" />
+            android:layout_marginStart="10dp"
+            android:text="exitTemCall" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/pttDown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
+            android:text="PTTDOWN" />
+        <Button
+            android:id="@+id/pttUp"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
+            android:text="PTTUP" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

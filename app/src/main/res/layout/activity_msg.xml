@@ -4,114 +4,146 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            >
     <TextView
-        android:id="@+id/viewRecvMsg"
-        android:layout_height="500dp"
-        android:layout_width="match_parent"
-        android:text="" />
-
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="sendId:"
+                android:layout_marginStart="5dp"
+                />
     <EditText
-        android:id="@+id/viewRemoteId"
+                android:id="@+id/receiveId"
+                android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+                android:text=""
+                android:hint="Please input uid/gid"
+                />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:hint="please input remote user id"/>
-
-    <RadioGroup
-        android:id="@+id/recvTypeRadio"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
         android:layout_marginTop="5dp"
-        android:orientation="horizontal"
-        android:visibility="visible">
-        <RadioButton
-            android:id="@+id/radio_btn_user"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            >
+            <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/addr_centerView"
-            android:text="user"
-            android:textSize="15dp" />
+                android:text="snedType:"
 
-        <View
-            android:id="@+id/addr_centerView"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
+                android:layout_marginStart="5dp"
             />
 
-        <RadioButton
-            android:id="@+id/radio_btn_group"
+            <EditText
+                android:id="@+id/sendType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/addr_centerView"
-            android:text="group"
-            android:textColor="@color/black"
-            android:textSize="15dp" />
-    </RadioGroup>
+                android:text=""
+                android:hint="Please input send Type"
+                />
+        </LinearLayout>
+    </LinearLayout>
 
-    <RadioGroup
-        android:id="@+id/msgTypeRadio"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
         android:layout_marginTop="5dp"
-        android:orientation="horizontal"
-        android:visibility="visible">
-        <RadioButton
-            android:id="@+id/radio_btn_text"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:layout_centerVertical="true"
-            android:text="text"
-            android:textSize="15dp" />
+            android:layout_marginStart="5dp"
+            android:text="send" />
 
-        <RadioButton
-            android:id="@+id/radio_btn_photo"
+        <Button
+            android:id="@+id/selectPhoto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:text="photo"
-            android:textColor="@color/black"
-            android:textSize="15dp" />
+            android:layout_marginStart="5dp"
+            android:text="photo" />
 
-        <RadioButton
-            android:id="@+id/radio_btn_voice"
+        <Button
+            android:id="@+id/selectVoice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/addr_centerView2"
-            android:text="voice"
-            android:textColor="@color/black"
-            android:textSize="15dp" />
+            android:layout_marginStart="5dp"
+            android:text="voice" />
 
-        <RadioButton
-            android:id="@+id/radio_btn_video"
+        <Button
+            android:id="@+id/selectVideo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/addr_centerView2"
-            android:text="video"
-            android:textColor="@color/black"
-            android:textSize="15dp" />
-    </RadioGroup>
+            android:layout_marginStart="5dp"
+            android:text="video" />
+    </LinearLayout>
 
-    <EditText
-        android:id="@+id/editContentView"
+    <LinearLayout
         android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_height="wrap_content">
+    <EditText
+            android:id="@+id/registerId"
+            android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="please input send content or url" />
+            android:text=""
+            android:hint="Please input gid"
+            />
 
     <Button
-        android:id="@+id/btnSend"
+            android:id="@+id/registerMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="Register offline message" />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/sendMsg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginTop="5dp"
-        android:text="Send"/>
-
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        android:layout_marginBottom="10dp"
+        android:text="send content:"
+        android:background="@android:drawable/dialog_holo_light_frame"
+        />
+    <TextView
+        android:id="@+id/receivedMsg"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:layout_marginBottom="10dp"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        android:gravity="start"
+        android:scrollbars="vertical"
+        android:text="receive content:"
+        android:background="@android:drawable/dialog_holo_light_frame"
+        />
 </LinearLayout>

@@ -3,7 +3,6 @@ package com.gwsd.ptt.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -42,19 +40,17 @@ public class GroupActivity extends BaseActivity {
 
     Button btnQueryGroup;
     Button btnJoinGroup;
-    Button btnPttDown;
-    Button btnPttUp;
+    Button btnSpeak;
 
     Toolbar toolbar;
 
     private RecyclerView recyclerView;
-    Drawable originalPttDown;
-    Drawable originalPttUp;
+
     private GroupAdapter adapter;
 
     Map<Long, String> groupMap;
 
-    private GWSDKManager gwsdkManager;
+    private boolean speak = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,36 +98,30 @@ public class GroupActivity extends BaseActivity {
         tVSpeaker = findViewById(R.id.speaker);
         btnQueryGroup = findViewById(R.id.btnQueryGroup);
         btnJoinGroup = findViewById(R.id.btnJoinGroup);
-        btnPttDown = findViewById(R.id.pttDown);
-        btnPttUp = findViewById(R.id.pttUp);
+        btnSpeak = findViewById(R.id.btnSpeak);
         toolbar = findViewById(R.id.toolbar);
         recyclerView = findViewById(R.id.groupRecycleView);
-        tVGroupId.setText(String.valueOf(gwsdkManager.getUserInfo().getCurrentGroupGid()));
+        //tVGroupId.setText(String.valueOf(gwsdkManager.getUserInfo().getCurrentGroupGid()));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-        originalPttDown = btnPttDown.getBackground();
-        originalPttUp = btnPttDown.getBackground();
     }
     private void initEvent() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-
         btnQueryGroup.setOnClickListener(v -> gwsdkManager.queryGroup());
         toolbar.setNavigationOnClickListener(v -> finish());
-        btnJoinGroup.setOnClickListener(v -> gwsdkManager.joinGroup(adapter.getSelectedGid(),adapter.getSelectedType()));
-        btnPttDown.setOnClickListener(v -> {
-            gwsdkManager.pttDown();
-            btnPttDown.setBackgroundColor(ContextCompat.getColor(GroupActivity.this, R.color.gray));
-            btnPttDown.setClickable(false);
-            tVSpeaker.setText("speaking");
+        btnJoinGroup.setOnClickListener(v -> {
+            gwsdkManager.joinGroup(adapter.getSelectedGid(),adapter.getSelectedType());
         });
-        btnPttUp.setOnClickListener(v ->{
-            gwsdkManager.pttUp();
-            btnPttDown.setBackground(originalPttDown);
-            btnPttDown.setEnabled(true);
-            tVSpeaker.setText("wait for speak...");
+        btnSpeak.setOnClickListener(v -> {
+            if (!speak) {
+                gwsdkManager.startSpeak();
+            } else {
+                gwsdkManager.stopSpeak();
+            }
+            speak = !speak;
         });
     }
 
@@ -159,39 +149,32 @@ public class GroupActivity extends BaseActivity {
                         });
                     }
                 } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_JOIN_GROUP) {
-                    GWJoinGroupBean gwJoinGroupBean = JSON.parseObject(data, GWJoinGroupBean.class);
-                    if (gwJoinGroupBean.getResult() == 0) {
-                        runOnUiThread(() -> {
+                    runOnUiThread(() -> {
+                        GWJoinGroupBean gwJoinGroupBean = JSON.parseObject(data, GWJoinGroupBean.class);
+                        if (gwJoinGroupBean.getResult() == 0) {
                             showAlert("join group success");
                             tVGroupName.setText(groupMap.get(gwsdkManager.getUserInfo().getCurrentGroupGid()));
                             tVGroupId.setText(String.valueOf(gwsdkManager.getUserInfo().getCurrentGroupGid()));
-                        });
-                    }
-                } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_SPEAK) {
-                    GWRequestSpeakBean gwRequestSpeakBean = JSON.parseObject(data,GWRequestSpeakBean.class);
-                    if (gwRequestSpeakBean.getResult() == 0){
-                        showAlert("group call success");
-                    }
-                }else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_REQUEST_MIC){
-                        GWSpeakNotifyBean gwSpeakNotifyBean = JSON.parseObject(data, GWSpeakNotifyBean.class);
-                    if (gwSpeakNotifyBean.getUid() == 0){
-                        runOnUiThread(()->{
-                            tVSpeaker.setText("wait for speak...");
-                            btnPttDown.setBackground(originalPttDown);
-                            btnPttUp.setBackground(originalPttUp);
-                            btnPttDown.setEnabled(true);
-                            btnPttUp.setEnabled(true);
-                        });
                         } else {
-                        runOnUiThread(()->{
-                            tVSpeaker.setText(gwSpeakNotifyBean.getName());
-                            btnPttDown.setBackgroundColor(ContextCompat.getColor(GroupActivity.this, R.color.gray));
-                            btnPttUp.setBackgroundColor(ContextCompat.getColor(GroupActivity.this, R.color.gray));
-                            btnPttDown.setEnabled(false);
-                            btnPttUp.setEnabled(false);
-                        });
+                            showAlert("join group fail");
                         }
-
+                    });
+                } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_SPEAK) {
+                    runOnUiThread(()->{
+                        GWSpeakNotifyBean gwSpeakNotifyBean = JSON.parseObject(data, GWSpeakNotifyBean.class);
+                        if (gwSpeakNotifyBean.getUid() != 0) {
+                            tVSpeaker.setText("speaker id:"+gwSpeakNotifyBean.getUid()+" name:"+gwSpeakNotifyBean.getName());
+                        } else {
+                            tVSpeaker.setText("no speaker");
+                        }
+                    });
+                } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_REQUEST_MIC) {
+                    runOnUiThread(()->{
+                        GWRequestSpeakBean gwRequestSpeakBean = JSON.parseObject(data, GWRequestSpeakBean.class);
+                        if (gwRequestSpeakBean.getResult() != 0) {
+                            showAlert("request speak fail");
+                        }
+                    });
                 }
             }
 

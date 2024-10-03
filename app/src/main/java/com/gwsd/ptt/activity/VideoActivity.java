@@ -25,6 +25,7 @@ public class VideoActivity extends BaseActivity {
     EditText editRemoteId;
 
     boolean isVideoCall = false;
+    String remoteid;
 
     public static void startAct(Context context) {
         Intent intent = new Intent(context, VideoActivity.class);
@@ -43,7 +44,7 @@ public class VideoActivity extends BaseActivity {
 
     private void initEvent() {
         btnPull.setOnClickListener(v -> {
-            String remoteid = editRemoteId.getText().toString();
+            remoteid = editRemoteId.getText().toString();
             if (remoteid == null || "".equals(remoteid)) {
                 showToast("please input remote user id");
             }
@@ -52,7 +53,7 @@ public class VideoActivity extends BaseActivity {
                     GWVideoEngine.GWVideoResolution.GW_VIDEO_RESOLUTION_NORMAL);
         });
         btnCall.setOnClickListener(v -> {
-            String remoteid = editRemoteId.getText().toString();
+            remoteid = editRemoteId.getText().toString();
             if (remoteid == null || "".equals(remoteid)) {
                 showToast("please input remote user id");
             }
@@ -67,7 +68,7 @@ public class VideoActivity extends BaseActivity {
             }
         });
         btnHangup.setOnClickListener(v -> {
-            gwsdkManager.hangupVideo();
+            gwsdkManager.hangupVideo(remoteid);
         });
     }
 
@@ -91,6 +92,7 @@ public class VideoActivity extends BaseActivity {
             @Override
             public void onVideoPull(String s, String s1, int i, boolean b) {
                 isVideoCall = false;
+                remoteid = s;
                 runOnUiThread(()->{
                     String msg = "recv user "+s1+" video pull request";
                     showToast(msg);
@@ -100,6 +102,7 @@ public class VideoActivity extends BaseActivity {
             @Override
             public void onVideoCall(String s, String s1) {
                 isVideoCall = true;
+                remoteid = s;
                 runOnUiThread(()->{
                     String msg = "recv user "+s1+" video call request";
                     showToast(msg);
@@ -174,7 +177,7 @@ public class VideoActivity extends BaseActivity {
             @Override
             public void onLocalStreamRemove() {
                 runOnUiThread(()->{
-                    gwsdkManager.attachLocalVideoView(gwRtcSurfaceVideoRenderLocal);
+                    gwsdkManager.clearVideoView(gwRtcSurfaceVideoRenderLocal);
                 });
             }
 

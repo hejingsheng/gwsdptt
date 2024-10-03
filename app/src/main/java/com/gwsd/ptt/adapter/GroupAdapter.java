@@ -75,6 +75,13 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
         return -1;
     }
 
+    public String getSelectedName() {
+        if (selectedPosition != -1) {
+            return groups.get(selectedPosition).getName(); // 返回选中项的 gid
+        }
+        return "";
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         CheckBox checkBox;
         TextView count;

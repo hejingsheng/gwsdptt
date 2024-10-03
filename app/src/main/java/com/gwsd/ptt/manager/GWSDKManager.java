@@ -24,6 +24,12 @@ import com.gwsd.bean.GWType;
 import com.gwsd.ptt.bean.GWPttUserInfo;
 import com.gwsd.rtc.view.GWRtcSurfaceVideoRender;
 
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+
 public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVideoEventHandler {
 
     private final String TAG = "GWSDKManager";
@@ -61,6 +67,9 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
     private GWSDKVideoEngineObserver videoObserver;
 
     private GWPttUserInfo userInfo;
+    private boolean haveStartMsgService = false;
+
+    private Disposable disposable;
 
     private GWSDKManager(Context context) {
         this.context = context;
@@ -107,13 +116,13 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
     public void queryMember(long gid,int type){
         gwPttEngine.pttQueryMember(gid,type);
     }
-    public void temCall(int[] var1, int var2){
+    public void tempGroup(int[] var1, int var2){
         gwPttEngine.pttTempGroup(var1,var2);
     }
-    public void pttDown(){
+    public void startSpeak(){
         gwPttEngine.pttSpeak(GWType.GW_SPEAK_TYPE.GW_PTT_SPEAK_START,System.currentTimeMillis());
     }
-    public void pttUp(){
+    public void stopSpeak(){
         gwPttEngine.pttSpeak(GWType.GW_SPEAK_TYPE.GW_PTT_SPEAK_END,System.currentTimeMillis());
     }
     public void fullDuplex(int uid,int action){
@@ -124,9 +133,10 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
     }
     public void startMsgService(int groups[], int type[], int num) {
         gwPttEngine.pttRegOfflineMsg(groups, type, num);
+        haveStartMsgService = true;
     }
     public void sendMsg(int recvtype, int remoteid, int msgtype, String content) {
-        gwPttEngine.pttSendMsg(userInfo.getId(), userInfo.getName(), recvtype, remoteid, msgtype, content, null, System.currentTimeMillis(), (char)1);
+        gwPttEngine.pttSendMsg(userInfo.getId(), userInfo.getName(), recvtype, remoteid, msgtype, content, content, System.currentTimeMillis(), (char)1);
     }
 
     @Override
@@ -140,7 +150,9 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
                 userInfo.setId(gwLoginResultBean.getUid());
                 userInfo.setOnline(true);
                 userInfo.setDefaultGid(gwLoginResultBean.getDefaultGid());
-                joinGroup(gwLoginResultBean.getDefaultGid(), 0);
+                gwPttEngine.pttHeart(100, "5g", System.currentTimeMillis());
+                startTimer();
+                //joinGroup(gwLoginResultBean.getDefaultGid(), 0);
             }
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_QUERY_GROUP) {
             GWGroupListBean gwGroupListBean = JSON.parseObject(data, GWGroupListBean.class);
@@ -162,10 +174,14 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
             GWDuplexBean gwDuplexBean = JSON.parseObject(data, GWDuplexBean.class);
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_LOGOUT) {
             userInfo.setOnline(false);
+            stopTimer();
+            haveStartMsgService = false;
             log("logout");
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_KICKOUT) {
             GWKickoutNotifyBean gwKickoutNotifyBean = JSON.parseObject(data, GWKickoutNotifyBean.class);
             userInfo.setOnline(false);
+            stopTimer();
+            haveStartMsgService = false;
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_CURRENT_GROUP) {
             GWCurrentGroupNotifyBean gwCurrentGroupNotifyBean = JSON.parseObject(data, GWCurrentGroupNotifyBean.class);
             if (gwCurrentGroupNotifyBean.getResult() == 0) {
@@ -198,6 +214,8 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         } else {
             log("error happen");
             userInfo.setOnline(false);
+            stopTimer();
+            haveStartMsgService = false;
         }
         if (pttObserver != null) {
             pttObserver.onPttEvent(event, data, data1);
@@ -207,6 +225,9 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
     @Override
     public void onMsgEvent(int i, String s) {
         log("recv msg event="+i+" data="+s);
+        if (i == GWType.GW_MSG_STATUS.GW_MSG_STATUS_ERROR) {
+            haveStartMsgService = false;
+        }
         if (pttObserver != null) {
             pttObserver.onMsgEvent(i, s);
         }
@@ -244,12 +265,12 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         gwVideoEngine.videoAcceptCall(userInfo.getAccount(), String.valueOf(userInfo.getId()), userInfo.getName());
     }
 
-    public void hangupVideo() {
+    public void hangupVideo(String remoteid) {
         if (!userInfo.isOnline()) {
             log("user not login!!!");
             return;
         }
-        gwVideoEngine.videoHangup(userInfo.getAccount(), String.valueOf(userInfo.getId()), userInfo.getName());
+        gwVideoEngine.videoHangup(String.valueOf(userInfo.getId()), userInfo.getName(), remoteid);
     }
 
     public void joinVideoMeeting() {
@@ -377,4 +398,21 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
     public void onError(int i, String s) {
         videoObserver.onError(i, s);
     }
+
+    private void startTimer() {
+        disposable = Observable.interval(10, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aLong -> {
+                    //Log.d(TAG, "send heart");
+                    gwPttEngine.pttHeart(100, "5g", System.currentTimeMillis());
+                });
+    }
+
+    private void stopTimer() {
+        if (disposable != null && !disposable.isDisposed()) {
+            disposable.dispose();
+            disposable = null;
+        }
+    }
+
 }

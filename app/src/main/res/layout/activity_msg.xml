@@ -1,6 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/viewRecvMsg"
+        android:layout_height="500dp"
+        android:layout_width="match_parent"
+        android:text="" />
+
+    <EditText
+        android:id="@+id/viewRemoteId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:hint="please input remote user id"/>
+
+    <RadioGroup
+        android:id="@+id/recvTypeRadio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:visibility="visible">
+        <RadioButton
+            android:id="@+id/radio_btn_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/addr_centerView"
+            android:text="user"
+            android:textSize="15dp" />
+
+        <View
+            android:id="@+id/addr_centerView"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            />
+
+        <RadioButton
+            android:id="@+id/radio_btn_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/addr_centerView"
+            android:text="group"
+            android:textColor="@color/black"
+            android:textSize="15dp" />
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/msgTypeRadio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:visibility="visible">
+        <RadioButton
+            android:id="@+id/radio_btn_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:layout_centerVertical="true"
+            android:text="text"
+            android:textSize="15dp" />
+
+        <RadioButton
+            android:id="@+id/radio_btn_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:text="photo"
+            android:textColor="@color/black"
+            android:textSize="15dp" />
+
+        <RadioButton
+            android:id="@+id/radio_btn_voice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/addr_centerView2"
+            android:text="voice"
+            android:textColor="@color/black"
+            android:textSize="15dp" />
+
+        <RadioButton
+            android:id="@+id/radio_btn_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/addr_centerView2"
+            android:text="video"
+            android:textColor="@color/black"
+            android:textSize="15dp" />
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/editContentView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="please input send content or url" />
+
+    <Button
+        android:id="@+id/btnSend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="5dp"
+        android:text="Send"/>
+
+</LinearLayout>

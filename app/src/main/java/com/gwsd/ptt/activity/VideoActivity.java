@@ -14,8 +14,6 @@ import com.gwsd.rtc.view.GWRtcSurfaceVideoRender;
 
 public class VideoActivity extends BaseActivity {
 
-    private GWSDKManager gwsdkManager;
-
     GWRtcSurfaceVideoRender gwRtcSurfaceVideoRenderLocal;
     GWRtcSurfaceVideoRender gwRtcSurfaceVideoRenderRemote;
 

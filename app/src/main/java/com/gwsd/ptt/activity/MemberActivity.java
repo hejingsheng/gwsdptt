@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alibaba.fastjson.JSON;
 import com.gwsd.bean.GWGroupListBean;
 import com.gwsd.bean.GWJoinGroupBean;
+import com.gwsd.bean.GWSpeakNotifyBean;
 import com.gwsd.bean.GWType;
 import com.gwsd.ptt.R;
 import com.gwsd.ptt.adapter.GroupAdapter;
@@ -31,14 +32,13 @@ public class MemberActivity extends BaseActivity {
 
     TextView tVselectMember;
     TextView tVcurrentGroupGid;
+    TextView viewSpeaker;
     Button btnQueryMember;
     Button btnTempGroup;
     Button btnSpeak;
 
     Toolbar toolbar;
     MemberAdapter adapter;
-
-    GWSDKManager gwsdkManager;
 
     private RecyclerView recyclerView;
 
@@ -87,6 +87,7 @@ public class MemberActivity extends BaseActivity {
     private void initView() {
         tVselectMember = findViewById(R.id.memId);
         tVcurrentGroupGid = findViewById(R.id.groupId);
+        viewSpeaker = findViewById(R.id.speaker);
         btnQueryMember = findViewById(R.id.queryMember);
         btnTempGroup = findViewById(R.id.tempGroup);
         btnSpeak = findViewById(R.id.speak);
@@ -103,10 +104,10 @@ public class MemberActivity extends BaseActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 
-        btnQueryMember.setOnClickListener(v -> gwsdkManager.queryMember(1,1));
+        btnQueryMember.setOnClickListener(v -> gwsdkManager.queryMember(gwsdkManager.getUserInfo().getCurrentGroupGid(),0));
         toolbar.setNavigationOnClickListener(v -> finish());
         int[] memberList = new int [] {1,2,3};
-        btnTempGroup.setOnClickListener(v -> gwsdkManager.temCall(memberList,1));
+        btnTempGroup.setOnClickListener(v -> gwsdkManager.tempGroup(memberList,1));
         btnSpeak.setOnClickListener(v -> {
             if (!speak) {
                 gwsdkManager.startSpeak();
@@ -124,24 +125,20 @@ public class MemberActivity extends BaseActivity {
             @Override
             public void onPttEvent(int event, String data, int var3) {
                 if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_QUERY_MEMBER) {
-                    GWGroupListBean gwGroupListBean = JSON.parseObject(data, GWGroupListBean.class);
-                    if (gwGroupListBean.getResult() == 0) {
 
-                        runOnUiThread(() -> {
-
-                        });
-                    }
                 } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_TMP_GROUP_ACTIVE) {
-                    GWJoinGroupBean gwJoinGroupBean = JSON.parseObject(data, GWJoinGroupBean.class);
-                    if (gwJoinGroupBean.getResult() == 0) {
-                        runOnUiThread(() -> {
-                            showAlert("join group success");
-                        });
-                    }
+
                 } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_TMP_GROUP_PASSIVE){
 
-                }else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_SPEAK){
-
+                } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_SPEAK) {
+                    runOnUiThread(()->{
+                        GWSpeakNotifyBean gwSpeakNotifyBean = JSON.parseObject(data, GWSpeakNotifyBean.class);
+                        if (gwSpeakNotifyBean.getUid() != 0) {
+                            viewSpeaker.setText("tmp group have user speak:"+gwSpeakNotifyBean.getUid()+"/"+gwSpeakNotifyBean.getName());
+                        } else {
+                            viewSpeaker.setText("no user speak");
+                        }
+                    });
                 }
             }
 

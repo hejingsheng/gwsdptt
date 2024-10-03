@@ -18,6 +18,7 @@ import com.alibaba.fastjson.JSON;
 import com.gwsd.bean.GWGroupListBean;
 import com.gwsd.bean.GWJoinGroupBean;
 import com.gwsd.bean.GWLoginResultBean;
+import com.gwsd.bean.GWSpeakNotifyBean;
 import com.gwsd.bean.GWType;
 import com.gwsd.ptt.R;
 import com.gwsd.ptt.adapter.GroupAdapter;
@@ -34,6 +35,7 @@ public class GroupActivity extends BaseActivity {
 
     TextView tVGroupName;
     TextView tVGroupId;
+    TextView viewSpeaker;
 
     Button btnQueryGroup;
     Button btnJoinGroup;
@@ -46,8 +48,6 @@ public class GroupActivity extends BaseActivity {
     private GroupAdapter adapter;
 
     Map<Long, String> groupMap;
-
-    private GWSDKManager gwsdkManager;
 
     private boolean speak = false;
 
@@ -94,6 +94,7 @@ public class GroupActivity extends BaseActivity {
     private void initView() {
         tVGroupName = findViewById(R.id.groupName);
         tVGroupId = findViewById(R.id.groupId);
+        viewSpeaker = findViewById(R.id.speaker);
         btnQueryGroup = findViewById(R.id.btnQueryGroup);
         btnJoinGroup = findViewById(R.id.btnJoinGroup);
         btnSpeak = findViewById(R.id.btnSpeak);
@@ -154,6 +155,15 @@ public class GroupActivity extends BaseActivity {
                             tVGroupId.setText(String.valueOf(gwsdkManager.getUserInfo().getCurrentGroupGid()));
                         });
                     }
+                } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_SPEAK) {
+                    runOnUiThread(()->{
+                        GWSpeakNotifyBean gwSpeakNotifyBean = JSON.parseObject(data, GWSpeakNotifyBean.class);
+                        if (gwSpeakNotifyBean.getUid() != 0) {
+                            viewSpeaker.setText("group have user speak:"+gwSpeakNotifyBean.getUid()+"/"+gwSpeakNotifyBean.getName());
+                        } else {
+                            viewSpeaker.setText("no user speak");
+                        }
+                    });
                 }
             }
 

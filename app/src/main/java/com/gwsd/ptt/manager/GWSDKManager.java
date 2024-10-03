@@ -107,7 +107,7 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
     public void queryMember(long gid,int type){
         gwPttEngine.pttQueryMember(gid,type);
     }
-    public void temCall(int[] var1, int var2){
+    public void tempGroup(int[] var1, int var2){
         gwPttEngine.pttTempGroup(var1,var2);
     }
     public void startSpeak(){
@@ -118,6 +118,9 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
     }
     public void startMsgService(int groups[], int type[], int num) {
         gwPttEngine.pttRegOfflineMsg(groups, type, num);
+    }
+    public void sendMsg(int recvtype, int remoteid, int msgtype, String content) {
+        gwPttEngine.pttSendMsg(userInfo.getId(), userInfo.getName(), recvtype, remoteid, msgtype, content, null, System.currentTimeMillis(), (char)1);
     }
 
     @Override

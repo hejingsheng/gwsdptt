@@ -30,13 +30,10 @@ public class MainActivity extends BaseActivity {
     Button btnGroup;
     Button btnMember;
     Button btnMsg;
-    Button btnHalfDupLex;
     Button btnFullDuplex;
     Button btnVideo;
     Button btnOther;
     Button btnLoginOut;
-
-    private GWSDKManager gwsdkManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +86,6 @@ public class MainActivity extends BaseActivity {
         btnGroup = findViewById(R.id.btngroup);
         btnMember = findViewById(R.id.btnmember);
         btnMsg = findViewById(R.id.btnmsg);
-        btnHalfDupLex = findViewById(R.id.btnHalfDuplexCall);
         btnFullDuplex = findViewById(R.id.btnFullDuplexCall);
         btnVideo = findViewById(R.id.btnVideo);
         btnOther = findViewById(R.id.btnOther);
@@ -113,6 +109,9 @@ public class MainActivity extends BaseActivity {
         btnMember.setOnClickListener(v->{
             Intent intent = new Intent(MainActivity.this, MemberActivity.class);
             startActivity(intent);
+        });
+        btnMsg.setOnClickListener(v -> {
+            MsgActivity.startAct(this);
         });
         btnVideo.setOnClickListener(v -> {
             VideoActivity.startAct(this);

@@ -40,6 +40,11 @@ public class VideoActivity extends BaseActivity {
         initData();
         initView();
         initEvent();
+
+        if (!gwsdkManager.hasVideoPermission()) {
+            showAlert("this account do not have video permission!!!");
+            finish();
+        }
     }
 
     private void initEvent() {

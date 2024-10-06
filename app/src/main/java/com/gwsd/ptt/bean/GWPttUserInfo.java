@@ -7,6 +7,10 @@ public class GWPttUserInfo {
     private String name;
     private int id;
     private long defaultGid;
+    private boolean message;
+    private boolean call;
+    private boolean video;
+    private boolean silent;
     private CurrentGroup currentGroup;
     private long lastpriority;
     private boolean online;
@@ -53,6 +57,38 @@ public class GWPttUserInfo {
 
     public void setDefaultGid(long defaultGid) {
         this.defaultGid = defaultGid;
+    }
+
+    public boolean isMessage() {
+        return message;
+    }
+
+    public void setMessage(boolean message) {
+        this.message = message;
+    }
+
+    public boolean isCall() {
+        return call;
+    }
+
+    public void setCall(boolean call) {
+        this.call = call;
+    }
+
+    public boolean isVideo() {
+        return video;
+    }
+
+    public void setVideo(boolean video) {
+        this.video = video;
+    }
+
+    public boolean isSilent() {
+        return silent;
+    }
+
+    public void setSilent(boolean silent) {
+        this.silent = silent;
     }
 
     public String getCurrentGroupName() {

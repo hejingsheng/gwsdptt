@@ -56,6 +56,8 @@
         <activity android:name=".activity.GroupActivity"/>
         <activity android:name=".activity.MemberActivity"/>
         <activity android:name=".activity.MsgActivity"/>
+        <activity android:name=".activity.FullDuplexActivity"/>
+        <activity android:name=".activity.OtherActivity"/>
     </application>
 
 </manifest>

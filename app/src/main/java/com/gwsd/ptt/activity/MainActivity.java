@@ -22,6 +22,7 @@ public class MainActivity extends BaseActivity {
 
     TextView sdkVersion;
     TextView demoVersion;
+    TextView power;
 
     EditText eTuserAccount;
     EditText eTuserPassword;
@@ -44,40 +45,11 @@ public class MainActivity extends BaseActivity {
         initEvent();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart=");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume=");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy");
-    }
-
     private void initView() {
 
         sdkVersion = findViewById(R.id.sdkVersion);
         demoVersion = findViewById(R.id.demoVersion);
+        power = findViewById(R.id.viewPower);
 
         eTuserAccount = findViewById(R.id.loginUserName);
         eTuserPassword = findViewById(R.id.loginUserPass);
@@ -96,11 +68,11 @@ public class MainActivity extends BaseActivity {
         sdkVersion.setText("sdkVersion" + gwsdkManager.getVersion());
         demoVersion.setText("demoVersion" + VERSION);
         btnLogin.setOnClickListener(v->{
-            //String account = eTuserAccount.getText().toString();
-            //String password = eTuserPassword.getText().toString();
-            String account = "gwsd03";
-            String password = "111111";
-            gwsdkManager.login(account,password,"12345","54321");
+            String account = eTuserAccount.getText().toString();
+            String password = eTuserPassword.getText().toString();
+            String imei = "12345"; // you should call android api get device imei
+            String iccid = "54321"; // you should call android api get sim card iccid
+            gwsdkManager.login(account,password,imei,iccid);
         });
         btnGroup.setOnClickListener(v ->{
             Intent intent = new Intent(MainActivity.this, GroupActivity.class);
@@ -120,6 +92,9 @@ public class MainActivity extends BaseActivity {
         btnVideo.setOnClickListener(v -> {
             VideoActivity.startAct(this);
         });
+        btnOther.setOnClickListener(v -> {
+            OtherActivity.startAct(this);
+        });
 		btnLoginOut.setOnClickListener(v -> {
             gwsdkManager.loginOut();
         });
@@ -135,13 +110,15 @@ public class MainActivity extends BaseActivity {
                     if (gwLoginResultBean.getResult() == 0) {
                         runOnUiThread(() -> {
                             showToast("user:"+gwLoginResultBean.getName()+" login success");
+                            String powerstr = "msg:"+gwLoginResultBean.isMessage()+" call:"+gwLoginResultBean.isCall()+" video:"+gwLoginResultBean.isVideo()+" silent:"+gwLoginResultBean.isSilent();
+                            power.setText(powerstr);
                         });
                     }
                 } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_LOGOUT) {
                     GWLoginResultBean gwLoginOutResultBean = JSON.parseObject(data, GWLoginResultBean.class);
                     if (gwLoginOutResultBean.getResult() == 0) {
                         runOnUiThread(() -> {
-
+                            showToast("user offline");
                         });
                     }
                 }

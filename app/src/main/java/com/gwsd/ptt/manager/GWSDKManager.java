@@ -131,6 +131,30 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
     public  void loginOut(){
         gwPttEngine.pttLogout();
     }
+    public boolean hasMsgPermission() {
+        if (userInfo.isMessage() || userInfo.isVideo() || userInfo.isSilent()) {
+            return true;
+        }
+        return false;
+    }
+    public boolean hasVideoPermission() {
+        if (userInfo.isVideo() || userInfo.isSilent()) {
+            return true;
+        }
+        return false;
+    }
+    public boolean hasSilentVideoPermission() {
+        if (userInfo.isSilent()) {
+            return true;
+        }
+        return false;
+    }
+    public boolean hasDuplexCallPermission() {
+        if (userInfo.isCall()) {
+            return true;
+        }
+        return false;
+    }
     public void startMsgService(int groups[], int type[], int num) {
         gwPttEngine.pttRegOfflineMsg(groups, type, num);
         haveStartMsgService = true;
@@ -150,6 +174,10 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
                 userInfo.setId(gwLoginResultBean.getUid());
                 userInfo.setOnline(true);
                 userInfo.setDefaultGid(gwLoginResultBean.getDefaultGid());
+                userInfo.setMessage(gwLoginResultBean.isMessage());
+                userInfo.setCall(gwLoginResultBean.isCall());
+                userInfo.setVideo(gwLoginResultBean.isVideo());
+                userInfo.setSilent(gwLoginResultBean.isSilent());
                 gwPttEngine.pttHeart(100, "5g", System.currentTimeMillis());
                 startTimer();
                 //joinGroup(gwLoginResultBean.getDefaultGid(), 0);

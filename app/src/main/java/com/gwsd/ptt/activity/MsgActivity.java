@@ -14,11 +14,6 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.gwsd.bean.GWMsgBaseBean;
-import com.gwsd.bean.GWMsgResponseBean;
-import com.gwsd.bean.GWPatrolMsgBean;
 import com.gwsd.bean.GWType;
 import com.gwsd.ptt.R;
 import com.gwsd.ptt.manager.GWSDKManager;
@@ -57,6 +52,11 @@ public class MsgActivity extends BaseActivity {
         initData();
         initView();
         initEvent();
+
+        if (!gwsdkManager.hasMsgPermission()) {
+            showAlert("this account do not have message permission!!!");
+            finish();
+        }
     }
 
     private void initData() {

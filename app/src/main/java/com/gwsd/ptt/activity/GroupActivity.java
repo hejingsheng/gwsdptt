@@ -1,15 +1,10 @@
 package com.gwsd.ptt.activity;
 
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
-
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alibaba.fastjson.JSON;
 import com.gwsd.bean.GWGroupListBean;
 import com.gwsd.bean.GWJoinGroupBean;
-import com.gwsd.bean.GWLoginResultBean;
 import com.gwsd.bean.GWRequestSpeakBean;
 import com.gwsd.bean.GWSpeakNotifyBean;
 import com.gwsd.bean.GWType;
@@ -60,36 +54,6 @@ public class GroupActivity extends BaseActivity {
         initData();
         initView();
         initEvent();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart=");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume=");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy");
     }
 
     private void initView() {

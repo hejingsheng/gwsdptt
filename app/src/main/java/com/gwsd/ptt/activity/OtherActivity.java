@@ -78,15 +78,27 @@ public class OtherActivity extends BaseActivity {
 
     private void initEvent() {
         btnWeather.setOnClickListener(v -> {
-
+            int cellid = 0;
+            int lac = 0;
+            int netmode = GWType.GW_NETWORK_TYPE.GW_PTT_NETWORK_4G;
+            String mcc = "460";
+            String mnc = "03";
+            gwsdkManager.getWeather(cellid, lac, netmode, mcc, mnc);
         });
 
         btnGps.setOnClickListener(v->{
-
+            double lat = 40.059355;
+            double lon = 116.608368;
+            gwsdkManager.reportGps(lat, lon);
         });
 
         btnAGps.setOnClickListener(v -> {
-
+            int cellid = 0;
+            int lac = 0;
+            int netmode = GWType.GW_NETWORK_TYPE.GW_PTT_NETWORK_4G;
+            String mcc = "460";
+            String mnc = "03";
+            gwsdkManager.reportBaseStation(cellid, lac, netmode, mcc, mnc);
         });
     }
 }

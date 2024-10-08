@@ -22,10 +22,17 @@ public class VideoActivity extends BaseActivity {
     Button btnAccept;
     Button btnHangup;
 
+    Button btnMuteMic;
+    Button btnMuteSpk;
+    Button btnSwitchCamera;
+
     EditText editRemoteId;
 
     boolean isVideoCall = false;
     String remoteid;
+
+    boolean micMute = false;
+    boolean spkMute = false;
 
     public static void startAct(Context context) {
         Intent intent = new Intent(context, VideoActivity.class);
@@ -75,6 +82,17 @@ public class VideoActivity extends BaseActivity {
         btnHangup.setOnClickListener(v -> {
             gwsdkManager.hangupVideo(remoteid);
         });
+        btnMuteMic.setOnClickListener(v -> {
+            gwsdkManager.muteMic(!micMute);
+            micMute = !micMute;
+        });
+        btnMuteSpk.setOnClickListener(v -> {
+            gwsdkManager.muteSpk(!spkMute);
+            spkMute = !spkMute;
+        });
+        btnSwitchCamera.setOnClickListener(v -> {
+            gwsdkManager.switchCamera();
+        });
     }
 
     private void initView() {
@@ -85,6 +103,11 @@ public class VideoActivity extends BaseActivity {
         btnCall = findViewById(R.id.videocall);
         btnAccept = findViewById(R.id.videoaccept);
         btnHangup = findViewById(R.id.videohangup);
+
+        btnMuteMic = findViewById(R.id.btnMuteMic);
+        btnMuteSpk = findViewById(R.id.btnMuteSpk);
+        btnSwitchCamera = findViewById(R.id.btnSwitchCamera);
+
         editRemoteId = findViewById(R.id.videoRemoteId);
     }
 

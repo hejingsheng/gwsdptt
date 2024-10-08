@@ -14,6 +14,7 @@ import com.gwsd.bean.GWGroupListBean;
 import com.gwsd.bean.GWGroupOperateBean;
 import com.gwsd.bean.GWJoinGroupBean;
 import com.gwsd.bean.GWKickoutNotifyBean;
+import com.gwsd.bean.GWLocationBean;
 import com.gwsd.bean.GWLoginResultBean;
 import com.gwsd.bean.GWMemberInfoBean;
 import com.gwsd.bean.GWRequestSpeakBean;
@@ -128,8 +129,32 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
     public void fullDuplex(int uid,int action){
         gwPttEngine.pttDuplexCall(uid,action);
     }
-    public  void loginOut(){
+    public void loginOut(){
         gwPttEngine.pttLogout();
+    }
+    public void getWeather(int cellid, int lac, int mode, String mcc, String mnc) {
+        gwPttEngine.pttGetWeather(cellid, lac, mode, mcc, mnc);
+    }
+    public void reportGps(double lat, double lon) {
+        GWLocationBean gwLocationBean = new GWLocationBean();
+        gwLocationBean.setType(GWType.GW_LOC_TYPE.GW_PTT_LOC_TYPE_GPS);
+        GWLocationBean.Location location = new GWLocationBean.Location();
+        location.setLat(lat);
+        location.setLon(lon);
+        gwLocationBean.setLocation(location);
+        gwPttEngine.pttReportLocation(gwLocationBean, System.currentTimeMillis());
+    }
+    public void reportBaseStation(int cellid, int lac_tac, @GWType.GW_NETWORK_TYPE int mode, String mcc, String mnc) {
+        GWLocationBean gwLocationBean = new GWLocationBean();
+        gwLocationBean.setType(GWType.GW_LOC_TYPE.GW_PTT_LOC_TYPE_CELL);
+        GWLocationBean.Location location = new GWLocationBean.Location();
+        location.setCellid(cellid);
+        location.setLac_or_tac(lac_tac);
+        location.setMode(mode);
+        location.setMcc(mcc);
+        location.setMnc(mnc);
+        gwLocationBean.setLocation(location);
+        gwPttEngine.pttReportLocation(gwLocationBean, System.currentTimeMillis());
     }
     public boolean hasMsgPermission() {
         if (userInfo.isMessage() || userInfo.isVideo() || userInfo.isSilent()) {
@@ -335,6 +360,18 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
 
     public void clearVideoView(GWRtcSurfaceVideoRender render) {
         gwVideoEngine.videoClearView(render);
+    }
+
+    public void muteMic(boolean mute) {
+        gwVideoEngine.muteMic(mute);
+    }
+
+    public void muteSpk(boolean mute) {
+        gwVideoEngine.muteSpeaker(mute);
+    }
+
+    public void switchCamera() {
+        gwVideoEngine.switchCamera();
     }
 
     @Override

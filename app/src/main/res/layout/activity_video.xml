@@ -8,21 +8,55 @@
         android:layout_above="@+id/editView"
         android:orientation="vertical">
 
-        <com.gwsd.rtc.view.GWRtcSurfaceVideoRender
-            android:id="@+id/videoviewlocal"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1">
+
+            <com.gwsd.rtc.view.GWRtcSurfaceVideoRender
+                android:id="@+id/videoviewlocal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <Button
+                android:id="@+id/btnMuteMic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:text="muteMic" />
+
+            <Button
+                android:id="@+id/btnSwitchCamera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_toRightOf="@+id/btnMuteMic"
+                android:text="switch camera" />
+
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp" />
 
-        <com.gwsd.rtc.view.GWRtcSurfaceVideoRender
-            android:id="@+id/videoviewremote"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1">
+
+            <com.gwsd.rtc.view.GWRtcSurfaceVideoRender
+                android:id="@+id/videoviewremote"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <Button
+                android:id="@+id/btnMuteSpk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:text="muteSpk" />
+
+        </RelativeLayout>
 
     </LinearLayout>
 

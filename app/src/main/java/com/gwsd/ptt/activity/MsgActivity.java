@@ -70,8 +70,12 @@ public class MsgActivity extends BaseActivity {
             @Override
             public void onMsgEvent(int status, String data) {
                 runOnUiThread(()->{
-                    String tmp = "recv msg status:"+status+" data:"+data;
-                    textRecvView.setText(tmp);
+                    if (status == GWType.GW_MSG_STATUS.GW_MSG_STATUS_DATA || status == GWType.GW_MSG_STATUS.GW_MSG_STATUS_SELF_DATA) {
+                        String tmp = "recv msg data:" + data;
+                        textRecvView.setText(tmp);
+                    } else {
+                        textRecvView.setText("recv msg status:"+status);
+                    }
                 });
             }
         });

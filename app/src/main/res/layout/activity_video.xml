@@ -64,13 +64,14 @@
         android:id="@+id/editView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_above="@+id/bottomBtnView">
 
-        <EditText
-            android:id="@+id/videoRemoteId"
+        <Button
+            android:id="@+id/btnVideoRemoteId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="please input remote user id"
+            android:text="select member"
             android:textSize="20dp" />
 
     </LinearLayout>

@@ -3,11 +3,15 @@ package com.gwsd.ptt.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.gwsd.GWVideoEngine;
+import com.gwsd.bean.GWMemberInfoBean;
+import com.gwsd.bean.GWType;
 import com.gwsd.ptt.R;
 import com.gwsd.ptt.manager.GWSDKManager;
 import com.gwsd.rtc.view.GWRtcSurfaceVideoRender;
@@ -26,10 +30,12 @@ public class VideoActivity extends BaseActivity {
     Button btnMuteSpk;
     Button btnSwitchCamera;
 
-    EditText editRemoteId;
+    Button btnSelectMember;
 
-    boolean isVideoCall = false;
+    int videoMode = -1;  // 0 video pull  1 video call  2 video meeting
     String remoteid;
+    String creater;
+    boolean isJoinMeeting = false;
 
     boolean micMute = false;
     boolean spkMute = false;
@@ -55,32 +61,47 @@ public class VideoActivity extends BaseActivity {
     }
 
     private void initEvent() {
+        btnSelectMember.setOnClickListener(v -> {
+            gwsdkManager.queryMember(gwsdkManager.getUserInfo().getCurrentGroupGid(), 0);
+        });
         btnPull.setOnClickListener(v -> {
-            remoteid = editRemoteId.getText().toString();
-            if (remoteid == null || "".equals(remoteid)) {
-                showToast("please input remote user id");
+            if (TextUtils.isEmpty(remoteid)) {
+                showToast("please select remote user");
+                return;
             }
             gwsdkManager.pullVideo(remoteid, false, false,
                     GWVideoEngine.GWVideoPriority.GW_VIDEO_PRIORITY_SMOOTH,
                     GWVideoEngine.GWVideoResolution.GW_VIDEO_RESOLUTION_NORMAL);
         });
         btnCall.setOnClickListener(v -> {
-            remoteid = editRemoteId.getText().toString();
-            if (remoteid == null || "".equals(remoteid)) {
-                showToast("please input remote user id");
+            if (TextUtils.isEmpty(remoteid)) {
+                showToast("please select remote user");
+                return;
             }
             gwsdkManager.callVideo(remoteid, false,
                     GWVideoEngine.GWVideoResolution.GW_VIDEO_RESOLUTION_NORMAL);
         });
         btnAccept.setOnClickListener(v -> {
-            if (isVideoCall) {
-                gwsdkManager.acceptCallVideo();
-            } else {
+            if (videoMode == 0) {
                 gwsdkManager.acceptPullVideo(2, false);
+            } else if (videoMode == 1) {
+                gwsdkManager.acceptCallVideo();
+            } else if (videoMode == 2) {
+                gwsdkManager.joinVideoMeeting();
+            } else {
+                showAlert("error video mode");
             }
         });
         btnHangup.setOnClickListener(v -> {
-            gwsdkManager.hangupVideo(remoteid);
+            if (videoMode == 2) {
+                if (isJoinMeeting) {
+                    gwsdkManager.leaveVideoMeeting();
+                } else {
+                    gwsdkManager.rejectVideoMeeting(creater, "user");
+                }
+            } else {
+                gwsdkManager.hangupVideo(remoteid);
+            }
         });
         btnMuteMic.setOnClickListener(v -> {
             gwsdkManager.muteMic(!micMute);
@@ -108,7 +129,7 @@ public class VideoActivity extends BaseActivity {
         btnMuteSpk = findViewById(R.id.btnMuteSpk);
         btnSwitchCamera = findViewById(R.id.btnSwitchCamera);
 
-        editRemoteId = findViewById(R.id.videoRemoteId);
+        btnSelectMember = findViewById(R.id.btnVideoRemoteId);
     }
 
     private void initData() {
@@ -116,10 +137,32 @@ public class VideoActivity extends BaseActivity {
         int[] a=new int[0];
         int[] b=new int[0];
         gwsdkManager.startMsgService(a, b, 0);
+        gwsdkManager.registerPttObserver(new GWSDKManager.GWSDKPttEngineObserver() {
+            @Override
+            public void onPttEvent(int event, String data, int var3) {
+                if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_QUERY_MEMBER) {
+                    runOnUiThread(()->{
+                        GWMemberInfoBean gwMemberInfoBean = JSON.parseObject(data, GWMemberInfoBean.class);
+                        if (gwMemberInfoBean.getResult() == 0 && gwMemberInfoBean.getMembers().size() > 0) {
+                            GWMemberInfoBean.MemberInfo member = gwMemberInfoBean.getMembers().get(0);
+                            showAlert("select member:"+member.getName()+",you can start video call or video pull");
+                            remoteid = String.valueOf(member.getUid());
+                        } else {
+                            showAlert("not have online users");
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onMsgEvent(int var1, String var2) {
+
+            }
+        });
         gwsdkManager.registerVideoObserver(new GWSDKManager.GWSDKVideoEngineObserver() {
             @Override
             public void onVideoPull(String s, String s1, int i, boolean b) {
-                isVideoCall = false;
+                videoMode = 0;
                 remoteid = s;
                 runOnUiThread(()->{
                     String msg = "recv user "+s1+" video pull request";
@@ -129,7 +172,7 @@ public class VideoActivity extends BaseActivity {
 
             @Override
             public void onVideoCall(String s, String s1) {
-                isVideoCall = true;
+                videoMode = 1;
                 remoteid = s;
                 runOnUiThread(()->{
                     String msg = "recv user "+s1+" video call request";
@@ -139,7 +182,12 @@ public class VideoActivity extends BaseActivity {
 
             @Override
             public void onVideoMeetingInvite(String s, String s1) {
-
+                videoMode = 2;
+                remoteid = "";
+                runOnUiThread(()->{
+                    String msg = "recv user "+s+" create video meeting invite";
+                    showToast(msg);
+                });
             }
 
             @Override
@@ -158,13 +206,24 @@ public class VideoActivity extends BaseActivity {
             }
 
             @Override
-            public void onVideoMeetingUserJoin(long l, String s, String s1, boolean b) {
-
+            public void onVideoMeetingUserJoin(long videoId, String id, String name, boolean video) {
+                runOnUiThread(()->{
+                    String data = name+ "join meeting"+" "+video;
+                    showToast(data);
+                    if (video) {
+                        gwsdkManager.attachRemoteVideoView(gwRtcSurfaceVideoRenderRemote, videoId);
+                    }
+                });
             }
 
             @Override
             public void onVideoMeetingSelfJoin() {
-
+                isJoinMeeting = true;
+                runOnUiThread(()->{
+                    String data = "I join meeting";
+                    showToast(data);
+                    gwsdkManager.attachLocalVideoView(gwRtcSurfaceVideoRenderLocal);
+                });
             }
 
             @Override

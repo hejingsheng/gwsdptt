@@ -25,6 +25,9 @@ import com.gwsd.bean.GWType;
 import com.gwsd.ptt.bean.GWPttUserInfo;
 import com.gwsd.rtc.view.GWRtcSurfaceVideoRender;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -68,6 +71,7 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
     private GWSDKVideoEngineObserver videoObserver;
 
     private GWPttUserInfo userInfo;
+    private Map<Long, String> groupMap;
     private boolean haveStartMsgService = false;
 
     private Disposable disposable;
@@ -156,6 +160,12 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         gwLocationBean.setLocation(location);
         gwPttEngine.pttReportLocation(gwLocationBean, System.currentTimeMillis());
     }
+    public String getGroupNameById(long gid) {
+        if (groupMap != null && groupMap.size() > 0) {
+            return groupMap.get(gid);
+        }
+        return null;
+    }
     public boolean hasMsgPermission() {
         if (userInfo.isMessage() || userInfo.isVideo() || userInfo.isSilent()) {
             return true;
@@ -209,6 +219,16 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
             }
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_QUERY_GROUP) {
             GWGroupListBean gwGroupListBean = JSON.parseObject(data, GWGroupListBean.class);
+            if (gwGroupListBean.getResult() == 0) {
+                List<GWGroupListBean.GWGroupBean> groups = gwGroupListBean.getGroups();
+                if (groupMap == null) {
+                    groupMap = new HashMap<>();
+                }
+                groupMap.clear();
+                for (GWGroupListBean.GWGroupBean group : groups) {
+                    groupMap.put(group.getGid(), group.getName());
+                }
+            }
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_JOIN_GROUP) {
             GWJoinGroupBean gwJoinGroupBean = JSON.parseObject(data, GWJoinGroupBean.class);
             if (gwJoinGroupBean.getResult() == 0) {

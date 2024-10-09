@@ -42,8 +42,6 @@ public class GroupActivity extends BaseActivity {
 
     private GroupAdapter adapter;
 
-    Map<Long, String> groupMap;
-
     private boolean speak = false;
 
     @Override
@@ -68,6 +66,15 @@ public class GroupActivity extends BaseActivity {
         //tVGroupId.setText(String.valueOf(gwsdkManager.getUserInfo().getCurrentGroupGid()));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+        if (gwsdkManager.getUserInfo().getCurrentGroupGid() != 0) {
+            String gname = gwsdkManager.getGroupNameById(gwsdkManager.getUserInfo().getCurrentGroupGid());
+            if (gname != null) {
+                tVGroupId.setText(String.valueOf(gwsdkManager.getUserInfo().getCurrentGroupGid()));
+                tVGroupName.setText(gwsdkManager.getGroupNameById(gwsdkManager.getUserInfo().getCurrentGroupGid()));
+            } else {
+                showToast("please query groups");
+            }
+        }
     }
     private void initEvent() {
         setSupportActionBar(toolbar);
@@ -100,16 +107,16 @@ public class GroupActivity extends BaseActivity {
 
                     if (gwGroupListBean.getResult() == 0) {
                         List<GWGroupListBean.GWGroupBean> groups = gwGroupListBean.getGroups();
-                        groupMap = new HashMap<>();
-
+                        String gname="";
                         for (GWGroupListBean.GWGroupBean group : groups) {
-                            groupMap.put(group.getGid(), group.getName());
+                            if (group.getGid() == gwsdkManager.getUserInfo().getCurrentGroupGid()) {
+                                gname = group.getName();
+                            }
                         }
-                        String groupName = groupMap.get(gwsdkManager.getUserInfo().getCurrentGroupGid());
+                        final String groupname = gname;
                         runOnUiThread(() -> {
-                            tVGroupName.setText(groupName);
+                            tVGroupName.setText(groupname);
                             adapter.setGroups(groups);
-
                         });
                     }
                 } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_JOIN_GROUP) {
@@ -117,7 +124,7 @@ public class GroupActivity extends BaseActivity {
                         GWJoinGroupBean gwJoinGroupBean = JSON.parseObject(data, GWJoinGroupBean.class);
                         if (gwJoinGroupBean.getResult() == 0) {
                             showAlert("join group success");
-                            tVGroupName.setText(groupMap.get(gwsdkManager.getUserInfo().getCurrentGroupGid()));
+                            tVGroupName.setText(gwsdkManager.getGroupNameById(gwsdkManager.getUserInfo().getCurrentGroupGid()));
                             tVGroupId.setText(String.valueOf(gwsdkManager.getUserInfo().getCurrentGroupGid()));
                         } else {
                             showAlert("join group fail");

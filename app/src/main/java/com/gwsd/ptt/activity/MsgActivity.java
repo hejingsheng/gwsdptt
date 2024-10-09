@@ -131,6 +131,9 @@ public class MsgActivity extends BaseActivity {
                 } else if (checkedId == R.id.radio_btn_video) {
                     msgType = GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_VIDEO;
                 }
+                if (msgType != GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_TEXT) {
+                    showAlert("you should upload media file to file server and send url to remote");
+                }
             }
         });
 

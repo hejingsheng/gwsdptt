@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20dp"
-        android:hint="please input remote user id"/>
+        android:hint="please input remote user or group id"/>
 
     <RadioGroup
         android:id="@+id/recvTypeRadio"

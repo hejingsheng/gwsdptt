@@ -62,7 +62,7 @@ public class VideoActivity extends BaseActivity {
 
     private void initEvent() {
         btnSelectMember.setOnClickListener(v -> {
-            gwsdkManager.queryMember(gwsdkManager.getUserInfo().getCurrentGroupGid(), 0);
+            gwsdkManager.queryMember(gwsdkManager.getUserInfo().getCurrentGroupGid(), gwsdkManager.getUserInfo().getCurrentGroupType());
         });
         btnPull.setOnClickListener(v -> {
             if (TextUtils.isEmpty(remoteid)) {
@@ -134,9 +134,6 @@ public class VideoActivity extends BaseActivity {
 
     private void initData() {
         gwsdkManager = GWSDKManager.INSTANCE(getApplicationContext());
-        int[] a=new int[0];
-        int[] b=new int[0];
-        gwsdkManager.startMsgService(a, b, 0);
         gwsdkManager.registerPttObserver(new GWSDKManager.GWSDKPttEngineObserver() {
             @Override
             public void onPttEvent(int event, String data, int var3) {

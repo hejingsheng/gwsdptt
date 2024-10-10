@@ -66,15 +66,8 @@ public class GroupActivity extends BaseActivity {
         //tVGroupId.setText(String.valueOf(gwsdkManager.getUserInfo().getCurrentGroupGid()));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-        if (gwsdkManager.getUserInfo().getCurrentGroupGid() != 0) {
-            String gname = gwsdkManager.getGroupNameById(gwsdkManager.getUserInfo().getCurrentGroupGid());
-            if (gname != null) {
-                tVGroupId.setText(String.valueOf(gwsdkManager.getUserInfo().getCurrentGroupGid()));
-                tVGroupName.setText(gwsdkManager.getGroupNameById(gwsdkManager.getUserInfo().getCurrentGroupGid()));
-            } else {
-                showToast("please query groups");
-            }
-        }
+        tVGroupId.setText(String.valueOf(gwsdkManager.getUserInfo().getCurrentGroupGid()));
+        tVGroupName.setText(gwsdkManager.getUserInfo().getCurrentGroupName());
     }
     private void initEvent() {
         setSupportActionBar(toolbar);
@@ -87,10 +80,12 @@ public class GroupActivity extends BaseActivity {
             gwsdkManager.joinGroup(adapter.getSelectedGid(),adapter.getSelectedType());
         });
         btnSpeak.setOnClickListener(v -> {
-            if (!speak) {
-                gwsdkManager.startSpeak();
-            } else {
+            if (speak) {
                 gwsdkManager.stopSpeak();
+                btnSpeak.setText("speak");
+            } else {
+                gwsdkManager.startSpeak();
+                btnSpeak.setText("stop");
             }
             speak = !speak;
         });
@@ -124,7 +119,7 @@ public class GroupActivity extends BaseActivity {
                         GWJoinGroupBean gwJoinGroupBean = JSON.parseObject(data, GWJoinGroupBean.class);
                         if (gwJoinGroupBean.getResult() == 0) {
                             showAlert("join group success");
-                            tVGroupName.setText(gwsdkManager.getGroupNameById(gwsdkManager.getUserInfo().getCurrentGroupGid()));
+                            tVGroupName.setText(gwsdkManager.getUserInfo().getCurrentGroupName());
                             tVGroupId.setText(String.valueOf(gwsdkManager.getUserInfo().getCurrentGroupGid()));
                         } else {
                             showAlert("join group fail");

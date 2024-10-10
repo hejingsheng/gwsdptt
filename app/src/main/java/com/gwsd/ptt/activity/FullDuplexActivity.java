@@ -35,7 +35,7 @@ import java.util.Map;
 public class FullDuplexActivity extends BaseActivity{
     private static final String TAG = "GW_FullDuplexActivity";
 
-    EditText editRemoteid;
+    Button btnSelectMember;
     Button btnCall;
     Button btnAccept;
     Button btnHangup;
@@ -61,7 +61,7 @@ public class FullDuplexActivity extends BaseActivity{
 
     private void initView() {
 
-        editRemoteid = findViewById(R.id.callRemoteId);
+        btnSelectMember = findViewById(R.id.btnCallRemoteId);
         btnCall = findViewById(R.id.btnCall);
         btnAccept = findViewById(R.id.btnAccept);
         btnHangup = findViewById(R.id.btnHangup);
@@ -74,8 +74,10 @@ public class FullDuplexActivity extends BaseActivity{
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        btnSelectMember.setOnClickListener(v -> {
+            gwsdkManager.queryMember(gwsdkManager.getUserInfo().getCurrentGroupGid(), gwsdkManager.getUserInfo().getCurrentGroupType());
+        });
         btnCall.setOnClickListener(v ->{
-            remoteid = editRemoteid.getText().toString();
             if (TextUtils.isEmpty(remoteid)){
                 showAlert("please input user id");
             }else {
@@ -116,6 +118,15 @@ public class FullDuplexActivity extends BaseActivity{
                             }
                         } else {
                             showAlert("duplex call error");
+                        }
+                    } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_QUERY_MEMBER) {
+                        GWMemberInfoBean gwMemberInfoBean = JSON.parseObject(data, GWMemberInfoBean.class);
+                        if (gwMemberInfoBean.getResult() == 0 && gwMemberInfoBean.getMembers().size() > 0) {
+                            GWMemberInfoBean.MemberInfo member = gwMemberInfoBean.getMembers().get(0);
+                            showAlert("select member:"+member.getName()+",you can start audio call");
+                            remoteid = String.valueOf(member.getUid());
+                        } else {
+                            showAlert("not have online users");
                         }
                     }
                 });

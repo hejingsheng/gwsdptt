@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.alibaba.fastjson.JSON;
 import com.gwsd.bean.GWLoginResultBean;
+import com.gwsd.bean.GWSpeakNotifyBean;
 import com.gwsd.bean.GWType;
 import com.gwsd.ptt.R;
 import com.gwsd.ptt.manager.GWSDKManager;
@@ -23,11 +24,14 @@ public class MainActivity extends BaseActivity {
     TextView sdkVersion;
     TextView demoVersion;
     TextView power;
+    TextView info;
+    TextView speaker;
 
     EditText eTuserAccount;
     EditText eTuserPassword;
 
     Button btnLogin;
+    Button btnSpeak;
     Button btnGroup;
     Button btnMember;
     Button btnMsg;
@@ -35,6 +39,8 @@ public class MainActivity extends BaseActivity {
     Button btnVideo;
     Button btnOther;
     Button btnLoginOut;
+
+    boolean speak = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,16 +51,26 @@ public class MainActivity extends BaseActivity {
         initEvent();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        String str = "name:"+gwsdkManager.getUserInfo().getName()+" group:"+gwsdkManager.getUserInfo().getCurrentGroupName();
+        info.setText(str);
+    }
+
     private void initView() {
 
         sdkVersion = findViewById(R.id.sdkVersion);
         demoVersion = findViewById(R.id.demoVersion);
         power = findViewById(R.id.viewPower);
+        info = findViewById(R.id.viewCurrentInfo);
+        speaker = findViewById(R.id.speaker);
 
         eTuserAccount = findViewById(R.id.loginUserName);
         eTuserPassword = findViewById(R.id.loginUserPass);
 
         btnLogin = findViewById(R.id.btnlogin);
+        btnSpeak = findViewById(R.id.btnspeak);
         btnGroup = findViewById(R.id.btngroup);
         btnMember = findViewById(R.id.btnmember);
         btnMsg = findViewById(R.id.btnmsg);
@@ -73,6 +89,16 @@ public class MainActivity extends BaseActivity {
             String imei = "12345"; // you should call android api get device imei
             String iccid = "54321"; // you should call android api get sim card iccid
             gwsdkManager.login(account,password,imei,iccid);
+        });
+        btnSpeak.setOnClickListener(v -> {
+            if (speak) {
+                gwsdkManager.stopSpeak();
+                btnSpeak.setText("speak");
+            } else {
+                gwsdkManager.startSpeak();
+                btnSpeak.setText("stop");
+            }
+            speak = !speak;
         });
         btnGroup.setOnClickListener(v ->{
             Intent intent = new Intent(MainActivity.this, GroupActivity.class);
@@ -118,9 +144,25 @@ public class MainActivity extends BaseActivity {
                     GWLoginResultBean gwLoginOutResultBean = JSON.parseObject(data, GWLoginResultBean.class);
                     if (gwLoginOutResultBean.getResult() == 0) {
                         runOnUiThread(() -> {
-                            showToast("user offline");
+                            showAlert("user offline");
                         });
                     }
+                } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_JOIN_GROUP) {
+                    runOnUiThread(()->{
+                        String msg = "user "+gwsdkManager.getUserInfo().getName()+" login success\njoin group "+gwsdkManager.getUserInfo().getCurrentGroupName();
+                        showAlert(msg);
+                        String str = "name:"+gwsdkManager.getUserInfo().getName()+" group:"+gwsdkManager.getUserInfo().getCurrentGroupName();
+                        info.setText(str);
+                    });
+                } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_SPEAK) {
+                    runOnUiThread(()->{
+                        GWSpeakNotifyBean gwSpeakNotifyBean = JSON.parseObject(data, GWSpeakNotifyBean.class);
+                        if (gwSpeakNotifyBean.getUid() != 0) {
+                            speaker.setText("speaker id:"+gwSpeakNotifyBean.getUid()+" name:"+gwSpeakNotifyBean.getName());
+                        } else {
+                            speaker.setText("no speaker");
+                        }
+                    });
                 }
             }
             @Override

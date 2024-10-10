@@ -115,6 +115,14 @@ public class GWPttUserInfo {
         return currentGroup.getPriority();
     }
 
+    public void setCurrentGroupType(int type) {
+        currentGroup.setType(type);
+    }
+
+    public int getCurrentGroupType() {
+        return currentGroup.getType();
+    }
+
     public long getLastpriority() {
         return lastpriority;
     }
@@ -134,6 +142,7 @@ public class GWPttUserInfo {
     public static class CurrentGroup {
         private long gid;
         private String gname;
+        private int type;
         private long priority;
 
         public long getGid() {
@@ -150,6 +159,14 @@ public class GWPttUserInfo {
 
         public void setGname(String gname) {
             this.gname = gname;
+        }
+
+        public int getType() {
+            return type;
+        }
+
+        public void setType(int type) {
+            this.type = type;
         }
 
         public long getPriority() {

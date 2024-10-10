@@ -14,9 +14,15 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import com.alibaba.fastjson.JSON;
+import com.gwsd.bean.GWGroupListBean;
+import com.gwsd.bean.GWMemberInfoBean;
 import com.gwsd.bean.GWType;
 import com.gwsd.ptt.R;
 import com.gwsd.ptt.manager.GWSDKManager;
+
+import java.util.HashMap;
+import java.util.List;
 
 public class MsgActivity extends BaseActivity {
 
@@ -33,11 +39,12 @@ public class MsgActivity extends BaseActivity {
     Button btnSend;
 
     TextView textRecvView;
-    EditText editRemoteid;
+    Button btnRemoteid;
     EditText editContentOrUrl;
 
     int recvType;
     int msgType;
+    String remoteid = null;
 
     public static void startAct(Context context) {
         Intent intent = new Intent(context, MsgActivity.class);
@@ -63,8 +70,31 @@ public class MsgActivity extends BaseActivity {
         gwsdkManager = GWSDKManager.INSTANCE(getApplicationContext());
         gwsdkManager.registerPttObserver(new GWSDKManager.GWSDKPttEngineObserver() {
             @Override
-            public void onPttEvent(int var1, String var2, int var3) {
-
+            public void onPttEvent(int event, String data, int var3) {
+                if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_QUERY_GROUP) {
+                    runOnUiThread(()->{
+                        GWGroupListBean gwGroupListBean = JSON.parseObject(data, GWGroupListBean.class);
+                        if (gwGroupListBean.getResult() == 0) {
+                            List<GWGroupListBean.GWGroupBean> groups = gwGroupListBean.getGroups();
+                            if (groups != null && groups.size() > 0) {
+                                GWGroupListBean.GWGroupBean group = groups.get(0);
+                                showAlert("select group:"+group.getName()+",you can send msg to group");
+                                remoteid = String.valueOf(group.getGid());
+                            }
+                        }
+                    });
+                } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_QUERY_MEMBER) {
+                    runOnUiThread(()->{
+                        GWMemberInfoBean gwMemberInfoBean = JSON.parseObject(data, GWMemberInfoBean.class);
+                        if (gwMemberInfoBean.getResult() == 0 && gwMemberInfoBean.getMembers().size() > 0) {
+                            GWMemberInfoBean.MemberInfo member = gwMemberInfoBean.getMembers().get(0);
+                            showAlert("select member:"+member.getName()+",you can send msg to user");
+                            remoteid = String.valueOf(member.getUid());
+                        } else {
+                            showAlert("not have online users");
+                        }
+                    });
+                }
             }
 
             @Override
@@ -79,9 +109,6 @@ public class MsgActivity extends BaseActivity {
                 });
             }
         });
-        int[] a=new int[0];
-        int[] b=new int[0];
-        gwsdkManager.startMsgService(a, b, 0);
     }
 
     private void initView() {
@@ -98,7 +125,7 @@ public class MsgActivity extends BaseActivity {
         btnSend = findViewById(R.id.btnSend);
 
         textRecvView = findViewById(R.id.viewRecvMsg);
-        editRemoteid = findViewById(R.id.viewRemoteId);
+        btnRemoteid = findViewById(R.id.btnRemoteId);
         editContentOrUrl = findViewById(R.id.editContentView);
 
         radioBtnUser.setChecked(true);
@@ -116,6 +143,16 @@ public class MsgActivity extends BaseActivity {
                 } else if (checkedId == R.id.radio_btn_group) {
                     recvType = GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_GROUP;
                 }
+            }
+        });
+
+        btnRemoteid.setOnClickListener(v -> {
+            if (recvType == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER) {
+                gwsdkManager.queryMember(gwsdkManager.getUserInfo().getCurrentGroupGid(), gwsdkManager.getUserInfo().getCurrentGroupType());
+            } else if (recvType == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_GROUP) {
+                gwsdkManager.queryGroup();
+            } else {
+                showAlert("error recv type");
             }
         });
 
@@ -146,10 +183,9 @@ public class MsgActivity extends BaseActivity {
     }
 
     private void sendMsg() {
-        String remoteid = editRemoteid.getText().toString();
         String content = editContentOrUrl.getText().toString();
         if (TextUtils.isEmpty(remoteid) || TextUtils.isEmpty(content)) {
-            showToast("please input id and content");
+            showToast("please select remote id or input content");
             return;
         }
         gwsdkManager.sendMsg(recvType, Integer.valueOf(remoteid), msgType, content);

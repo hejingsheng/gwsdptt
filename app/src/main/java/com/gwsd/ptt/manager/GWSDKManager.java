@@ -71,7 +71,7 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
     private GWSDKVideoEngineObserver videoObserver;
 
     private GWPttUserInfo userInfo;
-    private Map<Long, String> groupMap;
+    private Map<Long, GWGroupListBean.GWGroupBean> groupMap;
     private boolean haveStartMsgService = false;
 
     private Disposable disposable;
@@ -160,12 +160,6 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         gwLocationBean.setLocation(location);
         gwPttEngine.pttReportLocation(gwLocationBean, System.currentTimeMillis());
     }
-    public String getGroupNameById(long gid) {
-        if (groupMap != null && groupMap.size() > 0) {
-            return groupMap.get(gid);
-        }
-        return null;
-    }
     public boolean hasMsgPermission() {
         if (userInfo.isMessage() || userInfo.isVideo() || userInfo.isSilent()) {
             return true;
@@ -191,8 +185,10 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         return false;
     }
     public void startMsgService(int groups[], int type[], int num) {
-        gwPttEngine.pttRegOfflineMsg(groups, type, num);
-        haveStartMsgService = true;
+        if (!haveStartMsgService) {
+            gwPttEngine.pttRegOfflineMsg(groups, type, num);
+            haveStartMsgService = true;
+        }
     }
     public void sendMsg(int recvtype, int remoteid, int msgtype, String content) {
         gwPttEngine.pttSendMsg(userInfo.getId(), userInfo.getName(), recvtype, remoteid, msgtype, content, content, System.currentTimeMillis(), (char)1);
@@ -215,6 +211,7 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
                 userInfo.setSilent(gwLoginResultBean.isSilent());
                 gwPttEngine.pttHeart(100, "5g", System.currentTimeMillis());
                 startTimer();
+                queryGroup();
                 //joinGroup(gwLoginResultBean.getDefaultGid(), 0);
             }
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_QUERY_GROUP) {
@@ -225,8 +222,30 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
                     groupMap = new HashMap<>();
                 }
                 groupMap.clear();
+                int[] msg_groups = new int[groups.size()];
+                int[] msg_groups_type = new int[groups.size()];
+                int i = 0;
+                long joingroupid = 0;
+                int joingrouptype = 0;
                 for (GWGroupListBean.GWGroupBean group : groups) {
-                    groupMap.put(group.getGid(), group.getName());
+                    if (group.getGid() == userInfo.getDefaultGid()) {
+                        joingroupid = group.getGid();
+                        joingrouptype = group.getType();
+                    }
+                    groupMap.put(group.getGid(), group);
+                    msg_groups[i] = (int)group.getGid();
+                    msg_groups_type[i] = group.getType();
+                    i++;
+                }
+                if (userInfo.isMessage() || userInfo.isVideo() || userInfo.isSilent()) {
+                    startMsgService(msg_groups, msg_groups_type, groups.size());
+                }
+                if (joingroupid == 0) {
+                    joingroupid = groups.get(0).getGid();
+                    joingrouptype = groups.get(0).getType();
+                }
+                if (userInfo.getCurrentGroupGid() == 0) {
+                    joinGroup(joingroupid, joingrouptype);
                 }
             }
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_JOIN_GROUP) {
@@ -234,6 +253,9 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
             if (gwJoinGroupBean.getResult() == 0) {
                 userInfo.setCurrentGroupGid(gwJoinGroupBean.getGid());
                 userInfo.setCurrentGroupPriority(gwJoinGroupBean.getPriority());
+                userInfo.setLastpriority(userInfo.getCurrentGroupPriority());
+                userInfo.setCurrentGroupName(groupMap.get(gwJoinGroupBean.getGid()).getName());
+                userInfo.setCurrentGroupType(groupMap.get(gwJoinGroupBean.getGid()).getType());
             }
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_QUERY_MEMBER) {
             GWMemberInfoBean gwMemberInfoBean = JSON.parseObject(data, GWMemberInfoBean.class);
@@ -260,6 +282,7 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
             if (gwCurrentGroupNotifyBean.getResult() == 0) {
                 userInfo.setCurrentGroupGid(gwCurrentGroupNotifyBean.getGid());
                 userInfo.setCurrentGroupName(gwCurrentGroupNotifyBean.getName());
+                userInfo.setCurrentGroupType(0);
                 if (gwCurrentGroupNotifyBean.getReason().equals("return")) {
                     userInfo.setCurrentGroupPriority(userInfo.getLastpriority());
                 } else {

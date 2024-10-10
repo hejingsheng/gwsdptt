@@ -17,11 +17,11 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottomBtnView">
 
-        <EditText
-            android:id="@+id/callRemoteId"
+        <Button
+            android:id="@+id/btnCallRemoteId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="please input remote user id"
+            android:hint="please select remote user id"
             android:textSize="20dp" />
 
     </LinearLayout>

@@ -1,5 +1,6 @@
 package com.gwsd.ptt.adapter;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +38,7 @@ public class MemberAdapter extends RecyclerView.Adapter <MemberAdapter.ViewHolde
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         int uid = uidList.get(position);
         String name = membersMap.get(uid);
 

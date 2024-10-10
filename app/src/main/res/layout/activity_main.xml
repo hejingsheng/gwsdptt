@@ -23,15 +23,17 @@
     <EditText
         android:id="@+id/loginUserName"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:hint="Username"
+        android:textSize="13dp"
         android:text=""/>
 
     <EditText
         android:id="@+id/loginUserPass"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:hint="Password"
+        android:textSize="13dp"
         android:text=""/>
 
     <TextView
@@ -39,55 +41,87 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text=""
-        android:textSize="25dp"
+        android:textSize="15dp"
+        />
+
+    <TextView
+        android:id="@+id/viewCurrentInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="15dp"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="wait for speak..."
+        android:textSize="15dp"
+        android:gravity="center"
+        android:id="@+id/speaker"
         />
 
     <Button
         android:id="@+id/btnlogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="13dp"
         android:text="login" />
 
     <Button
-        android:id="@+id/btngroup"
+        android:id="@+id/btnspeak"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="PTT Group Base Test" />
-
-    <Button
-        android:id="@+id/btnmember"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="PTT Member Base Test" />
+        android:textSize="13dp"
+        android:text="speak" />
 
     <Button
         android:id="@+id/btnmsg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="13dp"
         android:text="PTT Msg Base Test" />
 
     <Button
         android:id="@+id/btnFullDuplexCall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="13dp"
         android:text="PTT Full Duplex Call Test" />
 
     <Button
         android:id="@+id/btnVideo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="13dp"
         android:text="PTT Video Test" />
+
+    <Button
+        android:id="@+id/btngroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="13dp"
+        android:text="PTT Group Base Test" />
+
+    <Button
+        android:id="@+id/btnmember"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="13dp"
+        android:text="PTT Member Base Test" />
 
     <Button
         android:id="@+id/btnOther"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="13dp"
         android:text="PTT Other Test" />
 
     <Button
         android:id="@+id/btnlogout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="13dp"
         android:text="logout" />
 
 

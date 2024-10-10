@@ -15,8 +15,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alibaba.fastjson.JSON;
 import com.gwsd.bean.GWGroupListBean;
 import com.gwsd.bean.GWJoinGroupBean;
+import com.gwsd.bean.GWMemberInfoBean;
 import com.gwsd.bean.GWRequestSpeakBean;
 import com.gwsd.bean.GWSpeakNotifyBean;
+import com.gwsd.bean.GWTempGroupBean;
+import com.gwsd.bean.GWTempGroupNotifyBean;
 import com.gwsd.bean.GWType;
 import com.gwsd.ptt.R;
 import com.gwsd.ptt.adapter.GroupAdapter;
@@ -31,8 +34,6 @@ public class MemberActivity extends BaseActivity {
 
     private static final String TAG = "GW_MemberActivity";
 
-    TextView tVselectMember;
-    TextView tVcurrentGroupGid;
     TextView tVSpeaker;
     Button btnQueryMember;
     Button btnTempGroup;
@@ -56,39 +57,7 @@ public class MemberActivity extends BaseActivity {
         initEvent();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart=");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume=");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy");
-    }
-
     private void initView() {
-        tVselectMember = findViewById(R.id.memId);
-        tVcurrentGroupGid = findViewById(R.id.groupId);
         tVSpeaker = findViewById(R.id.speaker);
         btnQueryMember = findViewById(R.id.queryMember);
         btnTempGroup = findViewById(R.id.tempGroup);
@@ -106,16 +75,23 @@ public class MemberActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-
-        btnQueryMember.setOnClickListener(v -> gwsdkManager.queryMember(gwsdkManager.getUserInfo().getCurrentGroupGid(),1));
+        btnQueryMember.setOnClickListener(v -> {
+            gwsdkManager.queryMember(gwsdkManager.getUserInfo().getCurrentGroupGid(), gwsdkManager.getUserInfo().getCurrentGroupType());
+        });
         toolbar.setNavigationOnClickListener(v -> finish());
-        int[] memberList = new int [] {1,2,3};
-        btnTempGroup.setOnClickListener(v -> gwsdkManager.tempGroup(memberList,1));
+
+        btnTempGroup.setOnClickListener(v -> {
+            int uid = adapter.getSelectedUid();
+            int[] memberList = new int [] {uid};
+            gwsdkManager.tempGroup(memberList,1);
+        });
         btnSpeak.setOnClickListener(v -> {
-            if (!speak) {
-                gwsdkManager.startSpeak();
-            } else {
+            if (speak) {
                 gwsdkManager.stopSpeak();
+                btnSpeak.setText("speak");
+            } else {
+                gwsdkManager.startSpeak();
+                btnSpeak.setText("stop");
             }
             speak = !speak;
         });
@@ -132,11 +108,36 @@ public class MemberActivity extends BaseActivity {
             @Override
             public void onPttEvent(int event, String data, int var3) {
                 if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_QUERY_MEMBER) {
-
+                    runOnUiThread(()->{
+                        GWMemberInfoBean gwMemberInfoBean = JSON.parseObject(data, GWMemberInfoBean.class);
+                        if (gwMemberInfoBean.getResult() == 0 && gwMemberInfoBean.getMembers().size() > 0) {
+                            Map<Integer, String> membersMap = new HashMap<>();
+                            for (GWMemberInfoBean.MemberInfo member : gwMemberInfoBean.getMembers()) {
+                                membersMap.put(member.getUid(), member.getName());
+                            }
+                            adapter.setMembers(membersMap);
+                        } else {
+                            showAlert("not have online users");
+                        }
+                    });
                 } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_TMP_GROUP_ACTIVE) {
-
+                    runOnUiThread(()->{
+                        GWTempGroupBean gwTempGroupBean = JSON.parseObject(data, GWTempGroupBean.class);
+                        if (gwTempGroupBean.getResult() == 0) {
+                            showAlert("invite " +gwTempGroupBean.getUids()+" to temp group");
+                        } else if (gwTempGroupBean.getResult() == 1) {
+                            showAlert("exit temp group");
+                        }
+                    });
                 } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_TMP_GROUP_PASSIVE){
-
+                    runOnUiThread(()->{
+                        GWTempGroupNotifyBean gwTempGroupNotifyBean = JSON.parseObject(data, GWTempGroupNotifyBean.class);
+                        if (gwTempGroupNotifyBean.getName() != null) {
+                            showAlert("invite temp group by user " + gwTempGroupNotifyBean.getName());
+                        } else {
+                            showAlert("exit temp group");
+                        }
+                    });
                 } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_SPEAK) {
                     runOnUiThread(()->{
                         GWSpeakNotifyBean gwSpeakNotifyBean = JSON.parseObject(data, GWSpeakNotifyBean.class);

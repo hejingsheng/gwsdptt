@@ -191,7 +191,7 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         }
     }
     public void sendMsg(int recvtype, int remoteid, int msgtype, String content) {
-        gwPttEngine.pttSendMsg(userInfo.getId(), userInfo.getName(), recvtype, remoteid, msgtype, content, content, System.currentTimeMillis(), (char)1);
+        gwPttEngine.pttSendMsg(userInfo.getId(), userInfo.getName(), recvtype, remoteid, msgtype, content, content, System.currentTimeMillis(), (char)1, (char)1);
     }
 
     @Override

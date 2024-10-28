@@ -19,7 +19,7 @@ import com.gwsd.ptt.manager.GWSDKManager;
 public class MainActivity extends BaseActivity {
 
     private static final String TAG = "GW_MainActivity";
-    private static final String VERSION = "V_0.0.1";
+    private static final String VERSION = "v_0.0.2";
 
     TextView sdkVersion;
     TextView demoVersion;

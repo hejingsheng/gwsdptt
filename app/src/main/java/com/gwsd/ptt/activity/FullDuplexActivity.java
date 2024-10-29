@@ -81,14 +81,14 @@ public class FullDuplexActivity extends BaseActivity{
             if (TextUtils.isEmpty(remoteid)){
                 showAlert("please input user id");
             }else {
-                gwsdkManager.fullDuplex(Integer.parseInt(remoteid),GWType.GW_DUPLEX_TYPE.GW_PTT_DUPLEX_START);
+                gwsdkManager.fullDuplex(Integer.parseInt(remoteid),GWType.GW_DUPLEX_TYPE.GW_PTT_DUPLEX_ACTION_CREATE);
             }
         });
         btnAccept.setOnClickListener(v -> {
-           gwsdkManager.fullDuplex(Integer.parseInt(remoteid), GWType.GW_DUPLEX_TYPE.GW_PTT_DUPLEX_ACCEPT);
+           gwsdkManager.fullDuplex(Integer.parseInt(remoteid), GWType.GW_DUPLEX_TYPE.GW_PTT_DUPLEX_ACTION_ACCEPT);
         });
         btnHangup.setOnClickListener(v -> {
-            gwsdkManager.fullDuplex(Integer.parseInt(remoteid), GWType.GW_DUPLEX_TYPE.GW_PTT_DUPLEX_HANGUP);
+            gwsdkManager.fullDuplex(Integer.parseInt(remoteid), GWType.GW_DUPLEX_TYPE.GW_PTT_DUPLEX_ACTION_HANGUP);
         });
 
     }

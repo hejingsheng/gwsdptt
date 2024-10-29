@@ -82,7 +82,8 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         gwVideoEngine = GWVideoEngine.INSTANCE();
         gwPttEngine.pttInit(this, this, null);
         gwPttEngine.pttConfigServer(0,"43.250.33.13", 23003);
-        gwPttEngine.pttConfigServer(1,"43.250.33.13", 51883);
+        //gwPttEngine.pttConfigServer(1,"43.250.33.13", 51883);
+        gwPttEngine.pttConfigServer(1, "119.3.175.165", 8883);
         gwPttEngine.pttConfigServer(2,"43.250.33.13", 50001);
         gwPttEngine.pttConfigServer(3,"114.116.246.85", 8188);
         log("current sdk version:"+gwPttEngine.pttGetVersion());
@@ -191,7 +192,7 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         }
     }
     public void sendMsg(int recvtype, int remoteid, int msgtype, String content) {
-        gwPttEngine.pttSendMsg(userInfo.getId(), userInfo.getName(), recvtype, remoteid, msgtype, content, content, System.currentTimeMillis(), (char)1, (char)1);
+        gwPttEngine.pttSendMsg(userInfo.getId(), userInfo.getName(), recvtype, remoteid, msgtype, content, "", 0, "", (char)0, System.currentTimeMillis(), (char)1, (char)1);
     }
 
     @Override

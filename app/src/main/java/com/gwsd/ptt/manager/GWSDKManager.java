@@ -187,12 +187,17 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
     }
     public void startMsgService(int groups[], int type[], int num) {
         if (!haveStartMsgService) {
-            gwPttEngine.pttRegOfflineMsg(groups, type, num);
+            gwPttEngine.pttRegOfflineMsg(groups, type, num, (char)0);
             haveStartMsgService = true;
         }
     }
     public void sendMsg(int recvtype, int remoteid, int msgtype, String content) {
         gwPttEngine.pttSendMsg(userInfo.getId(), userInfo.getName(), recvtype, remoteid, msgtype, content, "", 0, "", (char)0, System.currentTimeMillis(), (char)1, (char)1);
+    }
+    public String createThumb(String video) {
+        String thumb = gwPttEngine.pttCreateThumbForVideo(video);
+        log("thumb="+thumb);
+        return thumb;
     }
 
     @Override

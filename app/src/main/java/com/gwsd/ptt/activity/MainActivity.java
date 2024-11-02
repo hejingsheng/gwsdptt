@@ -3,6 +3,7 @@ package com.gwsd.ptt.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -13,8 +14,11 @@ import com.alibaba.fastjson.JSON;
 import com.gwsd.bean.GWLoginResultBean;
 import com.gwsd.bean.GWSpeakNotifyBean;
 import com.gwsd.bean.GWType;
+import com.gwsd.ptt.MyApp;
 import com.gwsd.ptt.R;
+import com.gwsd.ptt.manager.AppManager;
 import com.gwsd.ptt.manager.GWSDKManager;
+import com.gwsd.ptt.service.MainService;
 
 public class MainActivity extends BaseActivity {
 
@@ -123,6 +127,7 @@ public class MainActivity extends BaseActivity {
         });
 		btnLoginOut.setOnClickListener(v -> {
             gwsdkManager.loginOut();
+            //MyApp.exitApp();
         });
     }
 
@@ -172,5 +177,12 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            moveTaskToBack(true);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }

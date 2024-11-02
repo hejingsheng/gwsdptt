@@ -63,6 +63,8 @@ public class MainService extends Service {
 
     private void release(){
         log("call release");
+        unregisterReceiver(keyReceiver);
+        keyReceiver = null;
     }
     private void init(){
         log("call init");

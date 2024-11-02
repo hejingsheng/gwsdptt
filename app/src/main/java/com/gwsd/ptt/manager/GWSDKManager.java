@@ -82,8 +82,8 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         gwVideoEngine = GWVideoEngine.INSTANCE();
         gwPttEngine.pttInit(this, this, null);
         gwPttEngine.pttConfigServer(0,"43.250.33.13", 23003);
-        //gwPttEngine.pttConfigServer(1,"43.250.33.13", 51883);
-        gwPttEngine.pttConfigServer(1, "119.3.175.165", 8883);
+        gwPttEngine.pttConfigServer(1,"43.250.33.13", 51883);
+        //gwPttEngine.pttConfigServer(1, "119.3.175.165", 8883);
         gwPttEngine.pttConfigServer(2,"43.250.33.13", 50001);
         gwPttEngine.pttConfigServer(3,"114.116.246.85", 8188);
         log("current sdk version:"+gwPttEngine.pttGetVersion());
@@ -184,6 +184,9 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
             return true;
         }
         return false;
+    }
+    public boolean isOnline() {
+        return userInfo.isOnline();
     }
     public void startMsgService(int groups[], int type[], int num) {
         if (!haveStartMsgService) {

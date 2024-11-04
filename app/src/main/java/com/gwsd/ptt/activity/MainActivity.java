@@ -1,6 +1,8 @@
 package com.gwsd.ptt.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -163,8 +165,15 @@ public class MainActivity extends BaseActivity {
                     runOnUiThread(()->{
                         GWSpeakNotifyBean gwSpeakNotifyBean = JSON.parseObject(data, GWSpeakNotifyBean.class);
                         if (gwSpeakNotifyBean.getUid() != 0) {
+                            Log.i(TAG, "have speaker");
                             speaker.setText("speaker id:"+gwSpeakNotifyBean.getUid()+" name:"+gwSpeakNotifyBean.getName());
+                            AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+                            audioManager.setMode(AudioManager.MODE_NORMAL);
+                            audioManager.stopBluetoothSco();
+                            audioManager.setBluetoothScoOn(false);
+                            audioManager.setSpeakerphoneOn(true);
                         } else {
+                            Log.i(TAG, "no speaker");
                             speaker.setText("no speaker");
                         }
                     });

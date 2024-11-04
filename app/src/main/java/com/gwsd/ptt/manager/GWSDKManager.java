@@ -105,6 +105,19 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
     public String getVersion(){
         return gwPttEngine.pttGetVersion();
     }
+    public void checkNet() {
+        NetCheckThread netCheckThread = new NetCheckThread(gwPttEngine, new NetCheckThread.OnNetCheckCallback() {
+            @Override
+            public void onNetCheck(int result) {
+                if (result >= 0) {
+                    log("netcheck success");
+                } else {
+                    log("netcheck fail");
+                }
+            }
+        });
+    }
+
     public void login(String account, String password, String imei, String iccid) {
         gwPttEngine.pttLogin(account, password, imei, iccid);
         userInfo.setAccount(account);
@@ -529,6 +542,42 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         if (disposable != null && !disposable.isDisposed()) {
             disposable.dispose();
             disposable = null;
+        }
+    }
+
+    private static class NetCheckThread extends Thread {
+
+        public interface OnNetCheckCallback{
+            public void onNetCheck(int result);
+        }
+
+        private GWPttEngine gwPttEngine;
+        private OnNetCheckCallback onNetCheckCallback;
+        public NetCheckThread(GWPttEngine engine, OnNetCheckCallback callback) {
+            gwPttEngine = engine;
+            onNetCheckCallback = callback;
+        }
+
+        @Override
+        public void run() {
+            super.run();
+            int ret;
+            ret = gwPttEngine.pttNetCheck(0,"43.250.33.13", 23003);
+            if (ret < 0) {
+                onNetCheckCallback.onNetCheck(-1);
+                return;
+            }
+            ret = gwPttEngine.pttNetCheck(1,"43.250.33.13", 51883);
+            if (ret < 0) {
+                onNetCheckCallback.onNetCheck(-2);
+                return;
+            }
+            ret = gwPttEngine.pttNetCheck(2,"43.250.33.13", 50001);
+            if (ret < 0) {
+                onNetCheckCallback.onNetCheck(-3);
+                return;
+            }
+            onNetCheckCallback.onNetCheck(0);
         }
     }
 

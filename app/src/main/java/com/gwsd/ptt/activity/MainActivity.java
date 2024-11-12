@@ -49,12 +49,8 @@ public class MainActivity extends BaseActivity {
     boolean speak = false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        initView();
-        initData();
-        initEvent();
+    protected int getViewId() {
+        return R.layout.activity_main;
     }
 
     @Override
@@ -64,7 +60,8 @@ public class MainActivity extends BaseActivity {
         info.setText(str);
     }
 
-    private void initView() {
+    @Override
+    protected void initView() {
 
         sdkVersion = findViewById(R.id.sdkVersion);
         demoVersion = findViewById(R.id.demoVersion);
@@ -86,12 +83,16 @@ public class MainActivity extends BaseActivity {
         btnLoginOut = findViewById(R.id.btnlogout);
 
     }
-    private void initEvent(){
+
+    @Override
+    protected void initEvent(){
         sdkVersion.setText("sdkVersion" + gwsdkManager.getVersion());
         demoVersion.setText("demoVersion" + VERSION);
         btnLogin.setOnClickListener(v->{
-            String account = eTuserAccount.getText().toString();
-            String password = eTuserPassword.getText().toString();
+//            String account = eTuserAccount.getText().toString();
+//            String password = eTuserPassword.getText().toString();
+            String account = "gwsd03";
+            String password = "123456";
             String imei = "12345"; // you should call android api get device imei
             String iccid = "54321"; // you should call android api get sim card iccid
             gwsdkManager.login(account,password,imei,iccid);
@@ -119,7 +120,7 @@ public class MainActivity extends BaseActivity {
             startActivity(intent);
         });
         btnMsg.setOnClickListener(v -> {
-            MsgActivity.startAct(this);
+            ChatListActivity.startAct(this);
         });
         btnVideo.setOnClickListener(v -> {
             VideoActivity.startAct(this);
@@ -133,7 +134,8 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    private void initData(){
+    @Override
+    protected void initData(){
         gwsdkManager = GWSDKManager.INSTANCE(getApplicationContext());
         gwsdkManager.registerPttObserver(new GWSDKManager.GWSDKPttEngineObserver() {
             @Override

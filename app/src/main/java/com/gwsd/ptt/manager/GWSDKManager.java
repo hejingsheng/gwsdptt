@@ -17,12 +17,16 @@ import com.gwsd.bean.GWKickoutNotifyBean;
 import com.gwsd.bean.GWLocationBean;
 import com.gwsd.bean.GWLoginResultBean;
 import com.gwsd.bean.GWMemberInfoBean;
+import com.gwsd.bean.GWMsgBaseBean;
+import com.gwsd.bean.GWMsgBean;
 import com.gwsd.bean.GWRequestSpeakBean;
 import com.gwsd.bean.GWSpeakNotifyBean;
 import com.gwsd.bean.GWTempGroupBean;
 import com.gwsd.bean.GWTempGroupNotifyBean;
 import com.gwsd.bean.GWType;
 import com.gwsd.ptt.bean.GWPttUserInfo;
+import com.gwsd.ptt.dao.MsgDaoHelp;
+import com.gwsd.ptt.dao.pojo.MsgContentPojo;
 import com.gwsd.rtc.view.GWRtcSurfaceVideoRender;
 
 import java.util.HashMap;
@@ -345,6 +349,18 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         log("recv msg event="+i+" data="+s);
         if (i == GWType.GW_MSG_STATUS.GW_MSG_STATUS_ERROR) {
             haveStartMsgService = false;
+        }
+        if (i == GWType.GW_MSG_STATUS.GW_MSG_STATUS_DATA) {
+            GWMsgBaseBean gwMsgBaseBean = JSON.parseObject(s, GWMsgBaseBean.class);
+            if (gwMsgBaseBean.getType() == GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_TEXT
+                || gwMsgBaseBean.getType() == GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_PHOTO
+                || gwMsgBaseBean.getType() == GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_VOICE
+                || gwMsgBaseBean.getType() == GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_VIDEO) {
+                log("recv msg data");
+                GWMsgBean gwMsgBean = JSON.parseObject(s, GWMsgBean.class);
+                MsgContentPojo msgContentPojo = MsgDaoHelp.saveMsgContent(String.valueOf(userInfo.getId()), gwMsgBean);
+                MsgDaoHelp.saveOrUpdateConv(msgContentPojo);
+            }
         }
         if (pttObserver != null) {
             pttObserver.onMsgEvent(i, s);

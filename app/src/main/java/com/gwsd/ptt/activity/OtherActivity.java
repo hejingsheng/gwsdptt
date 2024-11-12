@@ -38,7 +38,13 @@ public class OtherActivity extends BaseActivity {
         initEvent();
     }
 
-    private void initData() {
+    @Override
+    protected int getViewId() {
+        return R.layout.activity_other;
+    }
+
+    @Override
+    protected void initData() {
         gwsdkManager = GWSDKManager.INSTANCE(getApplicationContext());
         gwsdkManager.registerPttObserver(new GWSDKManager.GWSDKPttEngineObserver() {
             @Override
@@ -67,7 +73,8 @@ public class OtherActivity extends BaseActivity {
         });
     }
 
-    private void initView() {
+    @Override
+    protected void initView() {
         btnWeather = findViewById(R.id.btnWeather);
         btnGps = findViewById(R.id.btnGps);
         btnAGps = findViewById(R.id.btnAGps);
@@ -76,7 +83,8 @@ public class OtherActivity extends BaseActivity {
         viewLocation = findViewById(R.id.viewLocation);
     }
 
-    private void initEvent() {
+    @Override
+    protected void initEvent() {
         btnWeather.setOnClickListener(v -> {
             int cellid = 0;
             int lac = 0;

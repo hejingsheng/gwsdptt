@@ -57,7 +57,13 @@ public class MemberActivity extends BaseActivity {
         initEvent();
     }
 
-    private void initView() {
+    @Override
+    protected int getViewId() {
+        return R.layout.activity_member;
+    }
+
+    @Override
+    protected void initView() {
         tVSpeaker = findViewById(R.id.speaker);
         btnQueryMember = findViewById(R.id.queryMember);
         btnTempGroup = findViewById(R.id.tempGroup);
@@ -70,7 +76,9 @@ public class MemberActivity extends BaseActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
     }
-    private void initEvent() {
+
+    @Override
+    protected void initEvent() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -101,7 +109,8 @@ public class MemberActivity extends BaseActivity {
         });
     }
 
-    private void initData() {
+    @Override
+    protected void initData() {
         adapter = new MemberAdapter();
         gwsdkManager = GWSDKManager.INSTANCE(getApplicationContext());
         gwsdkManager.registerPttObserver(new GWSDKManager.GWSDKPttEngineObserver() {

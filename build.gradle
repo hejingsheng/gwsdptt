@@ -4,12 +4,12 @@ buildscript {
 
     repositories {
         google()
-        jcenter()
+        maven { url 'https://repository.liferay.com/nexus/content/repositories/public' }
         maven { url "https://jitpack.io" }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.0.4'
-
+        classpath 'org.greenrobot:greendao-gradle-plugin:3.3.0'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
         classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0"
 

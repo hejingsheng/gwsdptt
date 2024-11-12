@@ -45,16 +45,12 @@ public class GroupActivity extends BaseActivity {
     private boolean speak = false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_group);
-
-        initData();
-        initView();
-        initEvent();
+    protected int getViewId() {
+        return R.layout.activity_group;
     }
 
-    private void initView() {
+    @Override
+    protected void initView() {
         tVGroupName = findViewById(R.id.groupName);
         tVGroupId = findViewById(R.id.groupId);
         tVSpeaker = findViewById(R.id.speaker);
@@ -69,7 +65,9 @@ public class GroupActivity extends BaseActivity {
         tVGroupId.setText(String.valueOf(gwsdkManager.getUserInfo().getCurrentGroupGid()));
         tVGroupName.setText(gwsdkManager.getUserInfo().getCurrentGroupName());
     }
-    private void initEvent() {
+
+    @Override
+    protected void initEvent() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -91,7 +89,8 @@ public class GroupActivity extends BaseActivity {
         });
     }
 
-    private void initData() {
+    @Override
+    protected void initData() {
         adapter = new GroupAdapter();
         gwsdkManager = GWSDKManager.INSTANCE(getApplicationContext());
         gwsdkManager.registerPttObserver(new GWSDKManager.GWSDKPttEngineObserver() {

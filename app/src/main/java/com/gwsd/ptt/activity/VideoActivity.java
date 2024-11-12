@@ -48,19 +48,19 @@ public class VideoActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_video);
-
-        initData();
-        initView();
-        initEvent();
-
         if (!gwsdkManager.hasVideoPermission()) {
             showAlert("this account do not have video permission!!!");
             finish();
         }
     }
 
-    private void initEvent() {
+    @Override
+    protected int getViewId() {
+        return R.layout.activity_video;
+    }
+
+    @Override
+    protected void initEvent() {
         btnSelectMember.setOnClickListener(v -> {
             gwsdkManager.queryMember(gwsdkManager.getUserInfo().getCurrentGroupGid(), gwsdkManager.getUserInfo().getCurrentGroupType());
         });
@@ -116,7 +116,8 @@ public class VideoActivity extends BaseActivity {
         });
     }
 
-    private void initView() {
+    @Override
+    protected void initView() {
         gwRtcSurfaceVideoRenderLocal = findViewById(R.id.videoviewlocal);
         gwRtcSurfaceVideoRenderRemote = findViewById(R.id.videoviewremote);
 
@@ -132,7 +133,8 @@ public class VideoActivity extends BaseActivity {
         btnSelectMember = findViewById(R.id.btnVideoRemoteId);
     }
 
-    private void initData() {
+    @Override
+    protected void initData() {
         gwsdkManager = GWSDKManager.INSTANCE(getApplicationContext());
         gwsdkManager.registerPttObserver(new GWSDKManager.GWSDKPttEngineObserver() {
             @Override

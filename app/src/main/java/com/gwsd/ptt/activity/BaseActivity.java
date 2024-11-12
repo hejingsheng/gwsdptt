@@ -2,15 +2,37 @@ package com.gwsd.ptt.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.gwsd.ptt.R;
 import com.gwsd.ptt.manager.GWSDKManager;
 
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     protected GWSDKManager gwsdkManager;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setTheme(R.style.Gw_Phone);
+        setContentView(getViewId());
+
+        initData();
+        initView();
+        initEvent();
+    }
+
+    protected abstract int getViewId();
+
+    protected abstract void initData();
+
+    protected abstract void initView();
+
+    protected abstract void initEvent();
 
     protected void showToast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();

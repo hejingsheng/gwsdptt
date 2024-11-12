@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -45,13 +46,13 @@ public class FullDuplexActivity extends BaseActivity{
     String remoteid;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_full_duplex);
+    protected int getViewId() {
+        return R.layout.activity_full_duplex;
+    }
 
-        initData();
-        initView();
-        initEvent();
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         if (!gwsdkManager.hasDuplexCallPermission()) {
             showAlert("this account do not have duplex call permission!!!");
@@ -59,7 +60,8 @@ public class FullDuplexActivity extends BaseActivity{
         }
     }
 
-    private void initView() {
+    @Override
+    protected void initView() {
 
         btnSelectMember = findViewById(R.id.btnCallRemoteId);
         btnCall = findViewById(R.id.btnCall);
@@ -69,7 +71,9 @@ public class FullDuplexActivity extends BaseActivity{
         toolbar = findViewById(R.id.toolbar);
 
     }
-    private void initEvent() {
+
+    @Override
+    protected void initEvent() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -93,7 +97,8 @@ public class FullDuplexActivity extends BaseActivity{
 
     }
 
-    private void initData() {
+    @Override
+    protected void initData() {
         gwsdkManager = GWSDKManager.INSTANCE(this);
         gwsdkManager.registerPttObserver(new GWSDKManager.GWSDKPttEngineObserver() {
             @Override

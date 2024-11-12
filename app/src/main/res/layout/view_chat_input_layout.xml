@@ -22,30 +22,35 @@
             android:src="@drawable/yida_ic_keyboard"
             android:visibility="visible" />
 
-        <Button
-            android:id="@+id/viewSend"
+        <RelativeLayout
+            android:id="@+id/viewbtn"
             android:layout_width="@dimen/dimen50dp"
             android:layout_height="@dimen/dimen35dp"
-            android:background="@drawable/yida_selector_input_btn_snd"
-            android:text="@string/btn_send"
-            android:textColor="@color/color_333"
-            android:textSize="@dimen/dimen16sp"
-            android:gravity="center"
-            android:layout_toLeftOf="@+id/viewShowAttach"
             android:layout_marginTop="@dimen/dimen2dp"
-            />
-        <Button
-            android:id="@+id/viewShowAttach"
-            android:layout_width="@dimen/dimen50dp"
-            android:layout_height="@dimen/dimen35dp"
-            android:background="@drawable/yida_selector_input_btn_snd"
-            android:text="+"
-            android:gravity="center"
-            android:textColor="@color/color_333"
-            android:textSize="@dimen/dimen16sp"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="@dimen/dimen2dp"
-            />
+            android:layout_alignParentRight="true">
+
+            <Button
+                android:id="@+id/viewSend"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/yida_selector_input_btn_snd"
+                android:gravity="center"
+                android:text="@string/btn_send"
+                android:textColor="@color/color_333"
+                android:textSize="@dimen/dimen16sp" />
+
+            <Button
+                android:id="@+id/viewShowAttach"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/yida_selector_input_btn_snd"
+                android:gravity="center"
+                android:text="+"
+                android:textColor="@color/color_333"
+                android:textSize="@dimen/dimen16sp" />
+
+        </RelativeLayout>
+
         <EditText
             android:id="@+id/viewEtInput"
             android:layout_width="match_parent"
@@ -53,18 +58,19 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dimen8dp"
             android:layout_marginRight="@dimen/dimen8dp"
-            android:layout_toLeftOf="@+id/viewSend"
+            android:layout_toLeftOf="@+id/viewbtn"
             android:layout_toRightOf="@+id/viewChangeEtType"
             android:background="@drawable/yida_ic_input_bg_s"
             android:maxLines="6"
             android:minHeight="@dimen/dimen35dp"
             android:text=""
+            android:textSize="@dimen/textSize_samll"
             android:textCursorDrawable="@drawable/color_cursor" />
         <Button
             android:id="@+id/viewVoiceRecord"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen35dp"
-            android:layout_toLeftOf="@+id/viewSend"
+            android:layout_toLeftOf="@+id/viewbtn"
             android:layout_toRightOf="@+id/viewChangeEtType"
             android:layout_marginLeft="@dimen/dimen8dp"
             android:layout_marginRight="@dimen/dimen8dp"

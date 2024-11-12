@@ -107,11 +107,11 @@ public class ChatInputView extends RelativeLayout implements View.OnClickListene
         viewChangeEtType.setImageResource(R.drawable.yida_ic_voice);
         viewVoiceRecord.setVisibility(GONE);
         viewEtInput.setVisibility(VISIBLE);
-        viewAttach.setVisibility(GONE);
         showAttach = false;
         viewEtInput.setText("");
         viewVoiceRecord.setText(R.string.btn_press_speak);
         changeBtnSndByInpout();
+        viewAttach.setVisibility(GONE);
     }
 
     public void setOnInputVewCLisenter(ChatInputView.OnInputViewLisenter onInputVewCLisenter) {
@@ -207,8 +207,14 @@ public class ChatInputView extends RelativeLayout implements View.OnClickListene
     protected void changeBtnSndByInpout() {
         if (viewEtInput.getText().toString().trim().length() == 0) {
             viewSend.setEnabled(false);
+            viewSend.setVisibility(GONE);
+            viewShowAttach.setVisibility(VISIBLE);
         } else {
             viewSend.setEnabled(true);
+            viewSend.setVisibility(VISIBLE);
+            viewAttach.setVisibility(GONE);
+            showAttach = false;
+            viewShowAttach.setVisibility(GONE);
         }
     }
 

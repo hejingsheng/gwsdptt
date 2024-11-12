@@ -1,6 +1,7 @@
 package com.gwsd.ptt.dao;
 
 import com.gwsd.bean.GWMsgBean;
+import com.gwsd.bean.GWPatrolMsgBean;
 import com.gwsd.bean.GWType;
 import com.gwsd.ptt.MyApp;
 import com.gwsd.ptt.dao.greendao.DaoSession;
@@ -8,8 +9,11 @@ import com.gwsd.ptt.dao.greendao.MsgContentPojoDao;
 import com.gwsd.ptt.dao.greendao.MsgConversationPojoDao;
 import com.gwsd.ptt.dao.pojo.MsgContentPojo;
 import com.gwsd.ptt.dao.pojo.MsgConversationPojo;
+import com.gwsd.ptt.manager.AppManager;
+import com.gwsd.ptt.manager.GWSDKManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MsgDaoHelp {
@@ -121,7 +125,16 @@ public class MsgDaoHelp {
 //            }
 //        }
         msgConversationPojo.setConvType(ctype);
-        msgConversationPojo.setConvNm(msgContent.getRecvNm());
+        if (ctype == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER
+            || ctype == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_DISPATCH) {
+            if (uid.equals(msgContent.getSenderId())) {
+                msgConversationPojo.setConvNm(msgContent.getRecvNm());
+            } else {
+                msgConversationPojo.setConvNm(msgContent.getSenderNm());
+            }
+        } else {
+            msgConversationPojo.setConvNm(msgContent.getRecvNm());
+        }
         msgConversationPojo.setLastMsgId(msgContent.getTab_Id());
         msgConversationPojo.setLastMsgSenderNm(msgContent.getSenderNm());
         msgConversationPojo.setLastMsgType(msgContent.getMsgType());
@@ -147,4 +160,19 @@ public class MsgDaoHelp {
             convDao.update(convBean);
         }
     }
+
+    public static List<MsgContentPojo> queryChatRecord(String loginUId, int cId,int ctype, int pageNum,int pagrSize) {
+        MsgContentPojoDao dao = getMsgDao();
+        if (dao == null) return new ArrayList<>();
+        List<MsgContentPojo> msgBeanList = dao
+                .queryBuilder()
+                .where(MsgContentPojoDao.Properties.LoginUId.eq(loginUId),MsgContentPojoDao.Properties.ConvId.eq(cId),MsgContentPojoDao.Properties.ConvType.eq(ctype))
+                .orderDesc(MsgContentPojoDao.Properties.Time)
+                .offset(pageNum*pagrSize)
+                .limit(pagrSize)
+                .list();
+        Collections.reverse(msgBeanList);
+        return msgBeanList;
+    }
+
 }

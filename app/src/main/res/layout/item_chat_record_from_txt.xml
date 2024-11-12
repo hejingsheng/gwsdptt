@@ -24,7 +24,7 @@
         android:textSize="@dimen/textSize_nroml"
         android:text=""
         />
-    <com.gwsd.ptt.ui.view.ChatFromTxtView
+    <com.gwsd.ptt.view.ChatFromTxtView
         android:id="@+id/viewFromMsgView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -41,5 +41,5 @@
             android:textColor="@color/textColorBlack"
             android:textSize="@dimen/textSize_nroml"
             android:text=""/>
-    </com.gwsd.ptt.ui.view.ChatFromTxtView>
+    </com.gwsd.ptt.view.ChatFromTxtView>
 </RelativeLayout>

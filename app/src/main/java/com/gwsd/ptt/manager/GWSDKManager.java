@@ -219,6 +219,9 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         log("thumb="+thumb);
         return thumb;
     }
+    public String getGroupNameById(long gid) {
+        return groupMap.get(gid).getName();
+    }
 
     @Override
     public void onPttEvent(int event, String data, int data1) {

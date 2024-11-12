@@ -10,6 +10,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.gwsd.ptt.R;
 import com.gwsd.ptt.activity.ChatActivity;
 import com.gwsd.ptt.adapter.MsgConvAdapter;
+import com.gwsd.ptt.bean.ChatParam;
 import com.gwsd.ptt.dao.MsgDaoHelp;
 import com.gwsd.ptt.dao.pojo.MsgConversationPojo;
 import com.gwsd.ptt.manager.GWSDKManager;
@@ -52,11 +53,15 @@ public class ChatListFragment extends BaseFragment implements SwipeRefreshLayout
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         viewNoData = (TextView) contentView.findViewById(R.id.viewNoData);
         recyclerView.setAdapter(mAdapter);
-        mAdapter.setOnItemClick((MsgConvAdapter.OnItemClick) (view, o, longclick) -> {
+        mAdapter.setOnItemClick((MsgConvAdapter.OnItemClick<MsgConversationPojo>) (view, o, longclick) -> {
             if (longclick) {
-
+                // not process
             } else {
-                ChatActivity.startAct(getContext(), null);
+                ChatParam chatParam=new ChatParam();
+                chatParam.setConvId(o.getConvId());
+                chatParam.setConvName(o.getConvNm());
+                chatParam.setConvType(o.getConvType());
+                ChatActivity.startAct(getContext(), chatParam);
             }
         });
         refreshData();

@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.FrameLayout;
 
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
-
 
 import com.gwsd.ptt.R;
 import com.gwsd.ptt.fragment.ChatListFragment;

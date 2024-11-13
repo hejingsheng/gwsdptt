@@ -15,12 +15,22 @@ import com.gwsd.ptt.dao.MsgDaoHelp;
 import com.gwsd.ptt.dao.pojo.MsgConversationPojo;
 import com.gwsd.ptt.manager.GWSDKManager;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 public class ChatListFragment extends ListFragment{
 
     private MsgConvAdapter mAdapter;
+    private Disposable mDisposable;
 
     public static ChatListFragment build() {
         ChatListFragment chatListFragment = new ChatListFragment();
@@ -36,7 +46,14 @@ public class ChatListFragment extends ListFragment{
 
     @Override
     protected void initData() {
+        EventBus.getDefault().register(this);
         mAdapter = new MsgConvAdapter(getContext(), getUid());
+    }
+
+    @Override
+    protected void release() {
+        super.release();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -76,6 +93,26 @@ public class ChatListFragment extends ListFragment{
             viewNoData.setVisibility(View.GONE);
         }else {
             viewNoData.setVisibility(View.GONE);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void eventUpdateConvList(MsgConversationPojo data) {
+        if (data == null) {
+            return;
+        }
+        cancelDisposable();
+        mDisposable= Observable.timer( 300, TimeUnit.MILLISECONDS )
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aLong -> {
+                    refreshData();
+                });
+    }
+
+    private void cancelDisposable(){
+        if (mDisposable != null && !mDisposable.isDisposed()) {
+            mDisposable.dispose();
+            mDisposable=null;
         }
     }
 

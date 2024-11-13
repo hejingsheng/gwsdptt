@@ -61,6 +61,7 @@ public class LoginActivity extends BaseActivity {
                     if (gwLoginResultBean.getResult() == 0) {
                         runOnUiThread(() -> {
                             MainActivity.startAct(getContext());
+                            finish();
                         });
                     } else {
                         runOnUiThread(()->{

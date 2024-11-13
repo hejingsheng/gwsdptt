@@ -34,6 +34,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         initEvent();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        release();
+    }
+
     protected Context getContext() {
         return this;
     }
@@ -45,6 +51,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected abstract void initView();
 
     protected abstract void initEvent();
+
+    protected void release() {
+
+    }
 
     protected void showToast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();

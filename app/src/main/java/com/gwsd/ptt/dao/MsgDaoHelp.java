@@ -99,13 +99,13 @@ public class MsgDaoHelp {
         return msgContentPojo;
     }
 
-    public static void saveOrUpdateConv(MsgContentPojo msgContent) {
+    public static MsgConversationPojo saveOrUpdateConv(MsgContentPojo msgContent) {
         String uid=msgContent.getLoginUId();
         Integer cid =msgContent.getConvId();
         Integer ctype = msgContent.getConvType();
         MsgConversationPojoDao convDao = getConvDao();
         if (convDao == null)
-            return;
+            return null;
         MsgConversationPojo msgConversationPojo;
         msgConversationPojo = convDao.queryBuilder()
                 .where(MsgConversationPojoDao.Properties.LoginUId.eq(uid),MsgConversationPojoDao.Properties.ConvId.eq(cid),MsgConversationPojoDao.Properties.ConvType.eq(ctype))
@@ -144,6 +144,7 @@ public class MsgDaoHelp {
             msgConversationPojo.setMsgUnReadCnt(unread+1);
         }
         convDao.insertOrReplace(msgConversationPojo);
+        return msgConversationPojo;
     }
 
     public static void updateConvRead(String loginUId,int convId, int convtype){

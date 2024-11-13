@@ -33,6 +33,12 @@ public abstract class BaseFragment extends Fragment {
         return contentView;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        release();
+    }
+
     protected abstract int getViewId();
 
     protected abstract void initData();
@@ -40,6 +46,10 @@ public abstract class BaseFragment extends Fragment {
     protected abstract void initView();
 
     protected abstract void initEvent();
+
+    protected void release() {
+
+    }
 
     protected void runOnUiThread(Runnable runnable){
         Observable.timer(100, TimeUnit.MILLISECONDS)

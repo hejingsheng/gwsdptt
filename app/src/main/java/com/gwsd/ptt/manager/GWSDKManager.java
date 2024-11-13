@@ -27,7 +27,10 @@ import com.gwsd.bean.GWType;
 import com.gwsd.ptt.bean.GWPttUserInfo;
 import com.gwsd.ptt.dao.MsgDaoHelp;
 import com.gwsd.ptt.dao.pojo.MsgContentPojo;
+import com.gwsd.ptt.dao.pojo.MsgConversationPojo;
 import com.gwsd.rtc.view.GWRtcSurfaceVideoRender;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -388,7 +391,9 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
                 log("recv msg data");
                 GWMsgBean gwMsgBean = JSON.parseObject(s, GWMsgBean.class);
                 MsgContentPojo msgContentPojo = MsgDaoHelp.saveMsgContent(String.valueOf(userInfo.getId()), gwMsgBean);
-                MsgDaoHelp.saveOrUpdateConv(msgContentPojo);
+                MsgConversationPojo msgConversationPojo = MsgDaoHelp.saveOrUpdateConv(msgContentPojo);
+                EventBus.getDefault().post(msgContentPojo);
+                EventBus.getDefault().post(msgConversationPojo);
             }
         }
         if (pttObserver != null) {

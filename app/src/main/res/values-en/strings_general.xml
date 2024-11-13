@@ -137,6 +137,9 @@
     <string name="photo">Photo</string>
     <string name="video">Video</string>
     <string name="voice">Voice</string>
+    <string name="pttcall">PTT</string>
+    <string name="voicecall">Voice Call</string>
+    <string name="videocall">Video Call</string>
     <string name="document">Document</string>
     <string name="camera">Camera</string>
     <string name="location">Location</string>

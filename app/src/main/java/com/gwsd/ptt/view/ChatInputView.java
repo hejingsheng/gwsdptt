@@ -32,13 +32,17 @@ public class ChatInputView extends RelativeLayout implements View.OnClickListene
 
         void onBtnPhoto();
 
-        void onBtnCamera();
+        void onBtnVoiceCall();
 
         void onBtnVideo();
 
         void onBtnFile();
 
         void onBtnLoc();
+
+        void onBtnVideoCall();
+
+        void onBtnPttCall();
     }
 
     public ChatInputView(Context context) {
@@ -64,10 +68,12 @@ public class ChatInputView extends RelativeLayout implements View.OnClickListene
     Button viewVoiceRecord;
 
     Button viewBtnPhoto;
-    Button viewBtnCamera;
+    Button viewBtnVoiceCall;
     Button viewBtnFile;
     Button viewBtnVideo;
     Button viewBtnLocation;
+    Button viewBtnVideoCall;
+    Button viewBtnPttCall;
 
     LinearLayout viewAttach;
 
@@ -84,10 +90,12 @@ public class ChatInputView extends RelativeLayout implements View.OnClickListene
         viewVoiceRecord = findViewById(R.id.viewVoiceRecord);
 
         viewBtnPhoto = findViewById(R.id.viewBtnPhoto);
-        viewBtnCamera = findViewById(R.id.viewBtnCamera);
+        viewBtnVoiceCall = findViewById(R.id.viewBtnVoiceCall);
         viewBtnFile = findViewById(R.id.viewBtnFile);
         viewBtnVideo = findViewById(R.id.viewBtnVideo);
         viewBtnLocation = findViewById(R.id.viewBtnLoc);
+        viewBtnVideoCall = findViewById(R.id.viewBtnVideoCall);
+        viewBtnPttCall = findViewById(R.id.viewBtnPttCall);
 
         viewAttach = findViewById(R.id.viewAttach);
 
@@ -98,10 +106,12 @@ public class ChatInputView extends RelativeLayout implements View.OnClickListene
         viewEtInput.addTextChangedListener(this);
 
         viewBtnPhoto.setOnClickListener(this::onClick);
-        viewBtnCamera.setOnClickListener(this::onClick);
+        viewBtnVoiceCall.setOnClickListener(this::onClick);
         viewBtnFile.setOnClickListener(this::onClick);
         viewBtnVideo.setOnClickListener(this::onClick);
         viewBtnLocation.setOnClickListener(this::onClick);
+        viewBtnVideoCall.setOnClickListener(this::onClick);
+        viewBtnPttCall.setOnClickListener(this::onClick);
 
         viewChangeEtType.setSelected(false);
         viewChangeEtType.setImageResource(R.drawable.yida_ic_voice);
@@ -154,14 +164,18 @@ public class ChatInputView extends RelativeLayout implements View.OnClickListene
             showAttach = !showAttach;
         } else if (view.getId() == R.id.viewBtnPhoto) {
             if (onInputVewCLisenter != null) onInputVewCLisenter.onBtnPhoto();
-        } else if (view.getId() == R.id.viewBtnCamera) {
-            if (onInputVewCLisenter != null) onInputVewCLisenter.onBtnCamera();
+        } else if (view.getId() == R.id.viewBtnVoiceCall) {
+            if (onInputVewCLisenter != null) onInputVewCLisenter.onBtnVoiceCall();
         } else if (view.getId() == R.id.viewBtnFile) {
             if (onInputVewCLisenter != null) onInputVewCLisenter.onBtnFile();
         } else if (view.getId() == R.id.viewBtnVideo) {
             if (onInputVewCLisenter != null) onInputVewCLisenter.onBtnVideo();
         } else if (view.getId() == R.id.viewBtnLoc) {
             if (onInputVewCLisenter != null) onInputVewCLisenter.onBtnLoc();
+        } else if (view.getId() == R.id.viewBtnVideoCall) {
+            if (onInputVewCLisenter != null) onInputVewCLisenter.onBtnVideoCall();
+        } else if (view.getId() == R.id.viewBtnPttCall) {
+            if (onInputVewCLisenter != null) onInputVewCLisenter.onBtnPttCall();
         }
     }
 

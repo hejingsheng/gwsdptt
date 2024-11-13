@@ -21,6 +21,10 @@ import com.gwsd.ptt.view.AppTopView;
 import com.gwsd.ptt.view.ChatInputView;
 import com.gwsd.ptt.view.VoiceSendingView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -58,10 +62,17 @@ public class ChatActivity extends BaseActivity implements ChatInputView.OnInputV
 
     @Override
     protected void initData() {
+        EventBus.getDefault().register(this);
         Bundle bundle = getIntent().getExtras();
         chatParam = (ChatParam) bundle.getSerializable("param");
         mAdapter = new ChatAdapter(getUid());
         mData=new ArrayList<>();
+    }
+
+    @Override
+    protected void release() {
+        super.release();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -103,7 +114,7 @@ public class ChatActivity extends BaseActivity implements ChatInputView.OnInputV
         mData.addAll(chatMsgBasePojoList);
         mAdapter.addAllMessage(mData);
         if(mData.size()>0){
-            Observable.timer(500, TimeUnit.MILLISECONDS)
+            Observable.timer(200, TimeUnit.MILLISECONDS)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(aLong -> {
                         viewRecyclerView.scrollToPosition(mAdapter.getItemCount()-1);
@@ -141,7 +152,7 @@ public class ChatActivity extends BaseActivity implements ChatInputView.OnInputV
     }
 
     @Override
-    public void onBtnCamera() {
+    public void onBtnVoiceCall() {
 
     }
 
@@ -158,5 +169,29 @@ public class ChatActivity extends BaseActivity implements ChatInputView.OnInputV
     @Override
     public void onBtnLoc() {
 
+    }
+
+    @Override
+    public void onBtnVideoCall() {
+
+    }
+
+    @Override
+    public void onBtnPttCall() {
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void eventRecvMsg(MsgContentPojo data) {
+        if (data.getConvId() == chatParam.getConvId()) {
+            setConvUnReadNone();
+            if (mData != null) {
+                mData.add(data);
+            }
+            mAdapter.addMessage(data);
+            Observable.timer(200, TimeUnit.MILLISECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(aLong ->  viewRecyclerView.scrollToPosition(mAdapter.getItemCount()-1));
+        }
     }
 }

@@ -8,6 +8,9 @@ import android.view.View;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.gwsd.bean.GWMsgBean;
+import com.gwsd.bean.GWType;
+import com.gwsd.ptt.MyApp;
 import com.gwsd.ptt.R;
 import com.gwsd.ptt.adapter.ChatAdapter;
 import com.gwsd.ptt.bean.ChatParam;
@@ -44,7 +47,7 @@ public class ChatActivity extends BaseActivity implements ChatInputView.OnInputV
     }
 
     private String getUid() {
-        String uid = String.valueOf(GWSDKManager.INSTANCE(this).getUserInfo().getId());
+        String uid = String.valueOf(GWSDKManager.getSdkManager().getUserInfo().getId());
         return uid;
     }
 
@@ -110,7 +113,11 @@ public class ChatActivity extends BaseActivity implements ChatInputView.OnInputV
 
     @Override
     public void onSendTxt(String str) {
-
+        GWMsgBean gwMsgBean = null;
+        gwMsgBean = GWSDKManager.getSdkManager().sendMsg(chatParam.getConvType(),  chatParam.getConvId(), chatParam.getConvName(), GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_TEXT, str);
+        MsgContentPojo msgContentPojo = MsgDaoHelp.saveMsgContent(getUid(), gwMsgBean);
+        MsgDaoHelp.saveOrUpdateConv(msgContentPojo);
+        mAdapter.addMessage(msgContentPojo);
     }
 
     @Override

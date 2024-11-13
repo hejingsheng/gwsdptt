@@ -22,7 +22,7 @@
     <string name="main_tab_setting">Configuración</string>
     <string name="main_tab_operator">Inicio</string>
     <string name="main_tab_talkbackRecord">Registros de intercomunicación</string>
-    <string name="main_tab_Contacts">Contactos</string>
+    <string name="main_tab_grp">Group</string>
 
     <string name="accessibility_service_description">Instalación inteligente, servicios de accesibilidad</string>
     <string name="search_hint_group">Ingrese palabras clave para buscar grupos</string>
@@ -52,7 +52,7 @@
     <string name="title_SysSetActivity">Configuración</string>
     <string name="title_SetNormActivity">Configuración general</string>
     <string name="title_PocMemberListActivity">Miembros del grupo</string>
-    <string name="title_ChatActivity">Intercomunicador</string>
+    <string name="title_ChatActivity">Chat</string>
     <string name="title_UpReportPhotoActivity">Informe de foto</string>
     <string name="title_UpreportVideoActivity">Informe de video</string>
     <string name="title_UpReportVioceActivity">Informe de voz</string>
@@ -910,4 +910,6 @@
     <string name="addr_port">Puerto de dirección:</string>
     <string name="mac_addr">Dirección MAC:</string>
     <string name="item_sysset_priority_sharp">Claridad</string>
+    <string name="main_tab_chat">Chat</string>
+    <string name="main_tab_my">Me</string>
 </resources>

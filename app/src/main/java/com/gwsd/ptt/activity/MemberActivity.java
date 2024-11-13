@@ -1,20 +1,14 @@
 package com.gwsd.ptt.activity;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.fastjson.JSON;
-import com.gwsd.bean.GWGroupListBean;
-import com.gwsd.bean.GWJoinGroupBean;
 import com.gwsd.bean.GWMemberInfoBean;
 import com.gwsd.bean.GWRequestSpeakBean;
 import com.gwsd.bean.GWSpeakNotifyBean;
@@ -22,12 +16,10 @@ import com.gwsd.bean.GWTempGroupBean;
 import com.gwsd.bean.GWTempGroupNotifyBean;
 import com.gwsd.bean.GWType;
 import com.gwsd.ptt.R;
-import com.gwsd.ptt.adapter.GroupAdapter;
 import com.gwsd.ptt.adapter.MemberAdapter;
 import com.gwsd.ptt.manager.GWSDKManager;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MemberActivity extends BaseActivity {

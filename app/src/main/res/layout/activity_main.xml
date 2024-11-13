@@ -1,128 +1,45 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="?attr/t_bgColor">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:focusable="false"
-        android:text="sdkVersion:"
-        android:id="@+id/sdkVersion"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:focusable="false"
-        android:text="demoVersion:"
-        android:id="@+id/demoVersion"
-        />
-
-    <EditText
-        android:id="@+id/loginUserName"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Username"
-        android:textSize="13dp"
-        android:text=""/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <com.gwsd.ptt.view.AppTopView
+            android:id="@+id/viewTop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:layout_alignParentTop="true" />
+        <FrameLayout
+            android:id="@+id/viewFrameLayout"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </FrameLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/line_height"
+            android:background="@color/main_tab_topLine"
+            />
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/viewTablayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/main_tab_height"
+            android:orientation="horizontal"
+            android:background="@color/main_tab_background"
+            app:tabIndicatorHeight="0dp"
+            app:tabIndicatorColor="@color/color_transparent"
+            app:tabPaddingStart="-1dp"
+            app:tabPaddingEnd="-1dp"
+            />
+    </LinearLayout>
 
-    <EditText
-        android:id="@+id/loginUserPass"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Password"
-        android:textSize="13dp"
-        android:text=""/>
-
-    <TextView
-        android:id="@+id/viewPower"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textSize="15dp"
-        />
-
-    <TextView
-        android:id="@+id/viewCurrentInfo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textSize="15dp"
-        />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="wait for speak..."
-        android:textSize="15dp"
-        android:gravity="center"
-        android:id="@+id/speaker"
-        />
-
-    <Button
-        android:id="@+id/btnlogin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="13dp"
-        android:text="login" />
-
-    <Button
-        android:id="@+id/btnspeak"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="13dp"
-        android:text="speak" />
-
-    <Button
-        android:id="@+id/btnmsg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="13dp"
-        android:text="PTT Msg Base Test" />
-
-    <Button
-        android:id="@+id/btnFullDuplexCall"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="13dp"
-        android:text="PTT Full Duplex Call Test" />
-
-    <Button
-        android:id="@+id/btnVideo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="13dp"
-        android:text="PTT Video Test" />
-
-    <Button
-        android:id="@+id/btngroup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="13dp"
-        android:text="PTT Group Base Test" />
-
-    <Button
-        android:id="@+id/btnmember"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="13dp"
-        android:text="PTT Member Base Test" />
-
-    <Button
-        android:id="@+id/btnOther"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="13dp"
-        android:text="PTT Other Test" />
-
-    <Button
-        android:id="@+id/btnlogout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="13dp"
-        android:text="logout" />
-
-
-</LinearLayout>
+</RelativeLayout>

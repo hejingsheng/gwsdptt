@@ -2,51 +2,38 @@ package com.gwsd.ptt.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.AudioManager;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.widget.Button;
-import android.widget.EditText;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
-import com.alibaba.fastjson.JSON;
-import com.gwsd.bean.GWLoginResultBean;
-import com.gwsd.bean.GWSpeakNotifyBean;
-import com.gwsd.bean.GWType;
-import com.gwsd.ptt.MyApp;
+import com.google.android.material.tabs.TabLayout;
 import com.gwsd.ptt.R;
-import com.gwsd.ptt.manager.AppManager;
-import com.gwsd.ptt.manager.GWSDKManager;
-import com.gwsd.ptt.service.MainService;
+import com.gwsd.ptt.fragment.BaseFragment;
+import com.gwsd.ptt.fragment.ChatListFragment;
+import com.gwsd.ptt.fragment.GroupListFragment;
+import com.gwsd.ptt.fragment.MeFragment;
+import com.gwsd.ptt.view.AppTopView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends BaseActivity {
 
-    private static final String TAG = "GW_MainActivity";
-    private static final String VERSION = "v_0.0.2";
+    AppTopView viewAppTop;
+    FrameLayout viewFrameLayout;
+    TabLayout viewTablayout;
 
-    TextView sdkVersion;
-    TextView demoVersion;
-    TextView power;
-    TextView info;
-    TextView speaker;
+    List<BaseFragment> fragmentList;
 
-    EditText eTuserAccount;
-    EditText eTuserPassword;
-
-    Button btnLogin;
-    Button btnSpeak;
-    Button btnGroup;
-    Button btnMember;
-    Button btnMsg;
-    Button btnFullDuplex;
-    Button btnVideo;
-    Button btnOther;
-    Button btnLoginOut;
-
-    boolean speak = false;
+    public static void startAct(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        context.startActivity(intent);
+    }
 
     @Override
     protected int getViewId() {
@@ -54,146 +41,110 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        String str = "name:"+gwsdkManager.getUserInfo().getName()+" group:"+gwsdkManager.getUserInfo().getCurrentGroupName();
-        info.setText(str);
+    protected void initData() {
+
     }
 
     @Override
     protected void initView() {
-
-        sdkVersion = findViewById(R.id.sdkVersion);
-        demoVersion = findViewById(R.id.demoVersion);
-        power = findViewById(R.id.viewPower);
-        info = findViewById(R.id.viewCurrentInfo);
-        speaker = findViewById(R.id.speaker);
-
-        eTuserAccount = findViewById(R.id.loginUserName);
-        eTuserPassword = findViewById(R.id.loginUserPass);
-
-        btnLogin = findViewById(R.id.btnlogin);
-        btnSpeak = findViewById(R.id.btnspeak);
-        btnGroup = findViewById(R.id.btngroup);
-        btnMember = findViewById(R.id.btnmember);
-        btnMsg = findViewById(R.id.btnmsg);
-        btnFullDuplex = findViewById(R.id.btnFullDuplexCall);
-        btnVideo = findViewById(R.id.btnVideo);
-        btnOther = findViewById(R.id.btnOther);
-        btnLoginOut = findViewById(R.id.btnlogout);
-
+        viewAppTop = findViewById(R.id.viewTop);
+        viewFrameLayout = findViewById(R.id.viewFrameLayout);
+        viewTablayout = findViewById(R.id.viewTablayout);
     }
 
     @Override
-    protected void initEvent(){
-        sdkVersion.setText("sdkVersion" + gwsdkManager.getVersion());
-        demoVersion.setText("demoVersion" + VERSION);
-        btnLogin.setOnClickListener(v->{
-//            String account = eTuserAccount.getText().toString();
-//            String password = eTuserPassword.getText().toString();
-            String account = "gwsd03";
-            String password = "123456";
-            String imei = "12345"; // you should call android api get device imei
-            String iccid = "54321"; // you should call android api get sim card iccid
-            gwsdkManager.login(account,password,imei,iccid);
-        });
-        btnSpeak.setOnClickListener(v -> {
-            if (speak) {
-                gwsdkManager.stopSpeak();
-                btnSpeak.setText("speak");
-            } else {
-                gwsdkManager.startSpeak();
-                btnSpeak.setText("stop");
-            }
-            speak = !speak;
-        });
-        btnGroup.setOnClickListener(v ->{
-            Intent intent = new Intent(MainActivity.this, GroupActivity.class);
-            startActivity(intent);
-        });
-        btnMember.setOnClickListener(v->{
-            Intent intent = new Intent(MainActivity.this, MemberActivity.class);
-            startActivity(intent);
-        });
-        btnFullDuplex.setOnClickListener(v ->{
-            Intent intent = new Intent(MainActivity.this, FullDuplexActivity.class);
-            startActivity(intent);
-        });
-        btnMsg.setOnClickListener(v -> {
-            ChatListActivity.startAct(this);
-        });
-        btnVideo.setOnClickListener(v -> {
-            VideoActivity.startAct(this);
-        });
-        btnOther.setOnClickListener(v -> {
-            OtherActivity.startAct(this);
-        });
-		btnLoginOut.setOnClickListener(v -> {
-            gwsdkManager.loginOut();
-            //MyApp.exitApp();
-        });
+    protected void initEvent() {
+        onTabLayouSelectedListener();
+        fragmentList=new ArrayList<>();
+        initTab(getSupportFragmentManager(), fragmentList,this,viewTablayout);
+        viewTablayout.getTabAt(0).select();
     }
 
-    @Override
-    protected void initData(){
-        gwsdkManager = GWSDKManager.INSTANCE(getApplicationContext());
-        gwsdkManager.registerPttObserver(new GWSDKManager.GWSDKPttEngineObserver() {
-            @Override
-            public void onPttEvent(int event, String data, int data1) {
-                if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_LOGIN) {
-                    GWLoginResultBean gwLoginResultBean = JSON.parseObject(data, GWLoginResultBean.class);
-                    if (gwLoginResultBean.getResult() == 0) {
-                        runOnUiThread(() -> {
-                            showToast("user:"+gwLoginResultBean.getName()+" login success");
-                            String powerstr = "msg:"+gwLoginResultBean.isMessage()+" call:"+gwLoginResultBean.isCall()+" video:"+gwLoginResultBean.isVideo()+" silent:"+gwLoginResultBean.isSilent();
-                            power.setText(powerstr);
-                        });
-                    }
-                } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_LOGOUT) {
-                    GWLoginResultBean gwLoginOutResultBean = JSON.parseObject(data, GWLoginResultBean.class);
-                    if (gwLoginOutResultBean.getResult() == 0) {
-                        runOnUiThread(() -> {
-                            showAlert("user offline");
-                        });
-                    }
-                } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_JOIN_GROUP) {
-                    runOnUiThread(()->{
-                        String msg = "user "+gwsdkManager.getUserInfo().getName()+" login success\njoin group "+gwsdkManager.getUserInfo().getCurrentGroupName();
-                        showAlert(msg);
-                        String str = "name:"+gwsdkManager.getUserInfo().getName()+" group:"+gwsdkManager.getUserInfo().getCurrentGroupName();
-                        info.setText(str);
-                    });
-                } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_SPEAK) {
-                    runOnUiThread(()->{
-                        GWSpeakNotifyBean gwSpeakNotifyBean = JSON.parseObject(data, GWSpeakNotifyBean.class);
-                        if (gwSpeakNotifyBean.getUid() != 0) {
-                            Log.i(TAG, "have speaker");
-                            speaker.setText("speaker id:"+gwSpeakNotifyBean.getUid()+" name:"+gwSpeakNotifyBean.getName());
-                            AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-                            audioManager.setMode(AudioManager.MODE_NORMAL);
-                            audioManager.stopBluetoothSco();
-                            audioManager.setBluetoothScoOn(false);
-                            audioManager.setSpeakerphoneOn(true);
-                        } else {
-                            Log.i(TAG, "no speaker");
-                            speaker.setText("no speaker");
-                        }
-                    });
-                }
-            }
-            @Override
-            public void onMsgEvent(int var1, String var2) {
+    private void initTab(FragmentManager fragmentManager, List<BaseFragment> fragmentList, Context context, TabLayout viewTablayout) {
 
-            }
-        });
-    }
+        TabLayout tabLayout = viewTablayout;
+        List<String> fragmentTitleList = new ArrayList<>();
+        List<String> fragmentFlagList = new ArrayList<>();
+        List<Integer> titleImgsList = new ArrayList<>();
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            moveTaskToBack(true);
-            return true;
+        fragmentList.add(ChatListFragment.build());
+        fragmentTitleList.add(getString(R.string.main_tab_chat));
+        fragmentFlagList.add("ChatListFragment");
+        titleImgsList.add(R.drawable.main_tab_chat);
+
+        fragmentList.add(GroupListFragment.build());
+        fragmentTitleList.add(getString(R.string.main_tab_grp));
+        fragmentFlagList.add("GroupFragment");
+        titleImgsList.add(R.drawable.main_tab_grp);
+
+        fragmentList.add(MeFragment.build());
+        fragmentTitleList.add(getString(R.string.main_tab_my));
+        fragmentFlagList.add("MeFragment");
+        titleImgsList.add(R.drawable.main_tab_me);
+
+        for (int i = 0; i < fragmentTitleList.size(); i++) {
+            tabLayout.addTab(tabLayout.newTab());
         }
-        return super.onKeyDown(keyCode, event);
+        for (int i = 0; i < tabLayout.getTabCount(); i++) {
+            TabLayout.Tab tab = tabLayout.getTabAt(i);
+            if (tab != null) {
+                tab.setCustomView(getTabView(context, i, fragmentTitleList, titleImgsList));
+            }
+        }
     }
+
+    private View getTabView(Context context, int position, List<String> fragmentTitleList, List<Integer> titleImgsList) {
+        View view;
+
+        view = LayoutInflater.from(context).inflate(R.layout.view_main_tab, null);
+        TextView textview = (TextView) view.findViewById(R.id.tab_tv);
+        textview.setTextAppearance(context, R.style.mainRadioBtn);
+        ImageView imageview = (ImageView) view.findViewById(R.id.tab_imgview);
+        View view_msg_red = view.findViewById(R.id.view_msg_red);
+        view_msg_red.setVisibility(View.GONE);
+        textview.setText(fragmentTitleList.get(position));
+        imageview.setImageResource(titleImgsList.get(position).intValue());
+        return view;
+    }
+
+    private void onTabLayouSelectedListener(){
+        viewTablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+                if (position == 0) {
+                    viewAppTop.setVisibility(View.VISIBLE);
+                    viewAppTop.setTopTitle(R.string.title_ChatActivity);
+                } else if (position == 1) {
+                    viewAppTop.setVisibility(View.VISIBLE);
+                    viewAppTop.setTopTitle(R.string.title_GroupFragment);
+                } else {
+                    viewAppTop.setVisibility(View.GONE);
+                }
+                BaseFragment baseFragment = fragmentList.get(position);
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                if (!baseFragment.isAdded()) {
+                    fragmentTransaction.add(R.id.viewFrameLayout, baseFragment);
+                }
+                fragmentTransaction.show(baseFragment);
+                for (BaseFragment fragment : fragmentList) {
+                    if (fragment != baseFragment) {
+                        fragmentTransaction.hide(fragment);
+                    }
+                }
+                fragmentTransaction.commitAllowingStateLoss();
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+    }
+
 }

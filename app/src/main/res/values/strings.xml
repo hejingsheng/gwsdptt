@@ -30,7 +30,9 @@
     <string name="main_tab_setting">设置</string>
     <string name="main_tab_operator">首页</string>
     <string name="main_tab_talkbackRecord">对讲记录</string>
-    <string name="main_tab_Contacts">通讯录</string>
+    <string name="main_tab_chat">聊天</string>
+    <string name="main_tab_grp">群组</string>
+    <string name="main_tab_my">我</string>
 
     <string name="accessibility_service_description">智能安装，无障碍服务</string>
     <string name="search_hint_group">请输入关键字搜索群组</string>
@@ -60,7 +62,7 @@
     <string name="title_SysSetActivity">设置</string>
     <string name="title_SetNormActivity">通用设置</string>
     <string name="title_PocMemberListActivity">群成员</string>
-    <string name="title_ChatActivity">对讲</string>
+    <string name="title_ChatActivity">聊天</string>
     <string name="title_UpReportPhotoActivity">图片上报</string>
     <string name="title_UpreportVideoActivity">视频上报</string>
     <string name="title_UpReportVioceActivity">语音上报</string>

@@ -5,9 +5,12 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.LocaleList;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -20,6 +23,7 @@ import com.gwsd.ptt.service.MainService;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 public class LauncherActivity extends AppCompatActivity {
 
@@ -41,7 +45,58 @@ public class LauncherActivity extends AppCompatActivity {
             return;
         }
         Log.i(TAG, "start app request permissions");
+        updateResources(this.getApplicationContext());
         requestPermissions();
+    }
+
+    public String getSysCountry() {
+        return Locale.getDefault().getCountry();
+    }
+
+    private void updateResources(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context = context.getApplicationContext();
+            Resources resources = context.getResources();
+            Locale locale = null;//
+            String language = Locale.getDefault().getLanguage();
+            if ("de".equals(language) || "ru".equals(language) || "tr".equals(language) || "zh".equals(language)
+                    || "es".equals(language) || "fr".equals(language) || "in".equals(language) || "it".equals(language) || "ko".equals(language)
+                    || "pt-rBR".equals(language) || "th".equals(language) || "tl".equals(language)) {
+                locale = Locale.getDefault();
+            }else{
+                locale = Locale.ENGLISH;
+            }
+            if (locale != null) {
+                Configuration configuration = resources.getConfiguration();
+                configuration.setLocale(locale);
+                configuration.setLocales(new LocaleList(locale));
+                Context context1 = context.createConfigurationContext(configuration);
+                AppManager.getInstance().updateAppContext(context1);
+            }
+        }else{
+            String country = getSysCountry();
+            Locale mDefaultLocale = null;
+            if (Locale.CHINA.getCountry().equals(country)) {
+                mDefaultLocale = Locale.SIMPLIFIED_CHINESE;
+            } else {
+                mDefaultLocale = Locale.ENGLISH;
+            }
+            updateResourcesLegacy(context, mDefaultLocale, 1.0F);
+        }
+    }
+
+    private Context updateResourcesLegacy(Context context, Locale locale, float fontScale) {
+        Resources resources = context.getResources();
+        Configuration configuration = resources.getConfiguration();
+        if (Build.VERSION.SDK_INT >= 17) {
+            configuration.setLocale(locale);
+            configuration.setLayoutDirection(locale);
+        } else {
+            configuration.locale = locale;
+        }
+
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+        return context;
     }
 
     private void requestPermissions() {
@@ -62,7 +117,7 @@ public class LauncherActivity extends AppCompatActivity {
         mhandle.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent=new Intent(LauncherActivity.this, MainActivity.class);
+                Intent intent=new Intent(LauncherActivity.this, LoginActivity.class);
                 LauncherActivity.this.startActivity(intent);
                 finish();
             }

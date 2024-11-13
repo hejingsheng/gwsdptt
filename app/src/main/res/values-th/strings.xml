@@ -22,7 +22,7 @@
     <string name="main_tab_setting">การตั้งค่า</string>
     <string name="main_tab_operator">หน้าหลัก</string>
     <string name="main_tab_talkbackRecord">บันทึกอินเตอร์คอม</string>
-    <string name="main_tab_Contacts">รายชื่อผู้ติดต่อ</string>
+    <string name="main_tab_grp">Group</string>
 
     <string name="accessibility_service_description">การติดตั้งอัจฉริยะ บริการการเข้าถึง</string>
     <string name="search_hint_group">กรุณาใส่คำสำคัญเพื่อค้นหากลุ่ม</string>
@@ -52,7 +52,7 @@
     <string name="title_SysSetActivity">การตั้งค่า</string>
     <string name="title_SetNormActivity">การตั้งค่าทั่วไป</string>
     <string name="title_PocMemberListActivity">สมาชิกกลุ่ม</string>
-    <string name="title_ChatActivity">อินเตอร์คอม</string>
+    <string name="title_ChatActivity">Chat</string>
     <string name="title_UpReportPhotoActivity">การรายงานภาพถ่าย</string>
     <string name="title_UpreportVideoActivity">การรายงานวิดีโอ</string>
     <string name="title_UpReportVioceActivity">การรายงานเสียง</string>
@@ -910,4 +910,6 @@
     <string name="addr_port">พอร์ตที่อยู่:</string>
     <string name="mac_addr">ที่อยู่ MAC:</string>
     <string name="item_sysset_priority_sharp">ความชัดเจน</string>
+    <string name="main_tab_chat">Chat</string>
+    <string name="main_tab_my">Me</string>
 </resources>

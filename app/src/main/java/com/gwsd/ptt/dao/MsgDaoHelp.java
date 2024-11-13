@@ -1,7 +1,6 @@
 package com.gwsd.ptt.dao;
 
 import com.gwsd.bean.GWMsgBean;
-import com.gwsd.bean.GWPatrolMsgBean;
 import com.gwsd.bean.GWType;
 import com.gwsd.ptt.MyApp;
 import com.gwsd.ptt.dao.greendao.DaoSession;
@@ -9,8 +8,6 @@ import com.gwsd.ptt.dao.greendao.MsgContentPojoDao;
 import com.gwsd.ptt.dao.greendao.MsgConversationPojoDao;
 import com.gwsd.ptt.dao.pojo.MsgContentPojo;
 import com.gwsd.ptt.dao.pojo.MsgConversationPojo;
-import com.gwsd.ptt.manager.AppManager;
-import com.gwsd.ptt.manager.GWSDKManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,7 +53,7 @@ public class MsgDaoHelp {
         msgContentPojo.setSenderNm(bean.getData().getSendName());
         msgContentPojo.setSenderType(bean.getData().getSendUType());
         msgContentPojo.setRecvId(bean.getData().getReceiveId());
-        msgContentPojo.setRecvNm("");
+        msgContentPojo.setRecvNm(bean.getData().getReceiveName());
         msgContentPojo.setRecvType(bean.getData().getReceiveUType());
         int msgtype = bean.getData().getMsgType();
         msgContentPojo.setMsgType(msgtype);

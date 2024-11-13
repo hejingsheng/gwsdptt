@@ -29,6 +29,7 @@ import com.gwsd.ptt.dao.MsgDaoHelp;
 import com.gwsd.ptt.dao.pojo.MsgContentPojo;
 import com.gwsd.rtc.view.GWRtcSurfaceVideoRender;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +63,9 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         }
         return gwsdkManager;
     }
+    public static GWSDKManager getSdkManager() {
+        return gwsdkManager;
+    }
 
     private void log(String message) {
         Log.i(TAG, message);
@@ -76,6 +80,7 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
 
     private GWPttUserInfo userInfo;
     private Map<Long, GWGroupListBean.GWGroupBean> groupMap;
+    private List<GWGroupListBean.GWGroupBean> groupBeanList;
     private boolean haveStartMsgService = false;
 
     private Disposable disposable;
@@ -87,7 +92,6 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         gwPttEngine.pttInit(this, this, null);
         gwPttEngine.pttConfigServer(0,"43.250.33.13", 23003);
         gwPttEngine.pttConfigServer(1,"43.250.33.13", 51883);
-        //gwPttEngine.pttConfigServer(1, "119.3.175.165", 8883);
         gwPttEngine.pttConfigServer(2,"43.250.33.13", 50001);
         gwPttEngine.pttConfigServer(3,"114.116.246.85", 8188);
         log("current sdk version:"+gwPttEngine.pttGetVersion());
@@ -211,16 +215,33 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
             haveStartMsgService = true;
         }
     }
-    public void sendMsg(int recvtype, int remoteid, int msgtype, String content) {
-        gwPttEngine.pttSendMsg(userInfo.getId(), userInfo.getName(), recvtype, remoteid, msgtype, content, "", 0, "", (char)0, System.currentTimeMillis(), (char)1, (char)1);
+    public GWMsgBean sendMsg(int recvtype, int remoteid, String remoteNm, int msgtype, String content) {
+        GWMsgBean gwMsgBean = new GWMsgBean();
+        gwMsgBean.setFrom(String.valueOf(userInfo.getId()));
+        gwMsgBean.setType(msgtype);
+        long tm = System.currentTimeMillis();
+        gwMsgBean.setTime((int)(tm/1000));
+        GWMsgBean.MsgContent msgContent = gwMsgBean.new MsgContent();
+        msgContent.setContent(content);
+        msgContent.setSendId(String.valueOf(userInfo.getId()));
+        msgContent.setSendName(userInfo.getName());
+        msgContent.setSendUType(GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER);
+        msgContent.setReceiveId(String.valueOf(remoteid));
+        msgContent.setReceiveName(remoteNm);
+        msgContent.setReceiveUType(recvtype);
+        msgContent.setTime((int)(tm/1000));
+        msgContent.setMsgType(msgtype);
+        gwMsgBean.setData(msgContent);
+        gwPttEngine.pttSendMsg(userInfo.getId(), userInfo.getName(), recvtype, remoteid, msgtype, content, "", 0, "", (char)0, tm, (char)1, (char)1);
+        return gwMsgBean;
     }
     public String createThumb(String video) {
         String thumb = gwPttEngine.pttCreateThumbForVideo(video);
         log("thumb="+thumb);
         return thumb;
     }
-    public String getGroupNameById(long gid) {
-        return groupMap.get(gid).getName();
+    public List<GWGroupListBean.GWGroupBean> getGroupList() {
+        return groupBeanList;
     }
 
     @Override
@@ -250,7 +271,12 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
                 if (groupMap == null) {
                     groupMap = new HashMap<>();
                 }
+                if (groupBeanList == null) {
+                    groupBeanList = new ArrayList<>();
+                }
                 groupMap.clear();
+                groupBeanList.clear();
+                groupBeanList.addAll(groups);
                 int[] msg_groups = new int[groups.size()];
                 int[] msg_groups_type = new int[groups.size()];
                 int i = 0;

@@ -18,11 +18,7 @@ import com.gwsd.ptt.manager.GWSDKManager;
 import java.util.Collections;
 import java.util.List;
 
-public class ChatListFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener{
-
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private RecyclerView recyclerView;
-    private TextView viewNoData;
+public class ChatListFragment extends ListFragment{
 
     private MsgConvAdapter mAdapter;
 
@@ -32,14 +28,11 @@ public class ChatListFragment extends BaseFragment implements SwipeRefreshLayout
     }
 
     @Override
-    protected int getViewId() {
-        return R.layout.fragment_chatlist;
+    public void onStart() {
+        super.onStart();
+        refreshData();
     }
 
-    private String getUid() {
-        String uid = String.valueOf(GWSDKManager.INSTANCE(getContext()).getUserInfo().getId());
-        return uid;
-    }
 
     @Override
     protected void initData() {
@@ -47,11 +40,7 @@ public class ChatListFragment extends BaseFragment implements SwipeRefreshLayout
     }
 
     @Override
-    protected void initView() {
-        swipeRefreshLayout = (SwipeRefreshLayout) contentView.findViewById(R.id.swipeRefreshLayout);
-        recyclerView = (RecyclerView) contentView.findViewById(R.id.recycleView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        viewNoData = (TextView) contentView.findViewById(R.id.viewNoData);
+    protected void setAdapter() {
         recyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClick((MsgConvAdapter.OnItemClick<MsgConversationPojo>) (view, o, longclick) -> {
             if (longclick) {
@@ -64,16 +53,10 @@ public class ChatListFragment extends BaseFragment implements SwipeRefreshLayout
                 ChatActivity.startAct(getContext(), chatParam);
             }
         });
-        refreshData();
     }
 
     @Override
-    protected void initEvent() {
-        swipeRefreshLayout.setOnRefreshListener(this);
-    }
-
-    @Override
-    public void onRefresh() {
+    protected void loadData() {
         refreshData();
     }
 
@@ -84,7 +67,6 @@ public class ChatListFragment extends BaseFragment implements SwipeRefreshLayout
             Collections.sort(convList,new MsgConvBeanComp());
         }
         mAdapter.setData(convList);
-        //dissmissLoadingDig();
         swipeRefreshLayout.setRefreshing(false);
         checkDataEmpty();
     }

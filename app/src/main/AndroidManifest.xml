@@ -45,9 +45,9 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".activity.LoginActivity"/>
         <activity android:name=".activity.MainActivity"/>
         <activity android:name=".activity.VideoActivity"/>
-        <activity android:name=".activity.GroupActivity"/>
         <activity android:name=".activity.MemberActivity"/>
         <activity android:name=".activity.ChatListActivity"/>
         <activity android:name=".activity.ChatActivity"/>

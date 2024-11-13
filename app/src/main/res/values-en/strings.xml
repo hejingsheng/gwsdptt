@@ -23,7 +23,7 @@
     <string name="main_tab_setting">Settings</string>
     <string name="main_tab_operator">Home</string>
     <string name="main_tab_talkbackRecord">Intercom records</string>
-    <string name="main_tab_Contacts">Contacts</string>
+    <string name="main_tab_grp">Group</string>
 
     <string name="accessibility_service_description">Smart installation, accessibility services</string>
     <string name="search_hint_group">Please enter keywords to search for groups</string>
@@ -53,7 +53,7 @@
     <string name="title_SysSetActivity">Settings</string>
     <string name="title_SetNormActivity">General settings</string>
     <string name="title_PocMemberListActivity">Group members</string>
-    <string name="title_ChatActivity">Intercom</string>
+    <string name="title_ChatActivity">Chat</string>
     <string name="title_UpReportPhotoActivity">Photo reporting</string>
     <string name="title_UpreportVideoActivity">Video reporting</string>
     <string name="title_UpReportVioceActivity">Voice reporting</string>
@@ -918,5 +918,7 @@
     <string name="addr_port">Address port:</string>
     <string name="mac_addr">MAC address:</string>
     <string name="item_sysset_priority_sharp">clearness</string>
+    <string name="main_tab_chat">Chat</string>
+    <string name="main_tab_my">Me</string>
 
 </resources>

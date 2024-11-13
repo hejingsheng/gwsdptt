@@ -22,7 +22,7 @@
     <string name="main_tab_setting">Настройки</string>
     <string name="main_tab_operator">Главная</string>
     <string name="main_tab_talkbackRecord">Записи интеркома</string>
-    <string name="main_tab_Contacts">Контакты</string>
+    <string name="main_tab_grp">Group</string>
 
     <string name="accessibility_service_description">Умная установка, услуги доступности</string>
     <string name="search_hint_group">Введите ключевые слова для поиска групп</string>
@@ -52,7 +52,7 @@
     <string name="title_SysSetActivity">Настройки</string>
     <string name="title_SetNormActivity">Общие настройки</string>
     <string name="title_PocMemberListActivity">Члены группы</string>
-    <string name="title_ChatActivity">Интерком</string>
+    <string name="title_ChatActivity">Chat</string>
     <string name="title_UpReportPhotoActivity">Фотоотчет</string>
     <string name="title_UpreportVideoActivity">Видеоотчет</string>
     <string name="title_UpReportVioceActivity">Голосовой отчет</string>
@@ -910,4 +910,6 @@
     <string name="addr_port">Порт адреса:</string>
     <string name="mac_addr">MAC-адрес:</string>
     <string name="item_sysset_priority_sharp">Очистить</string>
+    <string name="main_tab_chat">Chat</string>
+    <string name="main_tab_my">Me</string>
 </resources>

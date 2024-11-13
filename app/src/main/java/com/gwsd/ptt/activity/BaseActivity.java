@@ -1,8 +1,10 @@
 package com.gwsd.ptt.activity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -15,6 +17,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected GWSDKManager gwsdkManager;
 
+    private static final String TAG = "GWAPP";
+
+    protected void log(String msg) {
+        Log.i(TAG, msg);
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +32,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         initData();
         initView();
         initEvent();
+    }
+
+    protected Context getContext() {
+        return this;
     }
 
     protected abstract int getViewId();

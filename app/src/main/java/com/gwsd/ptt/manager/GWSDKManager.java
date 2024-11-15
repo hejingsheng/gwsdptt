@@ -25,6 +25,8 @@ import com.gwsd.bean.GWTempGroupBean;
 import com.gwsd.bean.GWTempGroupNotifyBean;
 import com.gwsd.bean.GWType;
 import com.gwsd.ptt.MyApp;
+import com.gwsd.ptt.activity.AudioCallActivity;
+import com.gwsd.ptt.activity.VideoCallActivity;
 import com.gwsd.ptt.bean.GWPttUserInfo;
 import com.gwsd.ptt.dao.MsgDaoHelp;
 import com.gwsd.ptt.dao.pojo.MsgContentPojo;
@@ -83,6 +85,7 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
     private GWPttUserInfo userInfo;
     private Map<Long, GWGroupListBean.GWGroupBean> groupMap;
     private List<GWGroupListBean.GWGroupBean> groupBeanList;
+    private List<GWMemberInfoBean.MemberInfo> memBeanList;
     private boolean haveStartMsgService = false;
 
     private Disposable disposable;
@@ -256,6 +259,10 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         return groupBeanList;
     }
 
+    public List<GWMemberInfoBean.MemberInfo> getMemberList(){
+        return memBeanList;
+    }
+
     @Override
     public void onPttEvent(int event, String data, int data1) {
         log("recv ptt event="+event+" data="+data);
@@ -326,6 +333,15 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
             }
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_QUERY_MEMBER) {
             GWMemberInfoBean gwMemberInfoBean = JSON.parseObject(data, GWMemberInfoBean.class);
+            if (gwMemberInfoBean.getResult() == 0){
+                List<GWMemberInfoBean.MemberInfo> members = gwMemberInfoBean.getMembers();
+                if (memBeanList == null) {
+                    memBeanList = new ArrayList<>();
+                }
+                memBeanList.clear();
+                memBeanList.addAll(members);
+            }
+
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_REQUEST_MIC) {
             GWRequestSpeakBean gwRequestSpeakBean = JSON.parseObject(data, GWRequestSpeakBean.class);
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_TMP_GROUP_ACTIVE) {
@@ -334,6 +350,13 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
             GWTempGroupNotifyBean gwTempGroupNotifyBean = JSON.parseObject(data, GWTempGroupNotifyBean.class);
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_DUPLEX) {
             GWDuplexBean gwDuplexBean = JSON.parseObject(data, GWDuplexBean.class);
+            if (gwDuplexBean.getResult() == 0) {
+                if (gwDuplexBean.getStatus() == GWType.GW_DUPLEX_STATUS.GW_PTT_DUPLEX_STATUS_INVIET) {
+                    if (gwDuplexBean.getUid() != 0) {
+                        AudioCallActivity.startAct(AppManager.getApp(), gwDuplexBean.getUid(), gwDuplexBean.getName(), false);
+                    }
+                }
+            }
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_LOGOUT) {
             userInfo.setOnline(false);
             stopTimer();
@@ -398,11 +421,15 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
                 || gwMsgBaseBean.getType() == GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_VOICE
                 || gwMsgBaseBean.getType() == GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_VIDEO) {
                 log("recv msg data");
-                GWMsgBean gwMsgBean = JSON.parseObject(s, GWMsgBean.class);
-                MsgContentPojo msgContentPojo = MsgDaoHelp.saveMsgContent(String.valueOf(userInfo.getId()), gwMsgBean);
-                MsgConversationPojo msgConversationPojo = MsgDaoHelp.saveOrUpdateConv(msgContentPojo);
-                EventBus.getDefault().post(msgContentPojo);
-                EventBus.getDefault().post(msgConversationPojo);
+                if (gwMsgBaseBean.getFrom().equals(String.valueOf(userInfo.getId()))) {
+                    log("recv self msg data drop it");
+                } else {
+                    GWMsgBean gwMsgBean = JSON.parseObject(s, GWMsgBean.class);
+                    MsgContentPojo msgContentPojo = MsgDaoHelp.saveMsgContent(String.valueOf(userInfo.getId()), gwMsgBean);
+                    MsgConversationPojo msgConversationPojo = MsgDaoHelp.saveOrUpdateConv(msgContentPojo);
+                    EventBus.getDefault().post(msgContentPojo);
+                    EventBus.getDefault().post(msgConversationPojo);
+                }
             }
         }
         if (pttObserver != null) {
@@ -510,7 +537,10 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
 
     @Override
     public void onVideoCall(String s, String s1) {
-        videoObserver.onVideoCall(s, s1);
+        if (videoObserver != null) {
+            videoObserver.onVideoCall(s, s1);
+        }
+        VideoCallActivity.startAct(AppManager.getApp(), s, s1, false, false);
     }
 
     @Override

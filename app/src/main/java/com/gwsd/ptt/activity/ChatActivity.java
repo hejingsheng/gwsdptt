@@ -240,12 +240,12 @@ public class ChatActivity extends BaseActivity implements ChatInputView.OnInputV
 
     @Override
     public void onBtnVoiceCall() {
-
+        AudioCallActivity.startAct(this, chatParam.getConvId(), chatParam.getConvName(), true);
     }
 
     @Override
     public void onBtnVideoCall() {
-
+        VideoCallActivity.startAct(this, String.valueOf(chatParam.getConvId()), chatParam.getConvName(), true, false);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

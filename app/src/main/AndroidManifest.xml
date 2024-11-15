@@ -57,15 +57,17 @@
 
         <activity android:name=".activity.LoginActivity"/>
         <activity android:name=".activity.MainActivity"/>
-        <activity android:name=".activity.VideoActivity"/>
-        <activity android:name=".activity.MemberActivity"/>
+        <activity android:name=".activity.VideoCallActivity"/>
         <activity android:name=".activity.ChatListActivity"/>
         <activity android:name=".activity.ChatActivity"/>
-        <activity android:name=".activity.FullDuplexActivity"/>
-        <activity android:name=".activity.OtherActivity"/>
+<!--        <activity android:name=".activity.OtherActivity"/>-->
 
         <activity android:name=".video_ui.video_record.VideoRecordActivity"/>
         <activity android:name=".video_ui.video_record.PlayVideoActivity"/>
+        <activity android:name=".activity.MemberListActivity"/>
+        <activity android:name=".activity.HalfDuplexActivity"/>
+        <activity android:name=".activity.GroupDetailActivity"/>
+        <activity android:name=".activity.AudioCallActivity"/>
 
         <service android:name=".service.MainService"/>
         <service android:name=".service.FileSendService"/>

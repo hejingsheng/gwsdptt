@@ -921,4 +921,9 @@
     <string name="main_tab_chat">Chat</string>
     <string name="main_tab_my">Me</string>
 
+    <string name="send_msg">Send message</string>
+    <string name="half_duplex">Half duplex intercom</string>
+    <string name="group_announcement">Group announcement</string>
+    <string name="group_members">Group member</string>
+    <string name="group_detail">Group Detail</string>
 </resources>

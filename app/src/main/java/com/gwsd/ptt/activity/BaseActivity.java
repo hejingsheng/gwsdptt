@@ -17,8 +17,6 @@ import com.gwsd.ptt.manager.GWSDKManager;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    protected GWSDKManager gwsdkManager;
-
     protected void log(String msg) {
         Log.i(MyApp.TAG, this.getClass().getSimpleName()+"="+msg);
     }

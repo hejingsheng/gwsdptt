@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.gwsd.ptt.view.AppTopView
+        android:id="@+id/viewTopView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/dimen5dp">
+        <ImageView
+            android:id="@+id/groupAvatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_circular_menu_member"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginStart="@dimen/dimen10dp">
+            <TextView
+                android:id="@+id/groupName"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="groupName"
+                android:textStyle="bold"
+                android:textSize="@dimen/textSize_largeXXX"
+                android:textColor="@color/color_black"/>
+            <TextView
+                android:id="@+id/groupId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/textSize_largeX"
+                android:text="123456"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_transparent10" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_transparent10"
+        android:layout_marginTop="@dimen/dimen20dp"/>
+
+    <LinearLayout
+        android:id="@+id/sendMsgLL"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height"
+        android:orientation="horizontal"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@mipmap/gw_ic_msg"/>
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/send_msg"
+            android:textSize="@dimen/textSize_large"
+            android:textColor="@color/color_black"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_transparent10" />
+    <LinearLayout
+        android:id="@+id/halfDuplexLL"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height"
+        android:orientation="horizontal"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@mipmap/ic_main_tab_poc_n"/>
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/half_duplex"
+            android:textSize="@dimen/textSize_large"
+            android:textColor="@color/color_black"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_transparent10" />
+
+    <LinearLayout
+        android:id="@+id/grpAnnouncement"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height"
+        android:orientation="horizontal"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@mipmap/gw_ic_notice"/>
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/group_announcement"
+            android:textSize="@dimen/textSize_large"
+            android:textColor="@color/color_black"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_transparent10" />
+
+</LinearLayout>

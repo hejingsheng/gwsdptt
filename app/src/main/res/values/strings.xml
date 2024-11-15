@@ -939,4 +939,10 @@
     <string name="addr_port">地址端口:</string>
     <string name="mac_addr">MAC地址:</string>
 
+    <string name="send_msg">发消息</string>
+    <string name="half_duplex">对讲</string>
+    <string name="group_announcement">群公告</string>
+    <string name="group_members">群组成员</string>
+    <string name="group_detail">群组详情</string>
+
 </resources>

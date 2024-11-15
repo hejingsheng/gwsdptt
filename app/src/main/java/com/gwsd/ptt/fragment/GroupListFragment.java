@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.gwsd.bean.GWGroupListBean;
 import com.gwsd.bean.GWType;
 import com.gwsd.ptt.R;
+import com.gwsd.ptt.activity.GroupDetailActivity;
 import com.gwsd.ptt.adapter.CommonHolder;
 import com.gwsd.ptt.adapter.CommonListAdapter;
 import com.gwsd.ptt.adapter.recylistener.RecyclerViewListener;
@@ -98,7 +99,10 @@ public class GroupListFragment extends ListFragment {
         mAdapter.setOnRecyclerViewItemClickListener(new RecyclerViewListener.OnRecyclerViewItemClickListener() {
             @Override
             public void onItemClick(RecyclerView.ViewHolder viewHolder, View view, int position) {
-
+                GWGroupListBean.GWGroupBean selectedGroup = mData.get(position);
+                long gid = selectedGroup.getGid();
+                String name = selectedGroup.getName();
+                GroupDetailActivity.startAct(getContext(),gid,name);
             }
         });
         mAdapter.setOnItemLongClick(new RecyclerViewListener.OnRecyclerViewItemLongClickListener() {

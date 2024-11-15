@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="?attr/t_bgColor">
+
+    <com.gwsd.ptt.view.AppTopView
+        android:id="@+id/viewHalfDuplexTopView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/speaker"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="空闲等待"
+            android:textColor="@color/color_white"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/dimen100dp">
+        <ImageView
+            android:id="@+id/ptt"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/btn_intercom"/>
+    </LinearLayout>
+
+</LinearLayout>

@@ -117,24 +117,30 @@ public class FileSendService extends Service {
             public void onResponse(Call call, Response response) throws IOException {
                 String data = response.body().string();
                 log("data="+data);
-                FileUploadResBean fileUploadResBean = JSON.parseObject(data, FileUploadResBean.class);
-                if (fileUploadResBean.getStatus() == 200) {
-                    String fileurl = fileUploadResBean.getData().getFile1().getUrl();
-                    GWMsgBean msg = fileSendParam.getGwMsgBean();
-                    msg.getData().setUrl(fileurl);
-                    if (fileUploadResBean.getData().getFile2() != null) {
-                        String thumburl = fileUploadResBean.getData().getFile2().getUrl();
-                        msg.getData().setThumbUrl(thumburl);
+                try {
+                    FileUploadResBean fileUploadResBean = JSON.parseObject(data, FileUploadResBean.class);
+                    if (fileUploadResBean.getStatus() == 200) {
+                        String fileurl = fileUploadResBean.getData().getFile1().getUrl();
+                        GWMsgBean msg = fileSendParam.getGwMsgBean();
+                        msg.getData().setUrl(fileurl);
+                        if (fileUploadResBean.getData().getFile2() != null) {
+                            String thumburl = fileUploadResBean.getData().getFile2().getUrl();
+                            msg.getData().setThumbUrl(thumburl);
+                        }
+                        log(msg.toString());
+                        GWSDKManager.getSdkManager().sendMsg(msg);
+                        // use local path insert to database
+                        msg.getData().setUrl(fileSendParam.getFilepath());
+                        msg.getData().setThumbUrl(fileSendParam.getFilepathThumb());
+                        MsgContentPojo msgContentPojo = MsgDaoHelp.saveMsgContent(getUid(), msg);
+                        MsgConversationPojo msgConversationPojo = MsgDaoHelp.saveOrUpdateConv(msgContentPojo);
+                        EventBus.getDefault().post(msgContentPojo);
+                        EventBus.getDefault().post(msgConversationPojo);
+                    } else {
+
                     }
-                    log(msg.toString());
-                    GWSDKManager.getSdkManager().sendMsg(msg);
-                    // use local path insert to database
-                    msg.getData().setUrl(fileSendParam.getFilepath());
-                    msg.getData().setThumbUrl(fileSendParam.getFilepathThumb());
-                    MsgContentPojo msgContentPojo = MsgDaoHelp.saveMsgContent(getUid(), msg);
-                    MsgConversationPojo msgConversationPojo = MsgDaoHelp.saveOrUpdateConv(msgContentPojo);
-                    EventBus.getDefault().post(msgContentPojo);
-                    EventBus.getDefault().post(msgConversationPojo);
+                }catch (Exception e) {
+
                 }
             }
         });

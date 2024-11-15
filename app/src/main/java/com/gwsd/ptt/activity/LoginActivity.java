@@ -48,7 +48,6 @@ public class LoginActivity extends BaseActivity {
             String iccid = "54321"; // you should call android api get sim card iccid
             GWSDKManager.getSdkManager().login(account,password,imei,iccid);
         });
-
     }
 
     @Override
@@ -79,6 +78,12 @@ public class LoginActivity extends BaseActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void release() {
+        super.release();
+        GWSDKManager.getSdkManager().registerPttObserver(null);
     }
 
     @Override

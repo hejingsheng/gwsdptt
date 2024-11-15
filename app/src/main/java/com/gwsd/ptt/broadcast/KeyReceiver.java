@@ -14,8 +14,8 @@ public class KeyReceiver extends BroadcastReceiver {
     public static final String PTT_KEY_DOWN = "android.intent.action.side_key.keydown.PTT";
     public static final String PTT_KEY_UP = "android.intent.action.side_key.keyup.PTT";
 
-    private void log(String message){
-        Log.d("KeyReceiver", message);
+    private void log(String msg){
+        Log.d(MyApp.TAG, this.getClass().getSimpleName()+"="+msg);
     }
 
     @Override

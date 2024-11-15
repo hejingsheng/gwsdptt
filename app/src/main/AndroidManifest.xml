@@ -34,6 +34,16 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/GWApp.Them" >
 
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.gwsd.ptt.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <activity
             android:name=".activity.LauncherActivity"
             android:exported="true">
@@ -54,7 +64,11 @@
         <activity android:name=".activity.FullDuplexActivity"/>
         <activity android:name=".activity.OtherActivity"/>
 
+        <activity android:name=".video_ui.video_record.VideoRecordActivity"/>
+        <activity android:name=".video_ui.video_record.PlayVideoActivity"/>
+
         <service android:name=".service.MainService"/>
+        <service android:name=".service.FileSendService"/>
         <receiver android:name=".broadcast.KeyReceiver"
             android:exported="true">
 

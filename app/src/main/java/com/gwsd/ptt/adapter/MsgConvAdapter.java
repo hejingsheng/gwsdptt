@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gwsd.bean.GWType;
+import com.gwsd.ptt.MyApp;
 import com.gwsd.ptt.R;
 import com.gwsd.ptt.dao.pojo.MsgConversationPojo;
 
@@ -22,8 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MsgConvAdapter extends RecyclerView.Adapter<MsgConvAdapter.ImConversHodler> {
-
-    private final String TAG = "MsgConvAdapter";
 
     public interface OnItemClick<T>{
         void onItemClick(View view, T t, boolean hasLongClick);
@@ -35,7 +34,7 @@ public class MsgConvAdapter extends RecyclerView.Adapter<MsgConvAdapter.ImConver
     OnItemClick onItemClick;
 
     private void log(String msg){
-        Log.i(TAG, msg);
+        Log.i(MyApp.TAG, this.getClass().getSimpleName()+"="+msg);
     }
     public MsgConvAdapter(Context context, String userId) {
         mData=new ArrayList<>();

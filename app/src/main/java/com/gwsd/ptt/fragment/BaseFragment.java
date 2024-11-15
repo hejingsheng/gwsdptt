@@ -2,6 +2,7 @@ package com.gwsd.ptt.fragment;
 
 import android.os.Bundle;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.gwsd.ptt.MyApp;
 
 import java.util.concurrent.TimeUnit;
 
@@ -20,6 +23,11 @@ public abstract class BaseFragment extends Fragment {
 
     protected View contentView;
     private boolean hasReleaseSuc=false;
+
+    protected void log(String msg) {
+        Log.i(MyApp.TAG, this.getClass().getSimpleName()+"="+msg);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,10 +59,20 @@ public abstract class BaseFragment extends Fragment {
 
     }
 
+    protected void finishAct(){
+        if(getActivity()!=null){
+            getActivity().finish();
+        }
+    }
+
     protected void runOnUiThread(Runnable runnable){
         Observable.timer(100, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> runnable.run());
+    }
+
+    protected void showToast(int id) {
+        showToast(getString(id));
     }
 
     protected void showToast(String msg){

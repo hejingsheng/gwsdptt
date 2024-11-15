@@ -27,7 +27,7 @@ import java.util.Locale;
 
 public class LauncherActivity extends AppCompatActivity {
 
-    private static final String TAG = "GW_LanucherActivity";
+    private static final String TAG = "GWAPP";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

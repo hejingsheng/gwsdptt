@@ -32,17 +32,17 @@ public class ChatInputView extends RelativeLayout implements View.OnClickListene
 
         void onBtnPhoto();
 
-        void onBtnVoiceCall();
-
         void onBtnVideo();
 
         void onBtnFile();
 
         void onBtnLoc();
 
-        void onBtnVideoCall();
-
         void onBtnPttCall();
+
+        void onBtnVoiceCall();
+
+        void onBtnVideoCall();
     }
 
     public ChatInputView(Context context) {

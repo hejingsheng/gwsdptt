@@ -10,6 +10,8 @@ import com.gwsd.ptt.service.MainService;
 
 public class MyApp extends Application {
 
+    public static final String TAG = "GWAPP";
+
     static MyApp myApp;
     public static MyApp getInstance(){
         return myApp;

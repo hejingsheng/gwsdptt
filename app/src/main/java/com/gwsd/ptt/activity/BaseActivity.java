@@ -10,17 +10,17 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.gwsd.ptt.MyApp;
 import com.gwsd.ptt.R;
+import com.gwsd.ptt.manager.AppManager;
 import com.gwsd.ptt.manager.GWSDKManager;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
     protected GWSDKManager gwsdkManager;
 
-    private static final String TAG = "GWAPP";
-
     protected void log(String msg) {
-        Log.i(TAG, msg);
+        Log.i(MyApp.TAG, this.getClass().getSimpleName()+"="+msg);
     }
 
     @Override
@@ -54,6 +54,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected void release() {
 
+    }
+
+    protected void showToast(int id) {
+        Toast.makeText(this, AppManager.getApp().getString(id), Toast.LENGTH_LONG).show();
     }
 
     protected void showToast(String msg) {

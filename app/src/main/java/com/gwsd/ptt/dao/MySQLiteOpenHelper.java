@@ -2,8 +2,10 @@ package com.gwsd.ptt.dao;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 
+import com.gwsd.ptt.MyApp;
 import com.gwsd.ptt.dao.greendao.DaoMaster;
 
 import org.greenrobot.greendao.database.Database;
@@ -15,7 +17,7 @@ public class MySQLiteOpenHelper extends DaoMaster.OpenHelper {
     }
 
     private void log(String msg){
-
+        Log.i(MyApp.TAG, this.getClass().getSimpleName()+"="+msg);
     }
     public MySQLiteOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory) {
         super(context, name, factory);

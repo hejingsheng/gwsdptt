@@ -24,6 +24,7 @@ import com.gwsd.bean.GWSpeakNotifyBean;
 import com.gwsd.bean.GWTempGroupBean;
 import com.gwsd.bean.GWTempGroupNotifyBean;
 import com.gwsd.bean.GWType;
+import com.gwsd.ptt.MyApp;
 import com.gwsd.ptt.bean.GWPttUserInfo;
 import com.gwsd.ptt.dao.MsgDaoHelp;
 import com.gwsd.ptt.dao.pojo.MsgContentPojo;
@@ -43,8 +44,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
 public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVideoEventHandler {
-
-    private final String TAG = "GWSDKManager";
 
     public interface GWSDKPttEngineObserver {
         void onPttEvent(int var1, String var2, int var3);
@@ -70,8 +69,8 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         return gwsdkManager;
     }
 
-    private void log(String message) {
-        Log.i(TAG, message);
+    private void log(String msg) {
+        Log.i(MyApp.TAG, this.getClass().getSimpleName()+"="+msg);
     }
 
     private Context context;
@@ -218,14 +217,14 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
             haveStartMsgService = true;
         }
     }
-    public GWMsgBean sendMsg(int recvtype, int remoteid, String remoteNm, int msgtype, String content) {
+    public GWMsgBean createMsgBean(int recvtype, int remoteid, String remoteNm, int msgtype) {
         GWMsgBean gwMsgBean = new GWMsgBean();
         gwMsgBean.setFrom(String.valueOf(userInfo.getId()));
         gwMsgBean.setType(msgtype);
         long tm = System.currentTimeMillis();
         gwMsgBean.setTime((int)(tm/1000));
-        GWMsgBean.MsgContent msgContent = gwMsgBean.new MsgContent();
-        msgContent.setContent(content);
+        GWMsgBean.MsgContent msgContent = new GWMsgBean.MsgContent();
+        msgContent.setContent("");
         msgContent.setSendId(String.valueOf(userInfo.getId()));
         msgContent.setSendName(userInfo.getName());
         msgContent.setSendUType(GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER);
@@ -235,8 +234,18 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         msgContent.setTime((int)(tm/1000));
         msgContent.setMsgType(msgtype);
         gwMsgBean.setData(msgContent);
-        gwPttEngine.pttSendMsg(userInfo.getId(), userInfo.getName(), recvtype, remoteid, msgtype, content, "", 0, "", (char)0, tm, (char)1, (char)1);
         return gwMsgBean;
+    }
+
+    public void sendMsg(GWMsgBean msg) {
+        String content = msg.getData().getContent();
+        long ts = (long)msg.getTime() * 1000;
+        if (msg.getType() != GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_TEXT) {
+            content = msg.getData().getUrl();
+        }
+        log(msg.toString());
+        gwPttEngine.pttSendMsg(userInfo.getId(), userInfo.getName(), msg.getData().getReceiveUType(), Integer.valueOf(msg.getData().getReceiveId()),
+                msg.getData().getReceiveName(), msg.getType(), content, msg.getData().getThumbUrl(), 0, "", (char)0, ts, (char)1, (char)1);
     }
     public String createThumb(String video) {
         String thumb = gwPttEngine.pttCreateThumbForVideo(video);
@@ -354,7 +363,7 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
             log("recv pcm data="+data1);
             return;
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_LOSTMIC) {
-            Log.d(TAG, "speak too long time stop record");
+            log("speak too long time stop record");
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_GROUP_OPERATE) {
             GWGroupOperateBean gwGroupOperateBean = JSON.parseObject(data, GWGroupOperateBean.class);
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_QUERY_DISPATCH) {

@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.gwsd.ptt.MyApp;
 import com.gwsd.ptt.R;
 import com.gwsd.ptt.broadcast.KeyReceiver;
 
@@ -31,8 +32,8 @@ public class MainService extends Service {
         context.stopService(intent);
     }
 
-    private void log(String message){
-        Log.d("MainService:", message);
+    private void log(String msg){
+        Log.d(MyApp.TAG, this.getClass().getSimpleName()+"="+msg);
     }
 
     private KeyReceiver keyReceiver;

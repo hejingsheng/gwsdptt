@@ -24,6 +24,7 @@ import com.gwsd.ptt.bean.ChatParam;
 import com.gwsd.ptt.bean.FileSendParam;
 import com.gwsd.ptt.dao.MsgDaoHelp;
 import com.gwsd.ptt.dao.pojo.MsgContentPojo;
+import com.gwsd.ptt.dialog.CustomProgressDialog;
 import com.gwsd.ptt.manager.GWSDKManager;
 import com.gwsd.ptt.service.FileSendService;
 import com.gwsd.ptt.utils.RecorderUtil;
@@ -159,6 +160,8 @@ public class ChatActivity extends BaseActivity implements ChatInputView.OnInputV
         if (recorderUtil == null) {
             recorderUtil = new RecorderUtil();
         }
+        viewVoiceAnimPanel.setVisibility(View.VISIBLE);
+        viewVoiceAnimPanel.showRecording();
         recorderUtil.generalFileName();
         recorderUtil.startRecording();
     }
@@ -166,6 +169,8 @@ public class ChatActivity extends BaseActivity implements ChatInputView.OnInputV
     @Override
     public void onStopVoice() {
         log("stop voice");
+        viewVoiceAnimPanel.setVisibility(View.GONE);
+        viewVoiceAnimPanel.showCancel();
         if(recorderUtil!=null){
             recorderUtil.stopRecording();
             long timeInterval=recorderUtil.getTimeInterval();
@@ -235,7 +240,7 @@ public class ChatActivity extends BaseActivity implements ChatInputView.OnInputV
 
     @Override
     public void onBtnPttCall() {
-
+        PttCallActivity.startAct(this, chatParam.getConvId(), chatParam.getConvName(), chatParam.getConvType());
     }
 
     @Override
@@ -251,6 +256,7 @@ public class ChatActivity extends BaseActivity implements ChatInputView.OnInputV
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void eventRecvMsg(MsgContentPojo data) {
         if (data.getConvId() == chatParam.getConvId()) {
+            dissmissLoadingDig();
             setConvUnReadNone();
             if (mData != null) {
                 mData.add(data);
@@ -345,5 +351,6 @@ public class ChatActivity extends BaseActivity implements ChatInputView.OnInputV
         GWMsgBean gwMsgBean = GWSDKManager.getSdkManager().createMsgBean(chatParam.getConvType(),  chatParam.getConvId(), chatParam.getConvName(), msgtype);
         fileSendParam.setGwMsgBean(gwMsgBean);
         FileSendService.startFileSend(getContext(), fileSendParam);
+        showLoadingDig(R.string.hint_uploading);
     }
 }

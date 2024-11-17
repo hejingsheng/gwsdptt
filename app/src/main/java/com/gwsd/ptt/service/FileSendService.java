@@ -97,14 +97,14 @@ public class FileSendService extends Service {
             mediaType = MediaType.parse("image/jpg");
         }
         MultipartBody.Builder builder = new MultipartBody.Builder()
-                .addFormDataPart("file1", mainfile.getName(), RequestBody.create(mediaType, mainfile));
+                .addFormDataPart("file", mainfile.getName(), RequestBody.create(mediaType, mainfile));
         builder.setType(MultipartBody.FORM);
         if (thumbfile != null) {
             builder.addFormDataPart("file2", thumbfile.getName(), RequestBody.create(MediaType.parse("image/jpg"), thumbfile));
         }
         RequestBody requestBody = builder.build();
         Request request = new Request.Builder()
-                .url("http://123.249.38.46:5001/app/chat/msg/upload2")
+                .url("http://123.249.38.46:5001/app/chat/msg/upload")
                 .post(requestBody)
                 .build();
         okHttpClient.newCall(request).enqueue(new Callback() {
@@ -120,13 +120,13 @@ public class FileSendService extends Service {
                 try {
                     FileUploadResBean fileUploadResBean = JSON.parseObject(data, FileUploadResBean.class);
                     if (fileUploadResBean.getStatus() == 200) {
-                        String fileurl = fileUploadResBean.getData().getFile1().getUrl();
+                        String fileurl = fileUploadResBean.getData().getUrl();
                         GWMsgBean msg = fileSendParam.getGwMsgBean();
                         msg.getData().setUrl(fileurl);
-                        if (fileUploadResBean.getData().getFile2() != null) {
-                            String thumburl = fileUploadResBean.getData().getFile2().getUrl();
-                            msg.getData().setThumbUrl(thumburl);
-                        }
+//                        if (fileUploadResBean.getData().getFile2() != null) {
+//                            String thumburl = fileUploadResBean.getData().getFile2().getUrl();
+//                            msg.getData().setThumbUrl(thumburl);
+//                        }
                         log(msg.toString());
                         GWSDKManager.getSdkManager().sendMsg(msg);
                         // use local path insert to database

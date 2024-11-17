@@ -5,7 +5,7 @@ public class FileUploadResBean {
     int status;
     String message;
     int timestamp;
-    FileResult data;
+    FileUrl data;
 
     public int getStatus() {
         return status;
@@ -31,11 +31,11 @@ public class FileUploadResBean {
         this.timestamp = timestamp;
     }
 
-    public FileResult getData() {
+    public FileUrl getData() {
         return data;
     }
 
-    public void setData(FileResult data) {
+    public void setData(FileUrl data) {
         this.data = data;
     }
 

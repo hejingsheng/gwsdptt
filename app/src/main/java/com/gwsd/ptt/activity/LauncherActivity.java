@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
@@ -13,21 +14,28 @@ import android.os.Handler;
 import android.os.LocaleList;
 import android.util.Log;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.gwsd.ptt.MyApp;
 import com.gwsd.ptt.R;
 import com.gwsd.ptt.manager.AppManager;
 import com.gwsd.ptt.service.MainService;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class LauncherActivity extends AppCompatActivity {
 
     private static final String TAG = "GWAPP";
+    final int REQUEST_CODE_PERMISSION=100;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,15 +107,74 @@ public class LauncherActivity extends AppCompatActivity {
         return context;
     }
 
+    ActivityResultLauncher<String[]> requestPermissionsLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), new ActivityResultCallback<Map<String, Boolean>>() {
+                @Override
+                public void onActivityResult(Map<String, Boolean> result) {
+                    boolean requestPermissionOk = true;
+                    for (String s : permissionsGroupList) {
+                        if (result.get(s) != null && result.get(s).equals(true)) {
+                            Log.i(TAG, "request "+s+" permission success");
+                        } else {
+                            Log.i(TAG, "request "+s+" permission fail");
+                            requestPermissionOk = false;
+                            break;
+                        }
+                    }
+                    if (requestPermissionOk) {
+                        requestAppPermissionsResultOk();
+                    } else {
+                        MyApp.exitApp();
+                    }
+                }
+            });
+
+    List<String> permissionsGroupList=null;
     private void requestPermissions() {
+        if(permissionsGroupList==null)permissionsGroupList=new ArrayList<>();
+        permissionsGroupList.clear();
+        permissionsGroupList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        permissionsGroupList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+        permissionsGroupList.add(Manifest.permission.RECORD_AUDIO);
+        permissionsGroupList.add(Manifest.permission.READ_PHONE_STATE);
+        permissionsGroupList.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+        permissionsGroupList.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        permissionsGroupList.add(Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS);
+        permissionsGroupList.add(Manifest.permission.WAKE_LOCK);
+        permissionsGroupList.add(Manifest.permission.CAMERA);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+            int isNeedRequest = 0;
+            for (String s : permissionsGroupList) {
+                if(checkSelfPermission(s) != PackageManager.PERMISSION_GRANTED){
+                    isNeedRequest = 1;
+                    break;
+                }else{
+
+                }
+            }
+            if (isNeedRequest != 0) {
+                //requestPermissions(permissionsGroupList.toArray(new String[permissionsGroupList.size()]), REQUEST_CODE_PERMISSION);
+                requestPermissionsLauncher.launch(permissionsGroupList.toArray(new String[permissionsGroupList.size()]));
+            }else{
+                requestAppPermissionsResultOk();
+            }
+        }else {
+            requestAppPermissionsResultOk();
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        if (requestCode == REQUEST_CODE_PERMISSION && grantResults.length == permissionsGroupList.size()) {
+//            requestAppPermissionsResultOk();
+//        } else {
+//            MyApp.exitApp();
+//        }
+//    }
+
+    private void requestAppPermissionsResultOk() {
         startMain();
     }
 
@@ -121,7 +188,7 @@ public class LauncherActivity extends AppCompatActivity {
                 LauncherActivity.this.startActivity(intent);
                 finish();
             }
-        }, 1000);
+        }, 500);
     }
 
     public boolean appBringToFront(Context context) {

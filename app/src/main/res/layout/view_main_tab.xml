@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:gravity="center"
     >
     <ImageView
@@ -16,9 +16,11 @@
     <com.gwsd.ptt.view.LanguageTextView
         android:id="@+id/tab_tv"
         style="@style/mainRadioBtn"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/tab_imgview"
         android:gravity="center"
-        android:text="1" />
+        android:textColor="?attr/t_txColor"
+        android:text="123456789" />
     <ImageView
         android:id="@+id/view_msg_red"
         android:layout_width="@dimen/dimen10dp"

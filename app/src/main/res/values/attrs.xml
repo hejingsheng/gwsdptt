@@ -76,6 +76,7 @@
     <attr name="t_colorPrimaryDark" format="color|reference"/>
     <attr name="t_bgColor" format="color|reference"/>
     <attr name="t_txColor" format="color|reference"/>
+    <attr name="t_tabColor" format="color|reference"/>
     <attr name="t_listItemColor" format="color|reference"/>
 
 </resources>

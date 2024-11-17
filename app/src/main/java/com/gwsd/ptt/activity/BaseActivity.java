@@ -12,8 +12,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.gwsd.ptt.MyApp;
 import com.gwsd.ptt.R;
+import com.gwsd.ptt.bean.OfflineEventBean;
+import com.gwsd.ptt.dialog.CustomProgressDialog;
 import com.gwsd.ptt.manager.AppManager;
 import com.gwsd.ptt.manager.GWSDKManager;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -76,4 +81,42 @@ public abstract class BaseActivity extends AppCompatActivity {
                 .show();
     }
 
+    protected void showLoadingDig(){
+        showLoadingDig(getString(R.string.please_Waiting));
+    }
+    protected void showLoadingDig(boolean hasAutoDis){
+        showLoadingDig(getString(R.string.please_Waiting),hasAutoDis);
+    }
+    protected void showLoadingDig(int resId){
+        showLoadingDig(getString(resId));
+    }
+    protected void showLoadingDig(String msg){
+        showLoadingDig(msg,true);
+    }
+
+    CustomProgressDialog customProgressDialog;
+    protected void showLoadingDig(String msg ,boolean hasAutoDis){
+        if(customProgressDialog==null){
+            customProgressDialog=CustomProgressDialog.build(getContext());
+            customProgressDialog.setMessage(msg);
+        }else {
+            customProgressDialog.setMessage(msg);
+        }
+        if(customProgressDialog.isShowing()){
+            return;
+        }
+        customProgressDialog.show(hasAutoDis?3000:0);
+    }
+    protected void updateLoadingDigMsg(String msg){
+        if(customProgressDialog!=null && customProgressDialog.isShowing()){
+            customProgressDialog.setMessage(msg);
+            return;
+        }
+    }
+    protected void dissmissLoadingDig(){
+        if(customProgressDialog!=null && customProgressDialog.isShowing()){
+            customProgressDialog.dismiss();
+            customProgressDialog=null;
+        }
+    }
 }

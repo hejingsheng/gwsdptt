@@ -409,7 +409,7 @@
     <string name="hint_ptt_speak_ing">Konuşuyor...</string>
     <string name="hint_press_record">Kaydetmek için basın</string>
     <string name="hint_ptt_loosen_over">Bitirmek için bırakın...</string>
-    <string name="hint_ptt_voice_play_ing">Ses oynatılıyor...</string>
+    <string name="hint_voice_record_ing">Ses oynatılıyor...</string>
     <string name="hint_ptt_request_mic_failure">Interkom başarısız</string>
     <string name="hint_ptt_current_no_request_mic">Şu anda mikrofon isteğinde bulunamazsınız</string>
     <string name="hint_enterjoin_group">Gruba katıl</string>

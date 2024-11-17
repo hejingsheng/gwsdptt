@@ -107,16 +107,16 @@ public class MsgConvAdapter extends RecyclerView.Adapter<MsgConvAdapter.ImConver
         if (convBean.getConvType() == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_GROUP
             ||convBean.getConvType() == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_SELFGROUP) {
             holder.viewItemLeftGrp.setBackgroundResource(R.color.color_transparent);
-            holder.viewIVHead.setImageResource(R.drawable.selector_conv_grp_head);
+            holder.viewIVHead.setImageResource(R.mipmap.ic_group_p_blue);
         } else if (convBean.getConvType() == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER) {
             holder.viewItemLeftGrp.setBackgroundResource(R.color.color_transparent);
-            holder.viewIVHead.setImageResource(R.drawable.selector_conv_terminal_head);
+            holder.viewIVHead.setImageResource(R.mipmap.ic_member_online_blue);
         } else if (convBean.getConvType() == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_DISPATCH) {
             holder.viewItemLeftGrp.setBackgroundResource(R.color.color_transparent);
-            holder.viewIVHead.setImageResource(R.drawable.selector_conv_dispatch_head);
+            holder.viewIVHead.setImageResource(R.mipmap.ic_dispatch_online);
         } else {
             holder.viewItemLeftGrp.setBackgroundResource(R.color.color_transparent);
-            holder.viewIVHead.setImageResource(R.drawable.selector_conv_terminal_head);
+            holder.viewIVHead.setImageResource(R.mipmap.ic_member_online_blue);
         }
 
         if(convBean.getLastMsgType()==GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_TEXT){

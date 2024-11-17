@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="@dimen/item_height"
-    android:background="@color/color_blue"
+    android:background="?attr/t_colorPrimary"
     android:id="@+id/viewTopRoot"
     >
     <FrameLayout
@@ -17,7 +17,7 @@
             android:id="@+id/viewTopLeftImg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_yida_top_back"
+            android:src="@drawable/selector_top_back_day"
             android:layout_gravity="center_vertical"
             />
     </FrameLayout>
@@ -25,7 +25,7 @@
         android:id="@+id/viewTopTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/color_white"
+        android:textColor="?attr/t_txColor"
         android:textSize="@dimen/dimen20sp"
         android:layout_centerInParent="true"
         android:singleLine="true"
@@ -63,4 +63,10 @@
             />
     </FrameLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_height"
+        android:background="@color/color_grey_40"
+        android:layout_alignParentBottom="true"
+        />
 </RelativeLayout>

@@ -16,7 +16,7 @@ import com.gwsd.ptt.R;
 import com.gwsd.ptt.manager.GWSDKManager;
 import com.gwsd.ptt.view.AppTopView;
 
-public class HalfDuplexActivity extends BaseActivity{
+public class PttCallActivity extends BaseActivity{
 
     AppTopView aTHalfDuplex;
 
@@ -26,11 +26,13 @@ public class HalfDuplexActivity extends BaseActivity{
 
     private long gid;
     private String gname;
+    private int gtype;
 
-    public static void startAct(Context context,long gid,String name) {
-        Intent intent = new Intent(context, HalfDuplexActivity.class);
+    public static void startAct(Context context,long gid,String name, int type) {
+        Intent intent = new Intent(context, PttCallActivity.class);
         intent.putExtra("pttGroup", gid);
         intent.putExtra("pttGroupName",name);
+        intent.putExtra("pttGroupType", type);
         context.startActivity(intent);
     }
 
@@ -44,6 +46,13 @@ public class HalfDuplexActivity extends BaseActivity{
     protected void initData() {
         gid = getIntent().getLongExtra("pttGroup", -1);
         gname = getIntent().getStringExtra("pttGroupName");
+        gtype = getIntent().getIntExtra("pttGroupType", 0);
+        if (gtype == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_GROUP
+                || gtype == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_SELFGROUP) {
+            log("ptt call group");
+        } else if (gtype == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER) {
+            log("ptt call user");
+        }
         GWSDKManager.getSdkManager().registerPttObserver(new GWSDKManager.GWSDKPttEngineObserver() {
             @Override
             public void onPttEvent(int event, String data, int data1) {
@@ -93,7 +102,7 @@ public class HalfDuplexActivity extends BaseActivity{
 
     @Override
     protected void initEvent() {
-        GWSDKManager.getSdkManager().joinGroup(gid,1);
+        GWSDKManager.getSdkManager().joinGroup(gid,gtype);
         aTHalfDuplex.setLeftClick(v ->{
             finish();
         });

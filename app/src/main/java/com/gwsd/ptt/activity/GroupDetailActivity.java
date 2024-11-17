@@ -18,26 +18,31 @@ public class GroupDetailActivity extends BaseActivity{
     TextView tVGid;
     LinearLayout lLmsg;
     LinearLayout lLHalfDuplex;
+    LinearLayout viewGrpNotice;
+    LinearLayout viewGrpDelMsg;
 
     private long gid;
     private String gname;
+    private int gtype;
 
-    public static void startAct(Context context,long gid,String name) {
+    public static void startAct(Context context,long gid,String name, int type) {
         Intent intent = new Intent(context, GroupDetailActivity.class);
         intent.putExtra("selectGid", gid);
         intent.putExtra("selectName",name);
+        intent.putExtra("selectType", type);
         context.startActivity(intent);
     }
 
     @Override
     protected int getViewId() {
-        return R.layout.activity_group_opt;
+        return R.layout.activity_group_detail;
     }
 
     @Override
     protected void initData() {
         gid = getIntent().getLongExtra("selectGid", -1);
         gname = getIntent().getStringExtra("selectName");
+        gtype = getIntent().getIntExtra("selectType", 0);
     }
 
     @Override
@@ -47,8 +52,12 @@ public class GroupDetailActivity extends BaseActivity{
         tVGid = findViewById(R.id.groupId);
         lLmsg = findViewById(R.id.sendMsgLL);
         lLHalfDuplex = findViewById(R.id.halfDuplexLL);
+        viewGrpNotice = findViewById(R.id.grpAnnouncement);
+        viewGrpDelMsg = findViewById(R.id.viewDelGroupMsg);
 
         topView.setTopTitle(R.string.group_detail);
+        topView.setLeftImg(R.drawable.selector_top_back_day);
+        topView.setTopRightImg(R.drawable.selector_more_info_day);
         tVGrpName.setText(gname);
         tVGid.setText(String.valueOf(gid));
 
@@ -59,7 +68,6 @@ public class GroupDetailActivity extends BaseActivity{
         topView.setLeftClick(v->{
             finish();
         });
-        topView.setTopRightImg(R.mipmap.ic_more);
         topView.setRightClick(v->{
             MemberListActivity.startAct(getContext(),gid);
         });
@@ -76,8 +84,14 @@ public class GroupDetailActivity extends BaseActivity{
         lLHalfDuplex.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HalfDuplexActivity.startAct(getContext(),gid, gname);
+                PttCallActivity.startAct(getContext(),gid, gname, gtype);
             }
+        });
+        viewGrpNotice.setOnClickListener(v->{
+
+        });
+        viewGrpDelMsg.setOnClickListener(v->{
+
         });
 
     }

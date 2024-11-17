@@ -409,7 +409,7 @@
     <string name="hint_ptt_speak_ing">Nagsasalita...</string>
     <string name="hint_press_record">Pindutin upang mag-record</string>
     <string name="hint_ptt_loosen_over">Bitawan upang matapos...</string>
-    <string name="hint_ptt_voice_play_ing">Nagpe-play ng boses...</string>
+    <string name="hint_voice_record_ing">Nagpe-play ng boses...</string>
     <string name="hint_ptt_request_mic_failure">Nabigo ang intercom</string>
     <string name="hint_ptt_current_no_request_mic">Hindi maaaring humiling ng mikropono ngayon</string>
     <string name="hint_enterjoin_group">Pumasok sa grupo</string>

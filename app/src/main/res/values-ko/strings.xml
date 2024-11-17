@@ -409,7 +409,7 @@
     <string name="hint_ptt_speak_ing">발언 중...</string>
     <string name="hint_press_record">녹음하려면 누르세요</string>
     <string name="hint_ptt_loosen_over">끝내려면 놓으세요...</string>
-    <string name="hint_ptt_voice_play_ing">음성 재생 중...</string>
+    <string name="hint_voice_record_ing">음성 재생 중...</string>
     <string name="hint_ptt_request_mic_failure">인터컴 실패</string>
     <string name="hint_ptt_current_no_request_mic">현재 마이크 요청 불가</string>
     <string name="hint_enterjoin_group">그룹 들어가기</string>

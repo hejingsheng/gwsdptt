@@ -115,4 +115,17 @@ public class AppTopView extends RelativeLayout {
         viewTopRightImg.setVisibility(VISIBLE);
         viewTopRightImg.setImageResource(resId);
     }
+    public ImageView getViewTopRightImg(){
+        return viewTopRightImg;
+    }
+    public void setTopRightImgVisible() {
+        viewTopRight.setVisibility(VISIBLE);
+        viewTopRightTx.setVisibility(GONE);
+        viewTopRightImg.setVisibility(VISIBLE);
+    }
+    public void setTopRightImgGone() {
+        viewTopRight.setVisibility(GONE);
+        viewTopRightTx.setVisibility(GONE);
+        viewTopRightImg.setVisibility(GONE);
+    }
 }

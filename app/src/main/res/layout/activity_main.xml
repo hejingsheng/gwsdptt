@@ -16,7 +16,6 @@
             android:id="@+id/viewTop"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
             android:layout_alignParentTop="true" />
         <FrameLayout
             android:id="@+id/viewFrameLayout"
@@ -27,14 +26,15 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/line_height"
-            android:background="@color/main_tab_topLine"
+            android:background="@color/color_grey_40"
             />
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/viewTablayout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/main_tab_height"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:background="@color/main_tab_background"
+            android:padding="@dimen/dimen5dp"
+            android:background="?attr/t_tabColor"
             app:tabIndicatorHeight="0dp"
             app:tabIndicatorColor="@color/color_transparent"
             app:tabPaddingStart="-1dp"

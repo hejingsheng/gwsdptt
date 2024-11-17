@@ -20,6 +20,7 @@ import com.gwsd.ptt.adapter.CommonListAdapter;
 import com.gwsd.ptt.adapter.recylistener.RecyclerViewListener;
 import com.gwsd.ptt.manager.GWSDKManager;
 
+import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class GroupListFragment extends ListFragment {
                 commonHolder.setOnClickView(R.id.viewSelected);
                 commonHolder.getView(R.id.viewSelected).setVisibility(View.GONE);
                 ImageView imageView= (ImageView) commonHolder.getView(R.id.viewHead);
-                imageView.setImageResource(R.drawable.phone_selector_group_item_img);
+                imageView.setImageResource(R.mipmap.ic_group_p_blue);
                 TextView textView= (TextView) commonHolder.getView(R.id.viewMemberName);
                 ColorStateList csl = (ColorStateList) getResources().getColorStateList(R.color.textColorBlack);
                 if (csl != null) {
@@ -94,6 +95,12 @@ public class GroupListFragment extends ListFragment {
     }
 
     @Override
+    protected void release() {
+        super.release();
+        GWSDKManager.getSdkManager().registerPttObserver(null);
+    }
+
+    @Override
     protected void setAdapter() {
         recyclerView.setAdapter(mAdapter);
         mAdapter.setOnRecyclerViewItemClickListener(new RecyclerViewListener.OnRecyclerViewItemClickListener() {
@@ -102,7 +109,8 @@ public class GroupListFragment extends ListFragment {
                 GWGroupListBean.GWGroupBean selectedGroup = mData.get(position);
                 long gid = selectedGroup.getGid();
                 String name = selectedGroup.getName();
-                GroupDetailActivity.startAct(getContext(),gid,name);
+                int type = selectedGroup.getType();
+                GroupDetailActivity.startAct(getContext(),gid,name,type);
             }
         });
         mAdapter.setOnItemLongClick(new RecyclerViewListener.OnRecyclerViewItemLongClickListener() {
@@ -114,11 +122,20 @@ public class GroupListFragment extends ListFragment {
     }
 
     @Override
+    protected boolean onTimer() {
+        log("query timeout");
+        swipeRefreshLayout.setRefreshing(false);
+        return true;
+    }
+
+    @Override
     protected void loadData() {
         GWSDKManager.getSdkManager().queryGroup();
+        startTimer(5000);
     }
 
     private void updateGroupList(){
+        stopTimer();
         swipeRefreshLayout.setRefreshing(false);
         mData.clear();
         mData.addAll(GWSDKManager.getSdkManager().getGroupList());

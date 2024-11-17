@@ -410,7 +410,7 @@
     <string name="hint_ptt_speak_ing">Speaking...</string>
     <string name="hint_press_record">Press to record</string>
     <string name="hint_ptt_loosen_over">Release to end...</string>
-    <string name="hint_ptt_voice_play_ing">Playing voice...</string>
+    <string name="hint_voice_record_ing">Playing voice...</string>
     <string name="hint_ptt_request_mic_failure">Intercom failed</string>
     <string name="hint_ptt_current_no_request_mic">Cannot request microphone now</string>
     <string name="hint_enterjoin_group">Enter group</string>
@@ -922,6 +922,7 @@
     <string name="main_tab_my">Me</string>
 
     <string name="send_msg">Send message</string>
+    <string name="del_msg">Delete message</string>
     <string name="half_duplex">Half duplex intercom</string>
     <string name="group_announcement">Group announcement</string>
     <string name="group_members">Group member</string>

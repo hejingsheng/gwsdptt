@@ -409,7 +409,7 @@
     <string name="hint_ptt_speak_ing">Hablando...</string>
     <string name="hint_press_record">Presione para grabar</string>
     <string name="hint_ptt_loosen_over">Suelte para terminar...</string>
-    <string name="hint_ptt_voice_play_ing">Reproduciendo voz...</string>
+    <string name="hint_voice_record_ing">Reproduciendo voz...</string>
     <string name="hint_ptt_request_mic_failure">Intercomunicador fallido</string>
     <string name="hint_ptt_current_no_request_mic">No se puede solicitar el micrófono ahora</string>
     <string name="hint_enterjoin_group">Entrar al grupo</string>

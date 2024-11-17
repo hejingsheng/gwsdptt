@@ -409,7 +409,7 @@
     <string name="hint_ptt_speak_ing">Parler...</string>
     <string name="hint_press_record">Appuyez pour enregistrer</string>
     <string name="hint_ptt_loosen_over">Relâchez pour terminer...</string>
-    <string name="hint_ptt_voice_play_ing">Lecture de la voix...</string>
+    <string name="hint_voice_record_ing">Lecture de la voix...</string>
     <string name="hint_ptt_request_mic_failure">Échec de l\'intercom</string>
     <string name="hint_ptt_current_no_request_mic">Impossible de demander le microphone maintenant</string>
     <string name="hint_enterjoin_group">Entrer dans le groupe</string>

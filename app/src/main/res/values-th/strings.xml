@@ -409,7 +409,7 @@
     <string name="hint_ptt_speak_ing">กำลังพูด...</string>
     <string name="hint_press_record">กดเพื่อบันทึก</string>
     <string name="hint_ptt_loosen_over">ปล่อยเพื่อสิ้นสุด...</string>
-    <string name="hint_ptt_voice_play_ing">กำลังเล่นเสียง...</string>
+    <string name="hint_voice_record_ing">กำลังเล่นเสียง...</string>
     <string name="hint_ptt_request_mic_failure">การใช้ระบบอินเตอร์คอมล้มเหลว</string>
     <string name="hint_ptt_current_no_request_mic">ไม่สามารถร้องขอไมโครโฟนได้ในขณะนี้</string>
     <string name="hint_enterjoin_group">เข้าสู่กลุ่ม</string>

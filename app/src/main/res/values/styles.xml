@@ -46,11 +46,12 @@
         <item name="windowNoTitle">true</item>
     </style>
     <style name="Gw.Phone" parent="Norm.Theme">
-        <item name="t_txColor">@color/color_gwtx</item>
-        <item name="t_bgColor">@color/color_gwbg</item>
-        <item name="t_colorPrimary">@color/color_blue5</item>
+        <item name="t_txColor">@drawable/font_gray_blue</item>
+        <item name="t_bgColor">@color/color_grey_10</item>
+        <item name="t_tabColor">@color/color_grey_5</item>
+        <item name="t_colorPrimary">@color/color_grey_5</item>
         <item name="t_colorPrimaryDark">@color/color_blue</item>
-        <item name="t_listItemColor">@color/color_white</item>
+        <item name="t_listItemColor">@drawable/selector_listitem_bg_day</item>
     </style>
     <style name="Yellow.Them" parent="Norm.Theme">
         <item name="t_txColor">@color/color_white</item>

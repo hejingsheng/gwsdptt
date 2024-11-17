@@ -409,7 +409,7 @@
     <string name="hint_ptt_speak_ing">Sprechen...</string>
     <string name="hint_press_record">Zum Aufnehmen drücken</string>
     <string name="hint_ptt_loosen_over">Zum Beenden loslassen...</string>
-    <string name="hint_ptt_voice_play_ing">Stimme wird wiedergegeben...</string>
+    <string name="hint_voice_record_ing">Stimme wird wiedergegeben...</string>
     <string name="hint_ptt_request_mic_failure">Intercom fehlgeschlagen</string>
     <string name="hint_ptt_current_no_request_mic">Mikrofon kann derzeit nicht angefordert werden</string>
     <string name="hint_enterjoin_group">Gruppe betreten</string>

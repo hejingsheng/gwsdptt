@@ -1,7 +1,9 @@
 package com.gwsd.ptt.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +15,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.gwsd.ptt.MyApp;
+import com.gwsd.ptt.utils.Utils;
 
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 public abstract class BaseFragment extends Fragment {
 
@@ -56,13 +60,36 @@ public abstract class BaseFragment extends Fragment {
     protected abstract void initEvent();
 
     protected void release() {
-
+        stopTimer();
     }
 
     protected void finishAct(){
         if(getActivity()!=null){
             getActivity().finish();
         }
+    }
+
+    protected boolean onTimer() {
+        return false;
+    }
+
+    Disposable disposable;
+    protected void startTimer(int ms) {
+        disposable = Observable.interval(ms, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aLong -> {
+                    boolean stop = onTimer();
+                    if (stop) {
+                        stopTimer();
+                    }
+                });
+    }
+
+    protected void stopTimer() {
+        if (disposable != null) {
+            disposable.dispose();
+        }
+        disposable = null;
     }
 
     protected void runOnUiThread(Runnable runnable){

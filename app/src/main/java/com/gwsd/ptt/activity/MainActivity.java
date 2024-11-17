@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,20 +16,26 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.tabs.TabLayout;
 import com.gwsd.ptt.R;
+import com.gwsd.ptt.bean.LoginEventBean;
+import com.gwsd.ptt.bean.OfflineEventBean;
 import com.gwsd.ptt.fragment.BaseFragment;
 import com.gwsd.ptt.fragment.ChatListFragment;
 import com.gwsd.ptt.fragment.GroupListFragment;
 import com.gwsd.ptt.fragment.MeFragment;
 import com.gwsd.ptt.view.AppTopView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends CommBusiActivity {
 
     AppTopView viewAppTop;
     FrameLayout viewFrameLayout;
     TabLayout viewTablayout;
+
+    RotateAnimation rotateAnimation;
 
     List<BaseFragment> fragmentList;
 
@@ -42,15 +50,44 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    protected void initData() {
+    protected void processLogin(LoginEventBean bean) {
+        super.processLogin(bean);
+        log("login:"+bean.getLoginResult());
+        showToast(R.string.hint_login_succeed);
+        viewAppTop.setTopRightImgGone();
+    }
 
+    @Override
+    protected void processOffline(OfflineEventBean bean) {
+        super.processOffline(bean);
+        log("offline:"+bean.getCode());
+        if (bean.getCode() == OfflineEventBean.OFFLINE_REASON_KICKOUT_CODE) {
+            showToast(R.string.hint_loging_otherterminals);
+        } else if (bean.getCode() == OfflineEventBean.OFFLINE_REASON_ERROR_CODE) {
+            showToast(R.string.hint_network_err);
+        }
+        viewAppTop.setTopRightImgVisible();
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
     }
 
     @Override
     protected void initView() {
         viewAppTop = findViewById(R.id.viewTop);
+        viewAppTop.setTopRightImg(R.mipmap.ic_top_logining_day);
         viewFrameLayout = findViewById(R.id.viewFrameLayout);
         viewTablayout = findViewById(R.id.viewTablayout);
+
+        rotateAnimation = new RotateAnimation(0, 360,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        rotateAnimation.setDuration(2000); // 设置动画持续时间，单位毫秒
+        rotateAnimation.setRepeatCount(Animation.INFINITE); // 设置动画重复次数，INFINITE 表示无限重复
+        rotateAnimation.setInterpolator(getApplicationContext(), android.R.interpolator.linear); // 设置动画插值器
+        viewAppTop.getViewTopRightImg().startAnimation(rotateAnimation);
+        viewAppTop.setTopRightImgGone();
     }
 
     @Override
@@ -71,17 +108,17 @@ public class MainActivity extends BaseActivity {
         fragmentList.add(ChatListFragment.build());
         fragmentTitleList.add(getString(R.string.main_tab_chat));
         fragmentFlagList.add("ChatListFragment");
-        titleImgsList.add(R.drawable.main_tab_chat);
+        titleImgsList.add(R.drawable.main_tab_chat_day);
 
         fragmentList.add(GroupListFragment.build());
         fragmentTitleList.add(getString(R.string.main_tab_grp));
         fragmentFlagList.add("GroupFragment");
-        titleImgsList.add(R.drawable.main_tab_grp);
+        titleImgsList.add(R.drawable.main_tab_grp_day);
 
         fragmentList.add(MeFragment.build());
         fragmentTitleList.add(getString(R.string.main_tab_my));
         fragmentFlagList.add("MeFragment");
-        titleImgsList.add(R.drawable.main_tab_me);
+        titleImgsList.add(R.drawable.main_tab_me_day);
 
         for (int i = 0; i < fragmentTitleList.size(); i++) {
             tabLayout.addTab(tabLayout.newTab());

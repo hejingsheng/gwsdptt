@@ -409,7 +409,7 @@
     <string name="hint_ptt_speak_ing">Berbicara...</string>
     <string name="hint_press_record">Tekan untuk merekam</string>
     <string name="hint_ptt_loosen_over">Lepaskan untuk mengakhiri...</string>
-    <string name="hint_ptt_voice_play_ing">Memutar suara...</string>
+    <string name="hint_voice_record_ing">Memutar suara...</string>
     <string name="hint_ptt_request_mic_failure">Interkom gagal</string>
     <string name="hint_ptt_current_no_request_mic">Tidak bisa meminta mikrofon sekarang</string>
     <string name="hint_enterjoin_group">Masuk ke grup</string>

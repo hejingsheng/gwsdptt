@@ -1,6 +1,9 @@
 package com.gwsd.ptt.manager;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
@@ -28,6 +31,8 @@ import com.gwsd.ptt.MyApp;
 import com.gwsd.ptt.activity.AudioCallActivity;
 import com.gwsd.ptt.activity.VideoCallActivity;
 import com.gwsd.ptt.bean.GWPttUserInfo;
+import com.gwsd.ptt.bean.LoginEventBean;
+import com.gwsd.ptt.bean.OfflineEventBean;
 import com.gwsd.ptt.dao.MsgDaoHelp;
 import com.gwsd.ptt.dao.pojo.MsgContentPojo;
 import com.gwsd.ptt.dao.pojo.MsgConversationPojo;
@@ -45,7 +50,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
-public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVideoEventHandler {
+public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVideoEventHandler, Handler.Callback {
 
     public interface GWSDKPttEngineObserver {
         void onPttEvent(int var1, String var2, int var3);
@@ -83,12 +88,17 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
     private GWSDKVideoEngineObserver videoObserver;
 
     private GWPttUserInfo userInfo;
+    private String imei;
+    private String iccid;
+    private boolean autoLogin = true;
     private Map<Long, GWGroupListBean.GWGroupBean> groupMap;
     private List<GWGroupListBean.GWGroupBean> groupBeanList;
     private List<GWMemberInfoBean.MemberInfo> memBeanList;
     private boolean haveStartMsgService = false;
 
     private Disposable disposable;
+    protected HandlerThread handlerThread;
+    protected Handler handler;
 
     private GWSDKManager(Context context) {
         this.context = context;
@@ -101,6 +111,33 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         gwPttEngine.pttConfigServer(3,"114.116.246.85", 8188);
         log("current sdk version:"+gwPttEngine.pttGetVersion());
         userInfo = new GWPttUserInfo();
+        handlerThread = new HandlerThread("SDKManagerThread");
+        handlerThread.start();
+        handler = new Handler(handlerThread.getLooper(), this);
+    }
+
+    private final int LOGIN_AGAIN_MSG = 0;
+
+    @Override
+    public boolean handleMessage(Message msg) {
+        switch (msg.what)
+        {
+            case LOGIN_AGAIN_MSG:
+                log("login msg try login");
+                login(userInfo.getAccount(), userInfo.getPassword(), imei, iccid);
+                break;
+            default:
+                break;
+        }
+        return false;
+    }
+
+    private void sendMessageToSDKHandler(int msg, int timeout) {
+        handler.sendEmptyMessageDelayed(msg, timeout);
+    }
+
+    private void removeSDKHandlerMessage(int msg) {
+        handler.removeMessages(msg);
     }
 
     public void registerPttObserver(GWSDKPttEngineObserver observer) {
@@ -133,6 +170,8 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
 
     public void login(String account, String password, String imei, String iccid) {
         gwPttEngine.pttLogin(account, password, imei, iccid);
+        this.imei = imei;
+        this.iccid = iccid;
         userInfo.setAccount(account);
         userInfo.setPassword(password);
         userInfo.setOnline(false);
@@ -283,6 +322,8 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
                 queryGroup();
                 //joinGroup(gwLoginResultBean.getDefaultGid(), 0);
             }
+            removeSDKHandlerMessage(LOGIN_AGAIN_MSG);
+            EventBus.getDefault().post(new LoginEventBean(gwLoginResultBean.getResult()));
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_QUERY_GROUP) {
             GWGroupListBean gwGroupListBean = JSON.parseObject(data, GWGroupListBean.class);
             if (gwGroupListBean.getResult() == 0) {
@@ -341,7 +382,6 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
                 memBeanList.clear();
                 memBeanList.addAll(members);
             }
-
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_REQUEST_MIC) {
             GWRequestSpeakBean gwRequestSpeakBean = JSON.parseObject(data, GWRequestSpeakBean.class);
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_TMP_GROUP_ACTIVE) {
@@ -358,15 +398,12 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
                 }
             }
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_LOGOUT) {
-            userInfo.setOnline(false);
-            stopTimer();
-            haveStartMsgService = false;
             log("logout");
+            offline(OfflineEventBean.OFFLINE_REASON_LOGOUT_CODE, null);
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_KICKOUT) {
             GWKickoutNotifyBean gwKickoutNotifyBean = JSON.parseObject(data, GWKickoutNotifyBean.class);
-            userInfo.setOnline(false);
-            stopTimer();
-            haveStartMsgService = false;
+            log("kickout");
+            offline(OfflineEventBean.OFFLINE_REASON_KICKOUT_CODE, gwKickoutNotifyBean.getReason());
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_CURRENT_GROUP) {
             GWCurrentGroupNotifyBean gwCurrentGroupNotifyBean = JSON.parseObject(data, GWCurrentGroupNotifyBean.class);
             if (gwCurrentGroupNotifyBean.getResult() == 0) {
@@ -399,12 +436,23 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
             GWChatGroupDetailBean gwChatGroupDetailBean = JSON.parseObject(data, GWChatGroupDetailBean.class);
         } else {
             log("error happen");
-            userInfo.setOnline(false);
-            stopTimer();
-            haveStartMsgService = false;
+            offline(OfflineEventBean.OFFLINE_REASON_ERROR_CODE, null);
         }
         if (pttObserver != null) {
             pttObserver.onPttEvent(event, data, data1);
+        }
+    }
+
+    private void offline(int code, String info) {
+        userInfo.setOnline(false);
+        stopTimer();
+        haveStartMsgService = false;
+        EventBus.getDefault().post(new OfflineEventBean(code, info));
+        if (code == OfflineEventBean.OFFLINE_REASON_KICKOUT_CODE) {
+            if (autoLogin) {
+                log("other login kickout login again");
+                sendMessageToSDKHandler(LOGIN_AGAIN_MSG, 3000);
+            }
         }
     }
 

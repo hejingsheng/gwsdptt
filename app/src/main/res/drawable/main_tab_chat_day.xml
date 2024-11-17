@@ -3,5 +3,5 @@
     <item android:state_checked="true" android:drawable="@mipmap/ic_main_tab_chat_p"/>
     <item android:state_pressed="true" android:drawable="@mipmap/ic_main_tab_chat_p"/>
     <item android:state_selected="true" android:drawable="@mipmap/ic_main_tab_chat_p"/>
-    <item android:state_checked="false" android:drawable="@mipmap/ic_main_tab_chat_n"/>
+    <item android:state_checked="false" android:drawable="@mipmap/ic_main_tab_chat_day"/>
 </selector>

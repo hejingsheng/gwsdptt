@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </FrameLayout>
-    <com.gwsd.ptt.view.MImageTextView
+    <com.gwsd.open_ptt.view.MImageTextView
         android:id="@+id/view_camera_change"
         android:layout_width="@dimen/video_hangup_size"
         android:layout_height="@dimen/video_hangup_size"

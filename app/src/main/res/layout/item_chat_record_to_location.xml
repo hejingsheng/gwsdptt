@@ -27,7 +27,7 @@
         <!--android:textSize="@dimen/textSize_nroml"-->
         <!--/>-->
     <!-- android:background="@drawable/chat_right_word_bubble"-->
-    <com.gwsd.ptt.ui.view.ChatFromLocationView
+    <com.gwsd.open_ptt.ui.view.ChatFromLocationView
         android:id="@+id/viewFromMsgView"
         style="@style/IMChatBubbleBg"
         android:layout_below="@+id/viewName"
@@ -69,5 +69,5 @@
             style="@style/IMChatBubbleImageView"
             android:layout_below="@+id/viewLocation"
             />
-    </com.gwsd.ptt.ui.view.ChatFromLocationView>
+    </com.gwsd.open_ptt.ui.view.ChatFromLocationView>
 </RelativeLayout>

@@ -25,7 +25,7 @@
         android:text=""
         />
     <!-- android:background="@drawable/chat_left_word_bubble"-->
-    <com.gwsd.ptt.view.ChatFromVideoView
+    <com.gwsd.open_ptt.view.ChatFromVideoView
         android:id="@+id/viewFromMsgView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,5 +45,5 @@
             android:src="@mipmap/ic_record_play"
             android:layout_centerInParent="true"
             />
-    </com.gwsd.ptt.view.ChatFromVideoView>
+    </com.gwsd.open_ptt.view.ChatFromVideoView>
 </RelativeLayout>

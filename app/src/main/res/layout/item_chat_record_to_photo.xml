@@ -27,7 +27,7 @@
         <!--android:textSize="@dimen/textSize_nroml"-->
         <!--/>-->
     <!--chat_right_word_bubble-->
-    <com.gwsd.ptt.view.ChatFromPhotoView
+    <com.gwsd.open_ptt.view.ChatFromPhotoView
         android:id="@+id/viewFromMsgView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -40,6 +40,6 @@
             style="@style/IMChatBubbleImageView"
 
             />
-    </com.gwsd.ptt.view.ChatFromPhotoView>
+    </com.gwsd.open_ptt.view.ChatFromPhotoView>
 
 </RelativeLayout>

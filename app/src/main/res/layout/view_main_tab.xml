@@ -13,7 +13,7 @@
         android:layout_centerHorizontal="true"
         />
 
-    <com.gwsd.ptt.view.LanguageTextView
+    <com.gwsd.open_ptt.view.LanguageTextView
         android:id="@+id/tab_tv"
         style="@style/mainRadioBtn"
         android:layout_height="wrap_content"

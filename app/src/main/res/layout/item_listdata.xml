@@ -22,7 +22,7 @@
             android:layout_height="@dimen/dimen_groupImgSize"
             android:src="@mipmap/ic_member_online_blue"
             />
-        <com.gwsd.ptt.view.MarqueeTextView
+        <com.gwsd.open_ptt.view.MarqueeTextView
             android:id="@+id/viewMemberName"
             android:layout_weight="1"
             android:layout_width="match_parent"

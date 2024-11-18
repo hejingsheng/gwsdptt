@@ -40,7 +40,7 @@
         <!--android:src="@mipmap/ic_im_send_fail"-->
         <!--/>-->
 
-    <com.gwsd.ptt.ui.view.ChatFromFileView
+    <com.gwsd.open_ptt.ui.view.ChatFromFileView
         android:id="@+id/viewFromMsgView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -88,7 +88,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.gwsd.ptt.ui.view.ChatFromFileView>
+    </com.gwsd.open_ptt.ui.view.ChatFromFileView>
     <!--android:background="@drawable/selector_green_bg_radius"-->
 
 </RelativeLayout>

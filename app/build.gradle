@@ -7,7 +7,7 @@ android {
     compileSdk 28
 
     defaultConfig {
-        applicationId "com.gwsd.ptt"
+        applicationId "com.gwsd.openptt"
         minSdk 21
         targetSdk 28
         versionCode 1
@@ -34,7 +34,7 @@ android {
         //数据库的schema版本，也可以理解为数据库版本号
         schemaVersion 1
         //设置DaoMaster、DaoSession、Dao包名，也就是要放置这些类的包的全路径。
-        daoPackage 'com.gwsd.ptt.dao.greendao'
+        daoPackage 'com.gwsd.open_ptt.dao.greendao'
         //设置DaoMaster、DaoSession、Dao目录
         targetGenDir 'src/main/java'
     }

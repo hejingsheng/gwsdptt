@@ -7,7 +7,7 @@
     android:background="?attr/t_bgColor"
     >
     <!--?attr/t_bgColor-->
-    <com.gwsd.ptt.view.AppTopView
+    <com.gwsd.open_ptt.view.AppTopView
         android:id="@+id/viewChatTopView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
         android:layout_above="@+id/viewChatGroup"
         android:layout_below="@+id/viewChatTopView" />
 
-    <com.gwsd.ptt.view.VoiceSendingView
+    <com.gwsd.open_ptt.view.VoiceSendingView
         android:id="@+id/viewVoiceAnimPanel"
         android:layout_width="@dimen/group_list_ptt_VoiceSendingView_size"
         android:layout_height="@dimen/group_list_ptt_VoiceSendingView_size"
@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         >
-        <com.gwsd.ptt.view.ChatInputView
+        <com.gwsd.open_ptt.view.ChatInputView
             android:id="@+id/viewChatInputView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -25,7 +25,7 @@
         android:textSize="@dimen/textSize_nroml"
         android:text=""
         />
-    <com.gwsd.ptt.ui.view.ChatFromFileView
+    <com.gwsd.open_ptt.ui.view.ChatFromFileView
         android:id="@+id/viewFromMsgView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -75,5 +75,5 @@
                 app:layout_constraintLeft_toLeftOf="@+id/viewFileName"
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.gwsd.ptt.ui.view.ChatFromFileView>
+    </com.gwsd.open_ptt.ui.view.ChatFromFileView>
 </RelativeLayout>

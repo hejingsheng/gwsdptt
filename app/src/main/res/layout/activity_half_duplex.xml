@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:background="?attr/t_bgColor">
 
-    <com.gwsd.ptt.view.AppTopView
+    <com.gwsd.open_ptt.view.AppTopView
         android:id="@+id/viewHalfDuplexTopView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

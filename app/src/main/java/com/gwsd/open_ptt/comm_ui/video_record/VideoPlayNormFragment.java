@@ -1,10 +1,10 @@
-package com.gwsd.open_ptt.video_ui.video_record;
+package com.gwsd.open_ptt.comm_ui.video_record;
 
 import android.os.Bundle;
 
 import com.gwsd.open_ptt.R;
 import com.gwsd.open_ptt.fragment.BaseFragment;
-import com.gwsd.open_ptt.video_ui.video_record.help.VideoPlayerView;
+import com.gwsd.open_ptt.comm_ui.video_record.help.VideoPlayerView;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
 

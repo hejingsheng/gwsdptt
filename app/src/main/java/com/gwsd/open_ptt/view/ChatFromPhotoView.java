@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.gwsd.open_ptt.R;
+import com.gwsd.open_ptt.comm_ui.image.ImageActivity;
 import com.gwsd.open_ptt.dao.pojo.MsgContentPojo;
 
 import java.util.ArrayList;
@@ -42,6 +43,6 @@ public class ChatFromPhotoView extends ChatBaseFromMsgView {
         super.onClick(view);
         ArrayList<String> arrayList=new ArrayList<>();
         arrayList.add(bean.getUrl());
-        //PhotoImagePagerActivity.navToImagePagerActivity(view.getContext(),arrayList,0);
+        ImageActivity.startAct(view.getContext(), arrayList, 0);
     }
 }

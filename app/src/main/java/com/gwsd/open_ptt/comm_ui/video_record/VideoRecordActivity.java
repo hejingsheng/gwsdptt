@@ -1,4 +1,4 @@
-package com.gwsd.open_ptt.video_ui.video_record;
+package com.gwsd.open_ptt.comm_ui.video_record;
 
 import android.Manifest;
 import android.content.Intent;
@@ -21,10 +21,10 @@ import com.gwsd.open_ptt.R;
 import com.gwsd.open_ptt.activity.BaseActivity;
 import com.gwsd.open_ptt.dialog.CancelConfirmDialog;
 import com.gwsd.open_ptt.utils.Utils;
-import com.gwsd.open_ptt.video_ui.video_record.contracts.VideoPlayContracts;
-import com.gwsd.open_ptt.video_ui.video_record.contracts.VideoRecordingContracts;
-import com.gwsd.open_ptt.video_ui.video_record.help.VideoRecoidingResultBean;
-import com.gwsd.open_ptt.video_ui.video_record.help.VideoRecordParam1;
+import com.gwsd.open_ptt.comm_ui.video_record.contracts.VideoPlayContracts;
+import com.gwsd.open_ptt.comm_ui.video_record.contracts.VideoRecordingContracts;
+import com.gwsd.open_ptt.comm_ui.video_record.help.VideoRecoidingResultBean;
+import com.gwsd.open_ptt.comm_ui.video_record.help.VideoRecordParam1;
 import com.gwsd.open_ptt.view.MImageTextView;
 
 import java.io.File;

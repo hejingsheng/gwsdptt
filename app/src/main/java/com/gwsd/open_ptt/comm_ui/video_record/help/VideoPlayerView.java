@@ -1,4 +1,4 @@
-package com.gwsd.open_ptt.video_ui.video_record.help;
+package com.gwsd.open_ptt.comm_ui.video_record.help;
 
 import android.content.Context;
 import android.content.DialogInterface;

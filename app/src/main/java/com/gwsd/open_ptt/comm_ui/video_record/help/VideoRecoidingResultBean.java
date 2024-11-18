@@ -1,4 +1,4 @@
-package com.gwsd.open_ptt.video_ui.video_record.help;
+package com.gwsd.open_ptt.comm_ui.video_record.help;
 
 /**
  * Created by Nicky on 2017/12/15.

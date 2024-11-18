@@ -1,4 +1,4 @@
-package com.gwsd.open_ptt.video_ui.video_record.presenter;
+package com.gwsd.open_ptt.comm_ui.video_record.presenter;
 
 import android.app.Activity;
 import android.hardware.Camera;
@@ -10,7 +10,7 @@ import android.view.Surface;
 import androidx.fragment.app.Fragment;
 
 import com.gwsd.open_ptt.MyApp;
-import com.gwsd.open_ptt.video_ui.video_record.contracts.VideoRecordingContracts;
+import com.gwsd.open_ptt.comm_ui.video_record.contracts.VideoRecordingContracts;
 import com.gwsd.open_ptt.view.CameraPreview;
 
 import java.io.IOException;

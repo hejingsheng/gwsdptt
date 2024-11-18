@@ -1,11 +1,11 @@
-package com.gwsd.open_ptt.video_ui.video_record.contracts;
+package com.gwsd.open_ptt.comm_ui.video_record.contracts;
 
 import android.hardware.Camera;
 import android.media.MediaRecorder;
 
 import androidx.fragment.app.Fragment;
 
-import com.gwsd.open_ptt.video_ui.video_record.help.VideoRecoidingResultBean;
+import com.gwsd.open_ptt.comm_ui.video_record.help.VideoRecoidingResultBean;
 import com.gwsd.open_ptt.view.CameraPreview;
 
 

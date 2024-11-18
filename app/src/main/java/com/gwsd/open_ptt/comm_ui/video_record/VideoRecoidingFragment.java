@@ -1,16 +1,16 @@
-package com.gwsd.open_ptt.video_ui.video_record;
+package com.gwsd.open_ptt.comm_ui.video_record;
 
 import android.hardware.Camera;
 import android.media.MediaRecorder;
 import android.widget.FrameLayout;
 
 import com.gwsd.open_ptt.R;
+import com.gwsd.open_ptt.comm_ui.video_record.contracts.VideoRecordingContracts;
 import com.gwsd.open_ptt.fragment.BaseFragment;
 import com.gwsd.open_ptt.utils.SDCardUtil;
 import com.gwsd.open_ptt.utils.Utils;
-import com.gwsd.open_ptt.video_ui.video_record.contracts.VideoRecordingContracts;
-import com.gwsd.open_ptt.video_ui.video_record.help.VideoRecoidingResultBean;
-import com.gwsd.open_ptt.video_ui.video_record.presenter.VideoRecordingPresenterImp;
+import com.gwsd.open_ptt.comm_ui.video_record.help.VideoRecoidingResultBean;
+import com.gwsd.open_ptt.comm_ui.video_record.presenter.VideoRecordingPresenterImp;
 import com.gwsd.open_ptt.view.CameraPreview;
 
 import java.io.File;

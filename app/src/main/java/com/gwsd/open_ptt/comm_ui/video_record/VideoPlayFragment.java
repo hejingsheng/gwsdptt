@@ -1,11 +1,11 @@
-package com.gwsd.open_ptt.video_ui.video_record;
+package com.gwsd.open_ptt.comm_ui.video_record;
 
 import android.text.TextUtils;
 
 import com.gwsd.open_ptt.R;
 import com.gwsd.open_ptt.fragment.BaseFragment;
-import com.gwsd.open_ptt.video_ui.video_record.contracts.VideoPlayContracts;
-import com.gwsd.open_ptt.video_ui.video_record.help.EmptyControlVideo;
+import com.gwsd.open_ptt.comm_ui.video_record.contracts.VideoPlayContracts;
+import com.gwsd.open_ptt.comm_ui.video_record.help.EmptyControlVideo;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
 public class VideoPlayFragment extends BaseFragment implements VideoPlayContracts.VideoPlayUI {

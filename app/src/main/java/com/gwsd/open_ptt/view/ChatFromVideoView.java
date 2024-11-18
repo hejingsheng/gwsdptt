@@ -7,6 +7,7 @@ import android.widget.ImageView;
 
 import com.gwsd.open_ptt.R;
 import com.gwsd.open_ptt.dao.pojo.MsgContentPojo;
+import com.gwsd.open_ptt.comm_ui.video_record.PlayVideoActivity;
 
 public class ChatFromVideoView extends ChatBaseFromMsgView {
     public ChatFromVideoView(Context context) {
@@ -42,6 +43,6 @@ public class ChatFromVideoView extends ChatBaseFromMsgView {
         super.onClick(view);
         String videoUrl=bean.getUrl();
         String thumbUrl=bean.getThumburl();
-        //PlayVideoActivity.navToAct(view.getContext(),videoUrl,thumbUrl);
+        PlayVideoActivity.navToAct(view.getContext(),videoUrl,thumbUrl);
     }
 }

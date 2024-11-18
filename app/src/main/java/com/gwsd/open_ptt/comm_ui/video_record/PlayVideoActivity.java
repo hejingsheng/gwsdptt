@@ -1,4 +1,4 @@
-package com.gwsd.open_ptt.video_ui.video_record;
+package com.gwsd.open_ptt.comm_ui.video_record;
 
 import android.content.Context;
 import android.content.Intent;

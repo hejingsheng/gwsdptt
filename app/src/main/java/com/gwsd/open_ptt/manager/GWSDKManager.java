@@ -33,6 +33,7 @@ import com.gwsd.open_ptt.activity.VideoCallActivity;
 import com.gwsd.open_ptt.bean.GWPttUserInfo;
 import com.gwsd.open_ptt.bean.LoginEventBean;
 import com.gwsd.open_ptt.bean.OfflineEventBean;
+import com.gwsd.open_ptt.config.DeviceConfig;
 import com.gwsd.open_ptt.config.ServerAddressConfig;
 import com.gwsd.open_ptt.dao.MsgDaoHelp;
 import com.gwsd.open_ptt.dao.pojo.MsgContentPojo;
@@ -318,7 +319,7 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
                 userInfo.setCall(gwLoginResultBean.isCall());
                 userInfo.setVideo(gwLoginResultBean.isVideo());
                 userInfo.setSilent(gwLoginResultBean.isSilent());
-                gwPttEngine.pttHeart(100, "5g", System.currentTimeMillis());
+                gwPttEngine.pttHeart(DeviceConfig.getDeviceBattery(), DeviceConfig.getDeviceNetwork(), System.currentTimeMillis());
                 startTimer();
                 queryGroup();
                 //joinGroup(gwLoginResultBean.getDefaultGid(), 0);
@@ -709,7 +710,7 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> {
                     //Log.d(TAG, "send heart");
-                    gwPttEngine.pttHeart(100, "5g", System.currentTimeMillis());
+                    gwPttEngine.pttHeart(DeviceConfig.getDeviceBattery(), DeviceConfig.getDeviceNetwork(), System.currentTimeMillis());
                 });
     }
 

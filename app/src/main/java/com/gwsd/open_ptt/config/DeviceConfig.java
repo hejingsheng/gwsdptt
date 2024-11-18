@@ -23,4 +23,24 @@ public class DeviceConfig {
         public int back_camera_orientation = 90;
     }
 
+    public static String getDeviceImei() {
+        // you should call android api get device imei
+        return "12345";
+    }
+
+    public static String getDeviceIccid() {
+        // you should call android api get sim card iccid
+        return "54321";
+    }
+
+    public static int getDeviceBattery() {
+        // you should call android api get battery
+        return 100;
+    }
+
+    public static String getDeviceNetwork() {
+        // you should call android api get network
+        return "5G";
+    }
+
 }

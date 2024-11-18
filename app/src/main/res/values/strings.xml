@@ -17,7 +17,7 @@
     <string name="login_welcome_easy_idata">对讲机</string>
 
     <!--默认-->
-    <string name="login_welcome">欢迎使用%1$s对讲系统</string>
+    <string name="login_welcome">欢迎使用%1$s系统</string>
 
     <string name="login_welcome_tts">欢迎使用公网对讲</string>
     <string name="login_welcome_idata">欢迎使用对讲APP</string>

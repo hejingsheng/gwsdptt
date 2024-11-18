@@ -25,7 +25,7 @@
             android:layout_marginTop="@dimen/dimen2dp"
             android:textColor="@drawable/font_gray_yellows"
             android:textSize="@dimen/textSize_nroml"
-            android:visibility="visible"
+            android:visibility="invisible"
             android:text="@string/item_check_update_version"
             >
         </TextView>
@@ -33,7 +33,7 @@
             android:id="@+id/view_login_logflag"
             android:layout_width="@dimen/login_logSize"
             android:layout_height="@dimen/login_logSize"
-            android:src="@mipmap/ic_logo_gw_w"
+            android:src="@mipmap/ic_logo_gw_day"
             android:layout_gravity="center"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/dimen_boundary_xl"
@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/login_welcome"
-            android:textColor="@color/textColorWhite"
+            android:textColor="?attr/t_txColor"
             android:textSize="@dimen/textSize_large"
             android:layout_marginTop="@dimen/dimen_boundary_s"
             android:layout_gravity="center"
@@ -63,20 +63,19 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dimen4dp"
                 />
-            <EditText
 
+            <EditText
                 android:id="@+id/view_input_username"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingLeft="@dimen/login_inputContent_paddingLeft"
-                android:textSize="@dimen/textSize_nroml"
-                android:textColor="@color/textColorWhite"
-                android:textColorHint="@color/textColorHint"
                 android:background="@null"
+                android:digits="1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                 android:drawableBottom="@drawable/line_black1"
                 android:hint="@string/hint_account"
-                android:digits="1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                />
+                android:paddingLeft="@dimen/login_inputContent_paddingLeft"
+                android:textColor="?attr/t_txColor"
+                android:textColorHint="@color/textColorHint"
+                android:textSize="@dimen/textSize_nroml" />
             <ImageView
                 android:id="@+id/view_clear_account"
                 android:layout_width="wrap_content"
@@ -107,7 +106,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textSize="@dimen/textSize_nroml"
-                android:textColor="@color/textColorWhite"
+                android:textColor="?attr/t_txColor"
                 android:textColorHint="@color/textColorHint"
                 android:background="@null"
                 android:drawableBottom="@drawable/line_black1"

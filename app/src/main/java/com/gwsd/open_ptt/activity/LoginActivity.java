@@ -9,6 +9,7 @@ import com.alibaba.fastjson.JSON;
 import com.gwsd.bean.GWLoginResultBean;
 import com.gwsd.bean.GWType;
 import com.gwsd.open_ptt.R;
+import com.gwsd.open_ptt.config.DeviceConfig;
 import com.gwsd.open_ptt.manager.GWSDKManager;
 
 public class LoginActivity extends BaseActivity {
@@ -35,17 +36,16 @@ public class LoginActivity extends BaseActivity {
         viewLogo = findViewById(R.id.view_login_logflag);
         viewUpdateApp = findViewById(R.id.viewUpdateApp);
         viewLoginWelcome = findViewById(R.id.view_login_welcome);
+        viewLoginWelcome.setText(String.format(getString(R.string.login_welcome), getString(R.string.app_name)));
     }
 
     @Override
     protected void initEvent(){
         viewLogin.setOnClickListener(v->{
-//            String account = viewInputUm.getText().toString();
-//            String password = viewInputPsw.getText().toString();
-            String account = "gwsd03";
-            String password = "123456";
-            String imei = "12345"; // you should call android api get device imei
-            String iccid = "54321"; // you should call android api get sim card iccid
+            String account = viewInputUm.getText().toString();
+            String password = viewInputPsw.getText().toString();
+            String imei = DeviceConfig.getDeviceImei();
+            String iccid = DeviceConfig.getDeviceIccid();
             GWSDKManager.getSdkManager().login(account,password,imei,iccid);
         });
     }

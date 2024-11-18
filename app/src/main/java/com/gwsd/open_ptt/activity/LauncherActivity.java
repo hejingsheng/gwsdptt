@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.LocaleList;
 import android.util.Log;
+import android.widget.ImageView;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -34,13 +35,17 @@ import java.util.Map;
 public class LauncherActivity extends AppCompatActivity {
 
     private static final String TAG = "GWAPP";
-    final int REQUEST_CODE_PERMISSION=100;
+    //final int REQUEST_CODE_PERMISSION=100;
+
+    ImageView viewLogo;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.Gw_Phone);
         setContentView(R.layout.activity_launcher);
-
+        viewLogo = findViewById(R.id.viewLogo);
+        viewLogo.setImageResource(R.mipmap.ic_logo_gw_day);
         init();
     }
 

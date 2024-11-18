@@ -30,12 +30,6 @@ import com.gwsd.open_ptt.view.MImageTextView;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 
 /**
  * Created by Nicky on 2017/12/15.
@@ -421,7 +415,7 @@ public class VideoRecordActivity extends BaseActivity {
                 contentStr=getString(R.string.exit);
             }
             cancelConfirmDialog.setContentText(contentStr,getString(R.string.no),getString(R.string.yes));
-            cancelConfirmDialog.setImagLog(R.mipmap.ic_logo_gw_w);
+            cancelConfirmDialog.setImagLog(R.mipmap.ic_logo_gw_night);
             cancelConfirmDialog.setOnClickTypeListener(new CancelConfirmDialog.OnClickTypeListener() {
                 @Override
                 public void onClick(View view, int type) {

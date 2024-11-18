@@ -121,10 +121,10 @@ public class GroupListFragment extends ListFragment {
     }
 
     @Override
-    protected boolean onTimer() {
-        log("query timeout");
+    protected void onTimer(int ts) {
+        log("query timeout="+ts);
         swipeRefreshLayout.setRefreshing(false);
-        return true;
+        stopTimer();
     }
 
     @Override

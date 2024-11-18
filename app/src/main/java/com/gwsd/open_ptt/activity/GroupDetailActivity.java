@@ -9,6 +9,8 @@ import android.widget.TextView;
 import com.gwsd.bean.GWType;
 import com.gwsd.open_ptt.R;
 import com.gwsd.open_ptt.bean.ChatParam;
+import com.gwsd.open_ptt.dao.MsgDaoHelp;
+import com.gwsd.open_ptt.manager.GWSDKManager;
 import com.gwsd.open_ptt.view.AppTopView;
 
 public class GroupDetailActivity extends BaseActivity{
@@ -63,6 +65,11 @@ public class GroupDetailActivity extends BaseActivity{
 
     }
 
+    private String getUid() {
+        String uid = String.valueOf(GWSDKManager.getSdkManager().getUserInfo().getId());
+        return uid;
+    }
+
     @Override
     protected void initEvent() {
         topView.setLeftClick(v->{
@@ -77,7 +84,7 @@ public class GroupDetailActivity extends BaseActivity{
                 ChatParam chatParam=new ChatParam();
                 chatParam.setConvId((int)gid);
                 chatParam.setConvName(gname);
-                chatParam.setConvType(GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_GROUP);
+                chatParam.setConvType(gtype);
                 ChatActivity.startAct(getContext(), chatParam);
             }
         });
@@ -88,10 +95,11 @@ public class GroupDetailActivity extends BaseActivity{
             }
         });
         viewGrpNotice.setOnClickListener(v->{
-
+            showToast(R.string.hint_exploit_ing);
         });
         viewGrpDelMsg.setOnClickListener(v->{
-
+            MsgDaoHelp.deleteConv(getUid(), (int)gid, gtype);
+            showToast(R.string.succeed);
         });
 
     }

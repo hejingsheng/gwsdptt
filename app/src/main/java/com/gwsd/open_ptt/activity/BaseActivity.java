@@ -15,6 +15,12 @@ import com.gwsd.open_ptt.R;
 import com.gwsd.open_ptt.dialog.CustomProgressDialog;
 import com.gwsd.open_ptt.manager.AppManager;
 
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+
 public abstract class BaseActivity extends AppCompatActivity {
 
     protected void log(String msg) {
@@ -51,7 +57,28 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected abstract void initEvent();
 
     protected void release() {
+        stopTimer();
+        disposable = null;
+    }
 
+    protected void onTimer(int ts) {
+
+    }
+
+    Disposable disposable;
+    protected void startTimer(int ms) {
+        disposable = Observable.interval(ms, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aLong -> {
+                    onTimer(aLong.intValue());
+                });
+    }
+
+    protected void stopTimer() {
+        if (disposable != null) {
+            disposable.dispose();
+        }
+        disposable = null;
     }
 
     protected void showToast(int id) {

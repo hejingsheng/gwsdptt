@@ -34,7 +34,6 @@ public class AudioCallActivity extends BaseActivity{
     int remoteid;
     String remoteNm;
     boolean caller;
-    Disposable disposable;
 
     public static void startAct(Context context, int remoteid, String remotenm, boolean caller) {
         Intent intent = new Intent(context, AudioCallActivity.class);
@@ -62,7 +61,7 @@ public class AudioCallActivity extends BaseActivity{
         if (caller) {
             iVAccept.setVisibility(View.GONE);
         }
-        startTimer();
+        startTimer(1000);
         tVCallUser.setText(remoteNm);
     }
 
@@ -150,22 +149,10 @@ public class AudioCallActivity extends BaseActivity{
         stopTimer();
     }
 
-    private void startTimer() {
-        log("==startTimer==");
-        disposable = Observable.interval(1, TimeUnit.SECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(aLong -> {
-                    if(tVTimer!=null){
-                        tVTimer.setText(Utils.intToTimer(aLong.intValue()));
-                    }
-                });
-    }
-
-    private void stopTimer() {
-        if (disposable != null && !disposable.isDisposed()) {
-            log("==stopTimer=dispose");
-            disposable.dispose();
-            disposable = null;
+    @Override
+    protected void onTimer(int ts) {
+        if(tVTimer!=null){
+            tVTimer.setText(Utils.intToTimer(ts));
         }
     }
 

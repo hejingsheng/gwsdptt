@@ -38,7 +38,6 @@ public class VideoCallActivity extends BaseActivity implements ChatVideoViewCont
     private boolean caller;
     private boolean record;
     private VideoStateParam videoStateParam;
-    Disposable disposable;
 
     private Handler handler = new Handler() {
         @Override
@@ -92,7 +91,7 @@ public class VideoCallActivity extends BaseActivity implements ChatVideoViewCont
             log("recv user "+remoteNm+" video call request");
         }
         videoContentView.setUpdateVideoVState(videoStateParam);
-        startTimer();
+        startTimer(1000);
     }
 
     @Override
@@ -242,7 +241,6 @@ public class VideoCallActivity extends BaseActivity implements ChatVideoViewCont
     protected void release() {
         super.release();
         videoContentView = null;
-        disposable = null;
         videoStateParam = null;
         GWSDKManager.getSdkManager().registerVideoObserver(null);
     }
@@ -279,22 +277,10 @@ public class VideoCallActivity extends BaseActivity implements ChatVideoViewCont
         }
     }
 
-    private void startTimer() {
-        log("==startTimer==");
-        disposable = Observable.interval(1, TimeUnit.SECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(aLong -> {
-                    if(videoContentView!=null){
-                        videoContentView.setUpdateVideoVTime(Utils.intToTimer(aLong.intValue()));
-                    }
-                });
-    }
-
-    private void stopTimer() {
-        if (disposable != null && !disposable.isDisposed()) {
-            log("==stopTimer=dispose");
-            disposable.dispose();
-            disposable = null;
+    @Override
+    protected void onTimer(int ts) {
+        if(videoContentView!=null){
+            videoContentView.setUpdateVideoVTime(Utils.intToTimer(ts));
         }
     }
 }

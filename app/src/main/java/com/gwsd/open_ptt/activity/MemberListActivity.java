@@ -26,6 +26,11 @@ import com.gwsd.open_ptt.view.AppTopView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 public class MemberListActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener{
 
@@ -150,11 +155,20 @@ public class MemberListActivity extends BaseActivity implements SwipeRefreshLayo
         loadData();
     }
 
+    @Override
+    protected void onTimer(int ts) {
+        log("query timeout="+ts);
+        swipeRefreshLayout.setRefreshing(false);
+        stopTimer();
+    }
+
     protected void loadData() {
         GWSDKManager.getSdkManager().queryMember(gid,1);
+        startTimer(5000);
     }
 
     private void updateMembersList(){
+        stopTimer();
         swipeRefreshLayout.setRefreshing(false);
         mData.clear();
         mData.addAll(GWSDKManager.getSdkManager().getMemberList());

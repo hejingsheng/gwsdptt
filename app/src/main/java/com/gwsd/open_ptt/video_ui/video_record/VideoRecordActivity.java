@@ -271,7 +271,7 @@ public class VideoRecordActivity extends BaseActivity {
                             uiUpdateViewByPlay(bean.filePath);
                         }
                     }else if(bean.code==201){
-                        startTimer();
+                        startTimer(1000);
                     }else if(bean.code==-1){
                         uiUpdateViewByNone();
                     }
@@ -326,38 +326,15 @@ public class VideoRecordActivity extends BaseActivity {
     private void openNightVision(){
 
     }
-    Disposable mDisposable;
-    private void startTimer(){
-        Observable.interval(1,TimeUnit.SECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Long>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        mDisposable=d;
-                    }
-                    @Override
-                    public void onNext(Long aLong) {
-                        if(view_timer!=null){
-                            timeCount++;
-                            view_timer.setText(Utils.intToTimer((videoRecordParam1.getRecordParam().getMaxTime()-timeCount)));
-                        }
-                        if(timeCount>= videoRecordParam1.getRecordParam().getMaxTime()){
-                            stopOrStartVideoRecord(STOP_Record_TYPE_Norm);
-                        }
-                    }
-                    @Override
-                    public void onError(Throwable e) {
-                    }
-                    @Override
-                    public void onComplete() {
-                    }
-                });
-    }
-    private void stopTimer(){
-        timeCount=0;
-        if(mDisposable!=null && !mDisposable.isDisposed()){
-            mDisposable.dispose();
-            mDisposable=null;
+
+    @Override
+    protected void onTimer(int ts) {
+        if(view_timer!=null){
+            timeCount++;
+            view_timer.setText(Utils.intToTimer((videoRecordParam1.getRecordParam().getMaxTime()-timeCount)));
+        }
+        if(timeCount>= videoRecordParam1.getRecordParam().getMaxTime()){
+            stopOrStartVideoRecord(STOP_Record_TYPE_Norm);
         }
     }
 

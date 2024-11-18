@@ -44,7 +44,7 @@ public class MsgDaoHelp {
         return convBeanList;
     }
 
-    public static MsgContentPojo saveMsgContent(String uid, GWMsgBean bean) {
+    public static synchronized MsgContentPojo saveMsgContent(String uid, GWMsgBean bean) {
         MsgContentPojoDao dao = getMsgDao();
         if (dao == null) return null;
         MsgContentPojo msgContentPojo = new MsgContentPojo();
@@ -99,7 +99,7 @@ public class MsgDaoHelp {
         return msgContentPojo;
     }
 
-    public static MsgConversationPojo saveOrUpdateConv(MsgContentPojo msgContent) {
+    public static synchronized MsgConversationPojo saveOrUpdateConv(MsgContentPojo msgContent) {
         String uid=msgContent.getLoginUId();
         Integer cid =msgContent.getConvId();
         Integer ctype = msgContent.getConvType();
@@ -171,6 +171,19 @@ public class MsgDaoHelp {
                 .list();
         Collections.reverse(msgBeanList);
         return msgBeanList;
+    }
+
+    public static void deleteConv(String loginUId,int convId, int convtype) {
+        MsgConversationPojoDao convDao = getConvDao();
+        if (convDao == null) return;
+        convDao.queryBuilder()
+                .where(MsgConversationPojoDao.Properties.LoginUId.eq(loginUId), MsgConversationPojoDao.Properties.ConvId.eq(convId), MsgConversationPojoDao.Properties.ConvType.eq(convtype))
+                .buildDelete().executeDeleteWithoutDetachingEntities();
+        MsgContentPojoDao dao = getMsgDao();
+        if (dao == null) return;
+        dao.queryBuilder()
+                .where(MsgContentPojoDao.Properties.LoginUId.eq(loginUId), MsgContentPojoDao.Properties.ConvId.eq(convId), MsgContentPojoDao.Properties.ConvType.eq(convtype))
+                .buildDelete().executeDeleteWithoutDetachingEntities();
     }
 
 }

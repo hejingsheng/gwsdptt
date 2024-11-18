@@ -51,8 +51,12 @@ public class MainActivity extends CommBusiActivity {
     protected void processLogin(LoginEventBean bean) {
         super.processLogin(bean);
         log("login:"+bean.getLoginResult());
-        showToast(R.string.hint_login_succeed);
-        viewAppTop.setTopRightImgGone();
+        if (bean.getLoginResult() == 0) {
+            showToast(R.string.hint_login_succeed);
+            viewAppTop.setTopRightImgGone();
+        } else if (bean.getLoginResult() < 0) {
+            showToast(R.string.hint_login_failure);
+        }
     }
 
     @Override

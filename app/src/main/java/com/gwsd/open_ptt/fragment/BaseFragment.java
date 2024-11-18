@@ -66,8 +66,8 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
-    protected boolean onTimer() {
-        return false;
+    protected void onTimer(int ts) {
+
     }
 
     Disposable disposable;
@@ -75,10 +75,7 @@ public abstract class BaseFragment extends Fragment {
         disposable = Observable.interval(ms, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> {
-                    boolean stop = onTimer();
-                    if (stop) {
-                        stopTimer();
-                    }
+                    onTimer(aLong.intValue());
                 });
     }
 

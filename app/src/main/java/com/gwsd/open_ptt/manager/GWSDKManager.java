@@ -337,6 +337,11 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
                 groupMap.clear();
                 groupBeanList.clear();
                 groupBeanList.addAll(groups);
+                for (GWGroupListBean.GWGroupBean gwGroupBean : groupBeanList) {
+                    if (gwGroupBean.getType() != GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_SELFGROUP) {
+                        gwGroupBean.setType(GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_GROUP);
+                    }
+                }
                 int[] msg_groups = new int[groups.size()];
                 int[] msg_groups_type = new int[groups.size()];
                 int i = 0;
@@ -448,7 +453,7 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         stopTimer();
         haveStartMsgService = false;
         EventBus.getDefault().post(new OfflineEventBean(code, info));
-        if (code == OfflineEventBean.OFFLINE_REASON_KICKOUT_CODE) {
+        if (code != OfflineEventBean.OFFLINE_REASON_LOGOUT_CODE) {
             if (autoLogin) {
                 log("other login kickout login again");
                 sendMessageToSDKHandler(LOGIN_AGAIN_MSG, 3000);

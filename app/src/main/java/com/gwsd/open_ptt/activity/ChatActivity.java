@@ -244,12 +244,20 @@ public class ChatActivity extends BaseActivity implements ChatInputView.OnInputV
 
     @Override
     public void onBtnVoiceCall() {
-        AudioCallActivity.startAct(this, chatParam.getConvId(), chatParam.getConvName(), true);
+        if (chatParam.getConvType() == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER) {
+            AudioCallActivity.startAct(this, chatParam.getConvId(), chatParam.getConvName(), true);
+        } else {
+            showToast(R.string.hint_not_support);
+        }
     }
 
     @Override
     public void onBtnVideoCall() {
-        VideoCallActivity.startAct(this, String.valueOf(chatParam.getConvId()), chatParam.getConvName(), true, false);
+        if (chatParam.getConvType() == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER) {
+            VideoCallActivity.startAct(this, String.valueOf(chatParam.getConvId()), chatParam.getConvName(), true, false);
+        } else {
+            showToast(R.string.hint_not_support);
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

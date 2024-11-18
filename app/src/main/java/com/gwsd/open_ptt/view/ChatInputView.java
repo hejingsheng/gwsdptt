@@ -5,6 +5,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,7 +17,7 @@ import android.widget.RelativeLayout;
 
 import com.gwsd.open_ptt.R;
 
-public class ChatInputView extends RelativeLayout implements View.OnClickListener, View.OnTouchListener, TextWatcher {
+public class ChatInputView extends RelativeLayout implements View.OnClickListener, View.OnTouchListener, TextWatcher, View.OnFocusChangeListener {
     final int TOUCH_Down = 0;
     final int TOUCH_Up = 1;
     final int TOUCH_Cancel = 2;
@@ -104,6 +105,7 @@ public class ChatInputView extends RelativeLayout implements View.OnClickListene
         viewShowAttach.setOnClickListener(this::onClick);
         viewVoiceRecord.setOnTouchListener(this);
         viewEtInput.addTextChangedListener(this);
+        viewEtInput.setOnFocusChangeListener(this);
 
         viewBtnPhoto.setOnClickListener(this::onClick);
         viewBtnVoiceCall.setOnClickListener(this::onClick);
@@ -243,5 +245,13 @@ public class ChatInputView extends RelativeLayout implements View.OnClickListene
     @Override
     public void afterTextChanged(Editable s) {
         changeBtnSndByInpout();
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        if (hasFocus) {
+            viewAttach.setVisibility(GONE);
+            showAttach = false;
+        }
     }
 }

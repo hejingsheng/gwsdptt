@@ -286,26 +286,30 @@ public class ChatActivity extends BaseActivity implements ChatInputView.OnInputV
 
         @Override
         public FileSelectData parseResult(int resultCode, @Nullable Intent intent) {
-            Uri uri = intent.getData();
-            String scheme = uri.getScheme();
-            String filepath = "";
-            if (scheme.startsWith("file")) {
-                filepath = uri.getPath();
-            } else if (scheme.startsWith("content")) {
-                Cursor cursor = getContentResolver().query(uri, null,null, null, null);
-                if (cursor != null && cursor.moveToFirst()) {
-                    int index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                    int count = cursor.getCount();
-                    if (count > 0) {
-                        filepath = cursor.getString(index);
+            if (intent != null) {
+                Uri uri = intent.getData();
+                String scheme = uri.getScheme();
+                String filepath = "";
+                if (scheme.startsWith("file")) {
+                    filepath = uri.getPath();
+                } else if (scheme.startsWith("content")) {
+                    Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+                    if (cursor != null && cursor.moveToFirst()) {
+                        int index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                        int count = cursor.getCount();
+                        if (count > 0) {
+                            filepath = cursor.getString(index);
+                        }
+                        cursor.close();
                     }
-                    cursor.close();
                 }
+                FileSelectData fileSelectData = new FileSelectData();
+                fileSelectData.type = FileSendParam.PHOTO_FILE_TYPE;
+                fileSelectData.path = filepath;
+                return fileSelectData;
+            } else {
+                return null;
             }
-            FileSelectData fileSelectData = new FileSelectData();
-            fileSelectData.type = FileSendParam.PHOTO_FILE_TYPE;
-            fileSelectData.path = filepath;
-            return fileSelectData;
         }
     }, this::handleActivityResult);
 
@@ -320,27 +324,34 @@ public class ChatActivity extends BaseActivity implements ChatInputView.OnInputV
 
         @Override
         public FileSelectData parseResult(int resultCode, @Nullable Intent intent) {
-            Bundle bundle=intent.getExtras();
-            String filepath = "";
-            if(bundle!=null){
-                String path=bundle.getString("filePath");
-                if(TextUtils.isEmpty(path) || !path.endsWith(".mp4")){
-                    showToast(R.string.hint_video_only_mp4);
-                    filepath = "";
+            if (intent != null) {
+                Bundle bundle = intent.getExtras();
+                String filepath = "";
+                if (bundle != null) {
+                    String path = bundle.getString("filePath");
+                    if (TextUtils.isEmpty(path) || !path.endsWith(".mp4")) {
+                        showToast(R.string.hint_video_only_mp4);
+                        filepath = "";
+                    } else {
+                        filepath = path;
+                    }
                 } else {
-                    filepath = path;
+                    filepath = "";
                 }
+                FileSelectData fileSelectData = new FileSelectData();
+                fileSelectData.type = FileSendParam.VIDEO_FILE_TYPE;
+                fileSelectData.path = filepath;
+                return fileSelectData;
             } else {
-                filepath = "";
+                return null;
             }
-            FileSelectData fileSelectData = new FileSelectData();
-            fileSelectData.type = FileSendParam.VIDEO_FILE_TYPE;
-            fileSelectData.path = filepath;
-            return fileSelectData;
         }
     }, this::handleActivityResult);
 
     private void handleActivityResult(FileSelectData filedata) {
+        if (filedata == null) {
+            return;
+        }
         log("select file="+filedata.type+" path="+filedata.path);
         int msgtype;
         FileSendParam fileSendParam = new FileSendParam();

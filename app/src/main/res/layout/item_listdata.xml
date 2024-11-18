@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/dimen_boundary"
     android:paddingRight="@dimen/dimen_boundary"
     android:id="@+id/view_item_root"
-    android:background="@drawable/selector_item_transparent_grey"
+    android:background="?attr/t_listItemColor"
     >
     <LinearLayout
         android:layout_width="match_parent"

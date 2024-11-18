@@ -21,6 +21,7 @@ import com.gwsd.open_ptt.R;
 import com.gwsd.open_ptt.adapter.CommonHolder;
 import com.gwsd.open_ptt.adapter.CommonListAdapter;
 import com.gwsd.open_ptt.adapter.recylistener.RecyclerViewListener;
+import com.gwsd.open_ptt.bean.ChatParam;
 import com.gwsd.open_ptt.manager.GWSDKManager;
 import com.gwsd.open_ptt.view.AppTopView;
 
@@ -70,7 +71,7 @@ public class MemberListActivity extends BaseActivity implements SwipeRefreshLayo
                 commonHolder.getView(R.id.viewSelected).setVisibility(View.GONE);
                 commonHolder.getView(R.id.viewMemberState).setVisibility(View.GONE);
                 ImageView imageView = (ImageView) commonHolder.getView(R.id.viewHead);
-                imageView.setImageResource(R.drawable.ic_top_user);
+                imageView.setImageResource(R.mipmap.ic_member_online_blue);
                 TextView textView = (TextView) commonHolder.getView(R.id.viewMemberName);
                 ColorStateList csl = (ColorStateList) getResources().getColorStateList(R.color.textColorBlack);
                 if (csl != null) {
@@ -140,6 +141,11 @@ public class MemberListActivity extends BaseActivity implements SwipeRefreshLayo
             @Override
             public void onItemClick(RecyclerView.ViewHolder viewHolder, View view, int position) {
                 GWMemberInfoBean.MemberInfo selectedMembers = mData.get(position);
+                ChatParam chatParam = new ChatParam();
+                chatParam.setConvId(selectedMembers.getUid());
+                chatParam.setConvName(selectedMembers.getName());
+                chatParam.setConvType(GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER);
+                ChatActivity.startAct(getContext(), chatParam);
             }
         });
         mAdapter.setOnItemLongClick(new RecyclerViewListener.OnRecyclerViewItemLongClickListener() {

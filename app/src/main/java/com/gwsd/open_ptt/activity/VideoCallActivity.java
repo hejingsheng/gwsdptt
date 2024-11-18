@@ -104,7 +104,6 @@ public class VideoCallActivity extends BaseActivity implements ChatVideoViewCont
         videoStateParam = new VideoStateParam();
         videoStateParam.setRemoteName(remoteNm)
                 .setRemoteUID(remoteid)
-                .setRecord(record)
                 .setDuplex(true);
         if (caller) {
             videoStateParam.setVideoStatus(ChatVideoViewContracts.VIDEO_View_send_Call);

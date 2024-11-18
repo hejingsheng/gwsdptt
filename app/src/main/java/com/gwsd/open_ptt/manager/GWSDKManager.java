@@ -33,6 +33,7 @@ import com.gwsd.open_ptt.activity.VideoCallActivity;
 import com.gwsd.open_ptt.bean.GWPttUserInfo;
 import com.gwsd.open_ptt.bean.LoginEventBean;
 import com.gwsd.open_ptt.bean.OfflineEventBean;
+import com.gwsd.open_ptt.config.ServerAddressConfig;
 import com.gwsd.open_ptt.dao.MsgDaoHelp;
 import com.gwsd.open_ptt.dao.pojo.MsgContentPojo;
 import com.gwsd.open_ptt.dao.pojo.MsgConversationPojo;
@@ -105,10 +106,10 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         gwPttEngine = GWPttEngine.INSTANCE(this.context);
         gwVideoEngine = GWVideoEngine.INSTANCE();
         gwPttEngine.pttInit(this, this, null);
-        gwPttEngine.pttConfigServer(0,"43.250.33.13", 23003);
-        gwPttEngine.pttConfigServer(1,"43.250.33.13", 51883);
-        gwPttEngine.pttConfigServer(2,"43.250.33.13", 50001);
-        gwPttEngine.pttConfigServer(3,"114.116.246.85", 8188);
+        gwPttEngine.pttConfigServer(0, ServerAddressConfig.PTT_SERVER_ADDRESS, ServerAddressConfig.PTT_SERVER_PORT);
+        gwPttEngine.pttConfigServer(1, ServerAddressConfig.MSG_SERVER_ADDRESS, ServerAddressConfig.MSG_SERVER_PORT);
+        gwPttEngine.pttConfigServer(2, ServerAddressConfig.DISPATCH_SERVER_ADDRESS, ServerAddressConfig.DISPATCH_SERVER_PORT);
+        gwPttEngine.pttConfigServer(3, ServerAddressConfig.VIDEO_SERVER_ADDRESS, ServerAddressConfig.VIDEO_SERVER_PORT);
         log("current sdk version:"+gwPttEngine.pttGetVersion());
         userInfo = new GWPttUserInfo();
         handlerThread = new HandlerThread("SDKManagerThread");
@@ -585,7 +586,9 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
 
     @Override
     public void onVideoPull(String s, String s1, int i, boolean b) {
-        videoObserver.onVideoPull(s, s1, i, b);
+        if (videoObserver != null) {
+            videoObserver.onVideoPull(s, s1, i, b);
+        }
     }
 
     @Override
@@ -598,81 +601,111 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
 
     @Override
     public void onVideoMeetingInvite(String s, String s1) {
-        videoObserver.onVideoMeetingInvite(s , s1);
+        if (videoObserver != null) {
+            videoObserver.onVideoMeetingInvite(s, s1);
+        }
     }
 
     @Override
     public void onVideoMeetingCancel() {
-        videoObserver.onVideoMeetingCancel();
+        if (videoObserver != null) {
+            videoObserver.onVideoMeetingCancel();
+        }
     }
 
     @Override
     public void onVideoMeetingSpeak() {
-        videoObserver.onVideoMeetingSpeak();
+        if (videoObserver != null) {
+            videoObserver.onVideoMeetingSpeak();
+        }
     }
 
     @Override
     public void onVideoMeetingMute() {
-        videoObserver.onVideoMeetingMute();
+        if (videoObserver != null) {
+            videoObserver.onVideoMeetingMute();
+        }
     }
 
     @Override
     public void onVideoMeetingUserJoin(long l, String s, String s1, boolean b) {
-        videoObserver.onVideoMeetingUserJoin(l, s, s1, b);
+        if (videoObserver != null) {
+            videoObserver.onVideoMeetingUserJoin(l, s, s1, b);
+        }
     }
 
     @Override
     public void onVideoMeetingSelfJoin() {
-        videoObserver.onVideoMeetingSelfJoin();
+        if (videoObserver != null) {
+            videoObserver.onVideoMeetingSelfJoin();
+        }
     }
 
     @Override
     public void onVideoMeetingUserLeave(long l) {
-        videoObserver.onVideoMeetingUserLeave(l);
+        if (videoObserver != null) {
+            videoObserver.onVideoMeetingUserLeave(l);
+        }
     }
 
     @Override
     public void onVideoMeetingKickout() {
-        videoObserver.onVideoMeetingKickout();
+        if (videoObserver != null) {
+            videoObserver.onVideoMeetingKickout();
+        }
     }
 
     @Override
     public void onLocalStreamReady() {
-        videoObserver.onLocalStreamReady();
+        if (videoObserver != null) {
+            videoObserver.onLocalStreamReady();
+        }
     }
 
     @Override
     public void onRemoteStreamReady(boolean b, long l) {
-        videoObserver.onRemoteStreamReady(b, l);
+        if (videoObserver != null) {
+            videoObserver.onRemoteStreamReady(b, l);
+        }
     }
 
     @Override
     public void onRemoteStreamRemove() {
-        videoObserver.onRemoteStreamRemove();
+        if (videoObserver != null) {
+            videoObserver.onRemoteStreamRemove();
+        }
     }
 
     @Override
     public void onLocalStreamRemove() {
-        videoObserver.onLocalStreamRemove();
+        if (videoObserver != null) {
+            videoObserver.onLocalStreamRemove();
+        }
     }
 
     @Override
     public void onVideoData(byte[] bytes, int i, int i1, int i2, int i3) {
-        videoObserver.onVideoData(bytes, i, i1, i2, i3);
+        if (videoObserver != null) {
+            videoObserver.onVideoData(bytes, i, i1, i2, i3);
+        }
     }
 
     @Override
     public void onHangup(String s) {
-        videoObserver.onHangup(s);
+        if (videoObserver != null) {
+            videoObserver.onHangup(s);
+        }
     }
 
     @Override
     public void onError(int i, String s) {
-        videoObserver.onError(i, s);
+        if (videoObserver != null) {
+            videoObserver.onError(i, s);
+        }
     }
 
     private void startTimer() {
-        disposable = Observable.interval(10, TimeUnit.SECONDS)
+        disposable = Observable.interval(50, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> {
                     //Log.d(TAG, "send heart");

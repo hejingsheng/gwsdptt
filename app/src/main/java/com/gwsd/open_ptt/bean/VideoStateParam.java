@@ -5,7 +5,6 @@ public class VideoStateParam {
     private int videoStatus;
     private String remoteName;
     private String remoteUID;
-    private boolean record;
     private boolean duplex;
     private String ts;
 
@@ -42,15 +41,6 @@ public class VideoStateParam {
 
     public VideoStateParam setDuplex(boolean duplex) {
         this.duplex = duplex;
-        return this;
-    }
-
-    public boolean isRecord() {
-        return record;
-    }
-
-    public VideoStateParam setRecord(boolean record) {
-        this.record = record;
         return this;
     }
 

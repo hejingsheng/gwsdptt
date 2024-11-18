@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 
 import com.gwsd.open_ptt.MyApp;
 import com.gwsd.open_ptt.comm_ui.video_record.contracts.VideoRecordingContracts;
+import com.gwsd.open_ptt.config.DeviceConfig;
 import com.gwsd.open_ptt.view.CameraPreview;
 
 import java.io.IOException;
@@ -87,9 +88,9 @@ public class VideoRecordingPresenterImp implements VideoRecordingContracts.Video
 
         try {
             if(cameraFacing==Camera.CameraInfo.CAMERA_FACING_BACK){
-                mMediaRecorder.setOrientationHint(90);
+                mMediaRecorder.setOrientationHint(DeviceConfig.DEVICE_CAMERA_ORIENTATION.back_camera_orientation);
             }else if(cameraFacing==Camera.CameraInfo.CAMERA_FACING_FRONT){
-                mMediaRecorder.setOrientationHint(90);
+                mMediaRecorder.setOrientationHint(DeviceConfig.DEVICE_CAMERA_ORIENTATION.front_camera_orientation);
             }
             mMediaRecorder.prepare();
         } catch (IllegalStateException e) {

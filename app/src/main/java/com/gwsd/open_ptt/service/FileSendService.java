@@ -14,6 +14,7 @@ import com.gwsd.bean.GWMsgBean;
 import com.gwsd.open_ptt.MyApp;
 import com.gwsd.open_ptt.bean.FileSendParam;
 import com.gwsd.open_ptt.bean.FileUploadResBean;
+import com.gwsd.open_ptt.config.ServerAddressConfig;
 import com.gwsd.open_ptt.dao.MsgDaoHelp;
 import com.gwsd.open_ptt.dao.pojo.MsgContentPojo;
 import com.gwsd.open_ptt.dao.pojo.MsgConversationPojo;
@@ -63,15 +64,6 @@ public class FileSendService extends Service {
         return START_STICKY;
     }
 
-//    public final static String ACTION = "com.gwsd.ptt.action.msg.uploadfile";
-//    public final static String PARAM_KEY = "msg";
-//    private void sendFileMsgBroadcast(GWMsgBean msg){
-//        Intent intent=new Intent();
-//        intent.setAction(ACTION);
-//        intent.putExtra(PARAM_KEY, msg);
-//        sendBroadcast(intent);
-//    }
-
     private String getUid() {
         String uid = String.valueOf(GWSDKManager.getSdkManager().getUserInfo().getId());
         return uid;
@@ -100,7 +92,7 @@ public class FileSendService extends Service {
         }
         RequestBody requestBody = builder.build();
         Request request = new Request.Builder()
-                .url("http://123.249.38.46:5001/app/chat/msg/upload")
+                .url(ServerAddressConfig.FILE_SERVER_ADDRESS)
                 .post(requestBody)
                 .build();
         okHttpClient.newCall(request).enqueue(new Callback() {
@@ -116,13 +108,13 @@ public class FileSendService extends Service {
                 try {
                     FileUploadResBean fileUploadResBean = JSON.parseObject(data, FileUploadResBean.class);
                     if (fileUploadResBean.getStatus() == 200) {
-                        String fileurl = fileUploadResBean.getData().getUrl();
+                        String fileurl = fileUploadResBean.getData().getFile1().getUrl();
                         GWMsgBean msg = fileSendParam.getGwMsgBean();
                         msg.getData().setUrl(fileurl);
-//                        if (fileUploadResBean.getData().getFile2() != null) {
-//                            String thumburl = fileUploadResBean.getData().getFile2().getUrl();
-//                            msg.getData().setThumbUrl(thumburl);
-//                        }
+                        if (fileUploadResBean.getData().getFile2() != null) {
+                            String thumburl = fileUploadResBean.getData().getFile2().getUrl();
+                            msg.getData().setThumbUrl(thumburl);
+                        }
                         log(msg.toString());
                         GWSDKManager.getSdkManager().sendMsg(msg);
                         // use local path insert to database

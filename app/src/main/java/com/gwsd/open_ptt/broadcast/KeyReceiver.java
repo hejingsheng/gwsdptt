@@ -7,12 +7,10 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.gwsd.open_ptt.MyApp;
+import com.gwsd.open_ptt.config.DeviceConfig;
 import com.gwsd.open_ptt.manager.GWSDKManager;
 
 public class KeyReceiver extends BroadcastReceiver {
-
-    public static final String PTT_KEY_DOWN = "android.intent.action.side_key.keydown.PTT";
-    public static final String PTT_KEY_UP = "android.intent.action.side_key.keyup.PTT";
 
     private void log(String msg){
         Log.d(MyApp.TAG, this.getClass().getSimpleName()+"="+msg);
@@ -23,11 +21,11 @@ public class KeyReceiver extends BroadcastReceiver {
         String action = intent.getAction();
         Bundle bundle = intent.getExtras();
         log("recv action="+action);
-        if (action.equals(PTT_KEY_DOWN)) {
+        if (action.equals(DeviceConfig.DEVICE_KEY_BROADCAST.PTT_KEY_DOWN)) {
             if (GWSDKManager.getSdkManager().isOnline()) {
                 GWSDKManager.getSdkManager().startSpeak();
             }
-        } else if (action.equals(PTT_KEY_UP)) {
+        } else if (action.equals(DeviceConfig.DEVICE_KEY_BROADCAST.PTT_KEY_UP)) {
             if (GWSDKManager.getSdkManager().isOnline()) {
                 GWSDKManager.getSdkManager().stopSpeak();
             }

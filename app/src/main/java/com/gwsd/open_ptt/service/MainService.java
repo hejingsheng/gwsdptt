@@ -14,6 +14,7 @@ import android.util.Log;
 import com.gwsd.open_ptt.MyApp;
 import com.gwsd.open_ptt.R;
 import com.gwsd.open_ptt.broadcast.KeyReceiver;
+import com.gwsd.open_ptt.config.DeviceConfig;
 
 public class MainService extends Service {
 
@@ -75,8 +76,9 @@ public class MainService extends Service {
 
     private IntentFilter getIntentFilter() {
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(KeyReceiver.PTT_KEY_DOWN);
-        intentFilter.addAction(KeyReceiver.PTT_KEY_UP);
+        for (String broadcast : DeviceConfig.DEVICE_KEY_BROADCAST.getBroadcastArray()) {
+            intentFilter.addAction(broadcast);
+        }
         return intentFilter;
     }
 

@@ -927,4 +927,5 @@
     <string name="group_announcement">Group announcement</string>
     <string name="group_members">Group member</string>
     <string name="group_detail">Group Detail</string>
+    <string name="group_voice_intercom">Group call</string>
 </resources>

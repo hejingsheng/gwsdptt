@@ -67,4 +67,10 @@ public class VoiceSendingView extends RelativeLayout {
         if(frameAnimation!=null)frameAnimation.stop();
         frameAnimation=null;
     }
+    public void cancalText(){
+        view_textmsg.setVisibility(GONE);
+        setTextStr(R.string.hint_press_record);
+        int txColor = getResources().getColor(R.color.textColorBlack);
+        view_textmsg.setTextColor(txColor);
+    }
 }

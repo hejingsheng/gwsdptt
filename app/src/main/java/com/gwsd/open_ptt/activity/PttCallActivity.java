@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -15,14 +14,19 @@ import com.gwsd.bean.GWType;
 import com.gwsd.open_ptt.R;
 import com.gwsd.open_ptt.manager.GWSDKManager;
 import com.gwsd.open_ptt.view.AppTopView;
+import com.gwsd.open_ptt.view.SpeakerVoiceDBAnimView;
+import com.gwsd.open_ptt.view.VoiceSendingView;
 
-public class PttCallActivity extends BaseActivity{
+public class PttCallActivity extends BaseActivity implements View.OnTouchListener{
 
     AppTopView aTHalfDuplex;
 
     TextView tVSpeaker;
 
-    ImageView iVPtt;
+    SpeakerVoiceDBAnimView viewSpeakerAnim;
+    TextView tVgid;
+    TextView tVgName;
+    VoiceSendingView viewVoiceSendingView;
 
     private long gid;
     private String gname;
@@ -39,7 +43,7 @@ public class PttCallActivity extends BaseActivity{
 
     @Override
     protected int getViewId() {
-        return R.layout.activity_half_duplex;
+        return R.layout.activity_pttcall;
     }
 
     @Override
@@ -60,25 +64,28 @@ public class PttCallActivity extends BaseActivity{
                     runOnUiThread(() -> {
                         GWJoinGroupBean gwJoinGroupBean = JSON.parseObject(data, GWJoinGroupBean.class);
                         if (gwJoinGroupBean.getResult() == 0) {
-                            showAlert("join group success");
+                           log("jonin group success");
                         } else {
-                            showAlert("join group fail");
+                            showToast("join group fail");
+                            finish();
                         }
                     });
                 }else if(event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_SPEAK){
                     runOnUiThread(()->{
                         GWSpeakNotifyBean gwSpeakNotifyBean = JSON.parseObject(data, GWSpeakNotifyBean.class);
                         if (gwSpeakNotifyBean.getUid() != 0) {
-                            tVSpeaker.setText("speaker id:"+gwSpeakNotifyBean.getUid()+" name:"+gwSpeakNotifyBean.getName());
+                            tVSpeaker.setText(gwSpeakNotifyBean.getName());
+                            viewSpeakerAnim.startSpeakerAnim();
                         } else {
-                            tVSpeaker.setText("wait for speak...");
+                            tVSpeaker.setText("");
+                            viewSpeakerAnim.stopSpeakerAnim();
                         }
                     });
                 }else if(event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_REQUEST_MIC){
                     runOnUiThread(()->{
                         GWRequestSpeakBean gwRequestSpeakBean = JSON.parseObject(data, GWRequestSpeakBean.class);
                         if (gwRequestSpeakBean.getResult() != 0) {
-                            showAlert("request speak fail");
+                            log("request speak fail");
                         }
                     });
                 }
@@ -95,34 +102,48 @@ public class PttCallActivity extends BaseActivity{
     protected void initView() {
         aTHalfDuplex = findViewById(R.id.viewHalfDuplexTopView);
         tVSpeaker = findViewById(R.id.speaker);
-        iVPtt = findViewById(R.id.ptt);
-        aTHalfDuplex.setTopTitle(gname);
-        tVSpeaker.setText("wait for speak...");
+        viewSpeakerAnim = findViewById(R.id.viewSpeakerAnim);
+        aTHalfDuplex.setTopTitle(R.string.group_voice_intercom);
+        tVSpeaker.setText("");
+        tVgid = findViewById(R.id.groupId);
+        tVgName = findViewById(R.id.groupName);
+        tVgName.setText(gname);
+        tVgid.setText(String.valueOf(gid));
+        viewVoiceSendingView = findViewById(R.id.view_VoiceSendingView);
+        viewVoiceSendingView.cancalText();
     }
 
     @Override
     protected void initEvent() {
         GWSDKManager.getSdkManager().joinGroup(gid,gtype);
+        viewVoiceSendingView.setOnTouchListener(this);
         aTHalfDuplex.setLeftClick(v ->{
             finish();
         });
-        iVPtt.setOnTouchListener(new View.OnTouchListener() {
+
+    }
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()){
-                    case MotionEvent.ACTION_DOWN:
+        touchHandler(event.getAction());
+        return true;
+    }
+    private void touchHandler(int action) {
+        if (action == MotionEvent.ACTION_DOWN) {
                         GWSDKManager.getSdkManager().startSpeak();
-                        iVPtt.setPressed(true);
-                        return true;
-                    case MotionEvent.ACTION_UP:
-                        iVPtt.setPressed(false);
+            runOnUiThread(()->{
+                tVSpeaker.setText(getString(R.string.local_equipment_speak));
+                viewSpeakerAnim.startSpeakerAnim();
+                viewVoiceSendingView.showRecording();
+            });
+        } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP) {
+            viewSpeakerAnim.stopSpeakerAnim();
                         GWSDKManager.getSdkManager().stopSpeak();
-                        return true;
-                    default:
-                        return false;
-                }
+            runOnUiThread(()->{
+                tVSpeaker.setText("");
+                viewSpeakerAnim.stopSpeakerAnim();
+                viewVoiceSendingView.showCancel();
+            });
             }
-        });
 
     }
 

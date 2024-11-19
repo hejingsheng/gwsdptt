@@ -38,7 +38,7 @@ public class AudioCallActivity extends BaseActivity{
 
     @Override
     protected int getViewId() {
-        return R.layout.activity_full_dulexing;
+        return R.layout.activity_voicecall;
     }
 
     protected void initView(){

@@ -149,7 +149,11 @@ public class PttCallActivity extends BaseActivity implements View.OnTouchListene
     @Override
     protected void initView() {
         aTHalfDuplex = findViewById(R.id.viewHalfDuplexTopView);
-        aTHalfDuplex.setTopTitle(R.string.group_voice_intercom);
+        if (type == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER) {
+            aTHalfDuplex.setTopTitle(R.string.title_TalkbackSoundActivity);
+        } else {
+            aTHalfDuplex.setTopTitle(R.string.group_voice_intercom);
+        }
         viewGroupName = findViewById(R.id.viewGroupName);
         viewGroupId = findViewById(R.id.viewGroupId);
         viewSpeakerAnim = findViewById(R.id.viewSpeakerAnim);

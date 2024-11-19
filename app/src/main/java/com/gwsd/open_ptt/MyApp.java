@@ -29,8 +29,8 @@ public class MyApp extends Application {
     private void init() {
         AppManager.getInstance().init(this, true);
         this.daoSession = DBManager.initDB(this);
-        GWSDKManager.INSTANCE(this);
-        CallManager.INSTANCE(this);
+        GWSDKManager.INSTANCE(AppManager.getApp());
+        CallManager.INSTANCE(AppManager.getApp());
     }
 
     public DaoSession getDaoSession() {

@@ -33,6 +33,7 @@ public class AudioCallActivity extends BaseActivity{
         intent.putExtra("remoteid", remoteid);
         intent.putExtra("remotenm", remotenm);
         intent.putExtra("caller", caller);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
         context.startActivity(intent);
     }
 
@@ -76,6 +77,7 @@ public class AudioCallActivity extends BaseActivity{
                                 iVBullhorn.setVisibility(View.VISIBLE);
                                 iVBullhorn.setSelected(true);
                                 iVAccept.setVisibility(View.GONE);
+                                CallManager.getManager().changeToHandset();
                             });
                         }else if (gwDuplexBean.getStatus() == GWType.GW_DUPLEX_STATUS.GW_PTT_DUPLEX_STATUS_END){
                             runOnUiThread(()->{

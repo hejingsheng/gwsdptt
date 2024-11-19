@@ -107,11 +107,35 @@ public class CallManager {
         return callState;
     }
 
+    private void printAudio(){
+        int volume=audioManager.getStreamVolume(AudioManager.STREAM_VOICE_CALL);
+        int getMode=audioManager.getMode();
+        int getRingerMode=audioManager.getRingerMode();
+        boolean isBluetoothScoAvailableOffCall=audioManager.isBluetoothScoAvailableOffCall();
+        boolean isBluetoothScoOn=audioManager.isBluetoothScoOn();
+        boolean isBluetoothA2dpOn=audioManager.isBluetoothA2dpOn();
+        boolean isWiredHeadsetOn=audioManager.isWiredHeadsetOn();
+        boolean isSpeakerphoneOn=audioManager.isSpeakerphoneOn();
+        StringBuffer stringBuffer=new StringBuffer();
+        stringBuffer.append("volume:").append(volume).append("\n");
+        stringBuffer.append("getMode:").append(getMode).append("\n");
+        stringBuffer.append("getRingerMode:").append(getRingerMode).append("\n");
+        stringBuffer.append("isBluetoothScoAvailableOffCall:").append(isBluetoothScoAvailableOffCall).append("\n");
+        stringBuffer.append("isBluetoothScoOn:").append(isBluetoothScoOn).append("\n");
+        stringBuffer.append("isBluetoothA2dpOn:").append(isBluetoothA2dpOn).append("\n");
+        stringBuffer.append("isWiredHeadsetOn:").append(isWiredHeadsetOn).append("\n");
+        stringBuffer.append("isSpeakerphoneOn:").append(isSpeakerphoneOn).append("\n");
+        log(stringBuffer.toString());
+        stringBuffer.setLength(0);
+    }
+
     public void changeToSpeaker() {
         log("change to speaker");
+        audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
         audioManager.stopBluetoothSco();
         audioManager.setBluetoothScoOn(false);
         audioManager.setSpeakerphoneOn(true);
+        printAudio();
     }
 
     public void changeToHandset() {
@@ -120,6 +144,7 @@ public class CallManager {
         audioManager.stopBluetoothSco();
         audioManager.setBluetoothScoOn(false);
         audioManager.setSpeakerphoneOn(false);
+        printAudio();
     }
 
     public void changeToHeadset() {
@@ -129,6 +154,7 @@ public class CallManager {
         audioManager.stopBluetoothSco();
         audioManager.setBluetoothScoOn(false);
         audioManager.setSpeakerphoneOn(false);
+        printAudio();
     }
 
     public int getMaxVolume(int streamType) {

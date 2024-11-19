@@ -60,6 +60,7 @@ public class VideoCallActivity extends BaseActivity implements ChatVideoViewCont
         intent.putExtra("remotenm", remotenm);
         intent.putExtra("caller", caller);
         intent.putExtra("record", record);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
         context.startActivity(intent);
     }
 

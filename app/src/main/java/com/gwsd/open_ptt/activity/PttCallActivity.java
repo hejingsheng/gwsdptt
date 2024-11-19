@@ -44,6 +44,7 @@ public class PttCallActivity extends BaseActivity implements View.OnTouchListene
         intent.putExtra("pttName",name);
         intent.putExtra("pttType", type);
         intent.putExtra("pttCreate", create);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
         context.startActivity(intent);
     }
 

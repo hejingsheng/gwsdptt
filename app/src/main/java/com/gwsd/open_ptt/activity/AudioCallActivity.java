@@ -2,7 +2,6 @@ package com.gwsd.open_ptt.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,15 +11,9 @@ import com.alibaba.fastjson.JSON;
 import com.gwsd.bean.GWDuplexBean;
 import com.gwsd.bean.GWType;
 import com.gwsd.open_ptt.R;
+import com.gwsd.open_ptt.manager.CallManager;
 import com.gwsd.open_ptt.manager.GWSDKManager;
 import com.gwsd.open_ptt.utils.Utils;
-
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-
 
 public class AudioCallActivity extends BaseActivity{
 
@@ -79,7 +72,9 @@ public class AudioCallActivity extends BaseActivity{
                         if (gwDuplexBean.getStatus() == GWType.GW_DUPLEX_STATUS.GW_PTT_DUPLEX_STATUS_ACCEPTED){
                             runOnUiThread(()->{
                                 iVMic.setVisibility(View.VISIBLE);
+                                iVMic.setSelected(false);
                                 iVBullhorn.setVisibility(View.VISIBLE);
+                                iVBullhorn.setSelected(true);
                                 iVAccept.setVisibility(View.GONE);
                             });
                         }else if (gwDuplexBean.getStatus() == GWType.GW_DUPLEX_STATUS.GW_PTT_DUPLEX_STATUS_END){
@@ -90,6 +85,11 @@ public class AudioCallActivity extends BaseActivity{
                         }else if (gwDuplexBean.getStatus() == GWType.GW_DUPLEX_STATUS.GW_PTT_DUPLEX_STATUS_START) {
                             log("call success");
                         }
+                    } else {
+                        log("call error:"+gwDuplexBean.getResult());
+                        runOnUiThread(()->{
+                            finish();
+                        });
                     }
                 }
             }
@@ -108,30 +108,20 @@ public class AudioCallActivity extends BaseActivity{
 
     protected void initEvent(){
         iVMic.setOnClickListener(v ->{
-            AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
             if (iVMic.isSelected()) {
-                audioManager.setMicrophoneMute(false);
-                boolean isMicrophoneMuted = audioManager.isMicrophoneMute();
-                log("isMicrophoneMuted:" + isMicrophoneMuted);
+                GWSDKManager.getSdkManager().mutePttMic(false);
                 iVMic.setSelected(false);
             }else{
-                audioManager.setMicrophoneMute(true);//禁音
-                boolean isMicrophoneMuted = audioManager.isMicrophoneMute();
-                log("isMicrophoneMuted:" + isMicrophoneMuted);
+                GWSDKManager.getSdkManager().mutePttMic(true);
                 iVMic.setSelected(true);
             }
         });
         iVBullhorn.setOnClickListener(v->{
-            AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
             if (iVBullhorn.isSelected()) {
-                audioManager.setSpeakerphoneOn(false);
-                boolean isSpeakerOn = audioManager.isSpeakerphoneOn();
-                log("isSpeakerOn:"+ isSpeakerOn);
+                CallManager.getManager().changeToSpeaker();
                 iVBullhorn.setSelected(false);
             }else{
-                audioManager.setSpeakerphoneOn(true);// 打开扬声器
-                boolean isSpeakerOn = audioManager.isSpeakerphoneOn();
-                log("isSpeakerOn:"+ isSpeakerOn);
+                CallManager.getManager().changeToHandset();
                 iVBullhorn.setSelected(true);
             }
         });
@@ -147,6 +137,7 @@ public class AudioCallActivity extends BaseActivity{
     protected void release() {
         super.release();
         stopTimer();
+        CallManager.getManager().exitAudioVideoCall();
     }
 
     @Override

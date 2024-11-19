@@ -5,6 +5,7 @@ import android.app.Application;
 import com.gwsd.open_ptt.dao.DBManager;
 import com.gwsd.open_ptt.dao.greendao.DaoSession;
 import com.gwsd.open_ptt.manager.AppManager;
+import com.gwsd.open_ptt.manager.CallManager;
 import com.gwsd.open_ptt.manager.GWSDKManager;
 import com.gwsd.open_ptt.service.MainService;
 
@@ -29,6 +30,7 @@ public class MyApp extends Application {
         AppManager.getInstance().init(this, true);
         this.daoSession = DBManager.initDB(this);
         GWSDKManager.INSTANCE(this);
+        CallManager.INSTANCE(this);
     }
 
     public DaoSession getDaoSession() {

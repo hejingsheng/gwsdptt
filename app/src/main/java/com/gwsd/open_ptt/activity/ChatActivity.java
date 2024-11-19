@@ -21,9 +21,12 @@ import com.gwsd.bean.GWType;
 import com.gwsd.open_ptt.R;
 import com.gwsd.open_ptt.adapter.ChatAdapter;
 import com.gwsd.open_ptt.bean.ChatParam;
+import com.gwsd.open_ptt.bean.ExitTmpGroupEventBean;
 import com.gwsd.open_ptt.bean.FileSendParam;
 import com.gwsd.open_ptt.dao.MsgDaoHelp;
 import com.gwsd.open_ptt.dao.pojo.MsgContentPojo;
+import com.gwsd.open_ptt.manager.AppManager;
+import com.gwsd.open_ptt.manager.CallManager;
 import com.gwsd.open_ptt.manager.GWSDKManager;
 import com.gwsd.open_ptt.service.FileSendService;
 import com.gwsd.open_ptt.utils.RecorderUtil;
@@ -245,7 +248,22 @@ public class ChatActivity extends BaseActivity implements ChatInputView.OnInputV
     @Override
     public void onBtnVoiceCall() {
         if (chatParam.getConvType() == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER) {
-            AudioCallActivity.startAct(this, chatParam.getConvId(), chatParam.getConvName(), true);
+            CallManager.getManager().enterAudioVideoCall(0, (canswitch, oldstate, newstate) -> {
+                if (canswitch) {
+                    if (oldstate == CallManager.CALL_STATE_PTT_TMP_GROUP_CALL) {
+                        EventBus.getDefault().post(new ExitTmpGroupEventBean());
+                        Observable.timer(500,TimeUnit.MILLISECONDS)
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(aLong -> {
+                                    AudioCallActivity.startAct(this, chatParam.getConvId(), chatParam.getConvName(), true);
+                                });
+                    } else {
+                        AudioCallActivity.startAct(this, chatParam.getConvId(), chatParam.getConvName(), true);
+                    }
+                } else {
+                    showToast(R.string.failure);
+                }
+            });
         } else {
             showToast(R.string.hint_not_support);
         }
@@ -254,7 +272,22 @@ public class ChatActivity extends BaseActivity implements ChatInputView.OnInputV
     @Override
     public void onBtnVideoCall() {
         if (chatParam.getConvType() == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER) {
-            VideoCallActivity.startAct(this, String.valueOf(chatParam.getConvId()), chatParam.getConvName(), true, false);
+            CallManager.getManager().enterAudioVideoCall(1, (canswitch, oldstate, newstate) -> {
+                if (canswitch) {
+                    if (oldstate == CallManager.CALL_STATE_PTT_TMP_GROUP_CALL) {
+                        EventBus.getDefault().post(new ExitTmpGroupEventBean());
+                        Observable.timer(500,TimeUnit.MILLISECONDS)
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(aLong -> {
+                                    VideoCallActivity.startAct(this, String.valueOf(chatParam.getConvId()), chatParam.getConvName(), true, false);
+                                });
+                    } else {
+                        VideoCallActivity.startAct(this, String.valueOf(chatParam.getConvId()), chatParam.getConvName(), true, false);
+                    }
+                } else {
+                    showToast(R.string.failure);
+                }
+            });
         } else {
             showToast(R.string.hint_not_support);
         }

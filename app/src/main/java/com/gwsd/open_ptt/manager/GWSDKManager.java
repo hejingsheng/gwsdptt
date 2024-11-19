@@ -30,6 +30,7 @@ import com.gwsd.bean.GWType;
 import com.gwsd.open_ptt.MyApp;
 import com.gwsd.open_ptt.activity.AudioCallActivity;
 import com.gwsd.open_ptt.activity.VideoCallActivity;
+import com.gwsd.open_ptt.bean.ExitTmpGroupEventBean;
 import com.gwsd.open_ptt.bean.GWPttUserInfo;
 import com.gwsd.open_ptt.bean.LoginEventBean;
 import com.gwsd.open_ptt.bean.OfflineEventBean;
@@ -200,6 +201,14 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
     }
     public void fullDuplex(int uid,int action){
         gwPttEngine.pttDuplexCall(uid,action);
+    }
+    public void mutePttSpk(boolean mute) {
+        int open = mute?0:1;
+        gwPttEngine.pttVoiceToggle(0, open);
+    }
+    public void mutePttMic(boolean mute) {
+        int open = mute?0:1;
+        gwPttEngine.pttVoiceToggle(1, open);
     }
     public void loginOut(){
         gwPttEngine.pttLogout();
@@ -400,7 +409,22 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
             if (gwDuplexBean.getResult() == 0) {
                 if (gwDuplexBean.getStatus() == GWType.GW_DUPLEX_STATUS.GW_PTT_DUPLEX_STATUS_INVIET) {
                     if (gwDuplexBean.getUid() != 0) {
-                        AudioCallActivity.startAct(AppManager.getApp(), gwDuplexBean.getUid(), gwDuplexBean.getName(), false);
+                        CallManager.getManager().enterAudioVideoCall(0, (canswitch, oldstate, newstate) -> {
+                            if (canswitch) {
+                                if (oldstate == CallManager.CALL_STATE_PTT_TMP_GROUP_CALL) {
+                                    EventBus.getDefault().post(new ExitTmpGroupEventBean());
+                                    Observable.timer(500,TimeUnit.MILLISECONDS)
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribe(aLong -> {
+                                                AudioCallActivity.startAct(AppManager.getApp(), gwDuplexBean.getUid(), gwDuplexBean.getName(), false);
+                                            });
+                                } else {
+                                    AudioCallActivity.startAct(AppManager.getApp(), gwDuplexBean.getUid(), gwDuplexBean.getName(), false);
+                                }
+                            } else {
+                                fullDuplex(gwDuplexBean.getUid(), GWType.GW_DUPLEX_TYPE.GW_PTT_DUPLEX_ACTION_HANGUP);
+                            }
+                        });
                     }
                 }
             }
@@ -597,7 +621,23 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         if (videoObserver != null) {
             videoObserver.onVideoCall(s, s1);
         }
-        VideoCallActivity.startAct(AppManager.getApp(), s, s1, false, false);
+        CallManager.getManager().enterAudioVideoCall(1, (canswitch, oldstate, newstate) -> {
+            if (canswitch) {
+                if (oldstate == CallManager.CALL_STATE_PTT_TMP_GROUP_CALL) {
+                    EventBus.getDefault().post(new ExitTmpGroupEventBean());
+                    Observable.timer(500,TimeUnit.MILLISECONDS)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(aLong -> {
+                                VideoCallActivity.startAct(AppManager.getApp(), s, s1, false, false);
+                            });
+                } else {
+                    VideoCallActivity.startAct(AppManager.getApp(), s, s1, false, false);
+                }
+            } else {
+                hangupVideo(s);
+            }
+        });
+
     }
 
     @Override

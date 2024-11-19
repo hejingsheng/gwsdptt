@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import com.gwsd.GWVideoEngine;
 import com.gwsd.open_ptt.R;
 import com.gwsd.open_ptt.bean.VideoStateParam;
+import com.gwsd.open_ptt.manager.CallManager;
 import com.gwsd.open_ptt.manager.GWSDKManager;
 import com.gwsd.open_ptt.utils.Utils;
 import com.gwsd.open_ptt.utils.VideoWinSwitchUtil;
@@ -175,6 +176,7 @@ public class VideoCallActivity extends BaseActivity implements ChatVideoViewCont
                         videoStateParam.setVideoStatus(ChatVideoViewContracts.VIDEO_View_send_Accept);
                         videoContentView.setUpdateVideoVState(videoStateParam);
                         GWSDKManager.getSdkManager().attachRemoteVideoView(viewRenderRemote, uid);
+                        CallManager.getManager().changeToSpeaker();
                     } else {
                         //showToast("remote stream ready not have video");
                     }
@@ -242,6 +244,7 @@ public class VideoCallActivity extends BaseActivity implements ChatVideoViewCont
         videoContentView = null;
         videoStateParam = null;
         GWSDKManager.getSdkManager().registerVideoObserver(null);
+        CallManager.getManager().exitAudioVideoCall();
     }
 
     @Override

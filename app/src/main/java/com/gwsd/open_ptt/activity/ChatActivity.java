@@ -242,7 +242,15 @@ public class ChatActivity extends BaseActivity implements ChatInputView.OnInputV
 
     @Override
     public void onBtnPttCall() {
-        PttCallActivity.startAct(this, chatParam.getConvId(), chatParam.getConvName(), chatParam.getConvType());
+        if (chatParam.getConvType() == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER) {
+            CallManager.getManager().enterPttTmpGroupCall((canswitch, oldstate, newstate) -> {
+                if (canswitch) {
+                    PttCallActivity.startAct(this, chatParam.getConvId(), chatParam.getConvName(), chatParam.getConvType(), true);
+                }
+            });
+        } else {
+            PttCallActivity.startAct(this, chatParam.getConvId(), chatParam.getConvName(), chatParam.getConvType(), false);
+        }
     }
 
     @Override

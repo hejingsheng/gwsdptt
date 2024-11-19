@@ -91,7 +91,7 @@ public class GroupDetailActivity extends BaseActivity{
         lLHalfDuplex.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PttCallActivity.startAct(getContext(),gid, gname, gtype);
+                PttCallActivity.startAct(getContext(),gid, gname, gtype, false);
             }
         });
         viewGrpNotice.setOnClickListener(v->{

@@ -20,7 +20,7 @@
     <dimen name="textSize_largeXX">@dimen/dimen20sp</dimen>
     <dimen name="textSize_largeX">@dimen/dimen18sp</dimen>
     <dimen name="textSize_large">@dimen/dimen16sp</dimen>
-    <dimen name="textSize_large_max">@dimen/dimen21sp</dimen>
+    <dimen name="textSize_largeXXXX">@dimen/dimen21sp</dimen>
     <dimen name="textSize_nromlX">@dimen/dimen14sp</dimen>
     <dimen name="textSize_nroml">@dimen/dimen12sp</dimen>
     <dimen name="textSize_samll">@dimen/dimen10sp</dimen>

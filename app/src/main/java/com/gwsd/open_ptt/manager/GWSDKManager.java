@@ -29,6 +29,7 @@ import com.gwsd.bean.GWTempGroupNotifyBean;
 import com.gwsd.bean.GWType;
 import com.gwsd.open_ptt.MyApp;
 import com.gwsd.open_ptt.activity.AudioCallActivity;
+import com.gwsd.open_ptt.activity.PttCallActivity;
 import com.gwsd.open_ptt.activity.VideoCallActivity;
 import com.gwsd.open_ptt.bean.ExitTmpGroupEventBean;
 import com.gwsd.open_ptt.bean.GWPttUserInfo;
@@ -404,6 +405,19 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
             GWTempGroupBean gwTempGroupBean = JSON.parseObject(data, GWTempGroupBean.class);
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_TMP_GROUP_PASSIVE) {
             GWTempGroupNotifyBean gwTempGroupNotifyBean = JSON.parseObject(data, GWTempGroupNotifyBean.class);
+            if (gwTempGroupNotifyBean.getName() != null && gwTempGroupNotifyBean.getName() != "") {
+                CallManager.getManager().enterPttTmpGroupCall((canswitch, oldstate, newstate) -> {
+                    if (canswitch) {
+                        PttCallActivity.startAct(AppManager.getApp(), gwTempGroupNotifyBean.getUid(), gwTempGroupNotifyBean.getName(), GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER ,false);
+                    } else {
+                        int[] ids = new int[1];
+                        ids[0] = 0;
+                        tempGroup(ids, 1);
+                    }
+                });
+            } else {
+                log("remote releas tmp group");
+            }
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_DUPLEX) {
             GWDuplexBean gwDuplexBean = JSON.parseObject(data, GWDuplexBean.class);
             if (gwDuplexBean.getResult() == 0) {

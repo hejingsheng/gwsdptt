@@ -13,68 +13,97 @@
         android:layout_height="wrap_content"
         />
 
-
     <LinearLayout
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_width="match_parent"
         android:background="@color/color_blue35"
         android:layout_weight="1"
         android:orientation="vertical">
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center">
-
         <TextView
-                android:id="@+id/groupName"
+            android:id="@+id/viewGroupName"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_gravity="left"
             android:layout_marginStart="@dimen/dimen10dp"
-            android:layout_marginTop="@dimen/dimen25dp"
-                android:text="@string/hint_poc_current_group"
-                android:textColor="@color/color_white"/>
-
-
-        <TextView
-                android:id="@+id/groupId"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_marginTop="@dimen/dimen25dp"
-                android:text="123456"
-                android:textColor="@color/color_white"
-            android:textSize="@dimen/textSize_large_max"/>
-
+            android:layout_marginTop="@dimen/dimen20dp"
+            android:text="@string/hint_poc_current_group"
+            android:textSize="@dimen/textSize_large"
+            android:textColor="@color/color_white"/>
 
         <TextView
-            android:id="@+id/speaker"
-            android:layout_marginTop="@dimen/dimen25dp"
+            android:id="@+id/viewGroupId"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text=""
-            android:textSize="@dimen/textSize_title"
-            android:textColor="?attr/t_txColor"/>
+            android:layout_marginTop="@dimen/item_height_s5"
+            android:text="123.000000"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/textSize_largeXXXX"/>
 
-    </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/dimen5dp"
+            android:visibility="visible"
+            android:orientation="vertical">
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_weight="1"
-        android:orientation="vertical">
             <com.gwsd.open_ptt.view.SpeakerVoiceDBAnimView
                 android:id="@+id/viewSpeakerAnim"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/item_height_x"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                tools:ignore="MissingClass" />
+                android:layout_marginTop="@dimen/dimen_boundary_xl" />
+
+            <RelativeLayout
+                android:id="@+id/viewSpeak"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/viewSpeakerAnim"
+                android:layout_marginTop="@dimen/item_height_ss"
+                >
+
+                <TextView
+                    android:id="@+id/viewSpeakStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/item_height_ss"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:text="SPEAKING"
+                    android:textColor="@color/color_white"
+                    android:textSize="@dimen/textSize_large" />
+                <ImageView
+                    android:id="@+id/viewSpeakLed"
+                    android:layout_width="@dimen/dimen10dp"
+                    android:layout_height="@dimen/dimen10dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/dimen_boundary_s"
+                    android:layout_toLeftOf="@+id/viewSpeakStatus"
+                    android:background="@drawable/selector_oval_red" />
+                <TextView
+                    android:id="@+id/viewSpeakTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/item_height"
+                    android:textSize="@dimen/textSize_large"
+                    android:layout_marginLeft="@dimen/dimen_boundary_xl"
+                    android:layout_toRightOf="@+id/viewSpeakStatus"
+                    android:gravity="center_vertical"
+                    android:text="00:00"
+                    android:textColor="@color/color_white"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <com.gwsd.open_ptt.view.VoiceSendingView
             android:id="@+id/view_VoiceSendingView"

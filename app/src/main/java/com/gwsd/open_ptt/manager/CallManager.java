@@ -47,11 +47,11 @@ public class CallManager {
         callState = CALL_STATE_IDLE;
     }
 
-    public void enterPttCall() {
+    public void enterPttGroupCall() {
         callState = CALL_STATE_PTT_GROUP_CALL;
     }
 
-    public void exitPttCall() {
+    public void exitPttGroupCall() {
         callState = CALL_STATE_IDLE;
     }
 

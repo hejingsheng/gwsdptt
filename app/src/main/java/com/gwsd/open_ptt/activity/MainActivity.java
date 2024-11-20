@@ -18,14 +18,22 @@ import com.google.android.material.tabs.TabLayout;
 import com.gwsd.open_ptt.R;
 import com.gwsd.open_ptt.bean.LoginEventBean;
 import com.gwsd.open_ptt.bean.OfflineEventBean;
+import com.gwsd.open_ptt.dao.pojo.MsgConversationPojo;
 import com.gwsd.open_ptt.fragment.BaseFragment;
 import com.gwsd.open_ptt.fragment.ChatListFragment;
 import com.gwsd.open_ptt.fragment.GroupListFragment;
 import com.gwsd.open_ptt.fragment.MeFragment;
 import com.gwsd.open_ptt.view.AppTopView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class MainActivity extends CommBusiActivity {
 
@@ -195,4 +203,15 @@ public class MainActivity extends CommBusiActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
+
+    public void updateNewMsgFlag(int newMsgnum) {
+        TabLayout.Tab tab = viewTablayout.getTabAt(0);
+        View view_msg_red = tab.getCustomView().findViewById(R.id.view_msg_red);
+        if (newMsgnum > 0) {
+            view_msg_red.setVisibility(View.VISIBLE);
+        } else {
+            view_msg_red.setVisibility(View.GONE);
+        }
+    }
+
 }

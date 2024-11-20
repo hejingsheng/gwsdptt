@@ -1,9 +1,14 @@
 package com.gwsd.open_ptt.fragment;
 
+import android.app.Activity;
+import android.content.Context;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 
 import com.gwsd.open_ptt.R;
 import com.gwsd.open_ptt.activity.ChatActivity;
+import com.gwsd.open_ptt.activity.MainActivity;
 import com.gwsd.open_ptt.adapter.MsgConvAdapter;
 import com.gwsd.open_ptt.bean.ChatParam;
 import com.gwsd.open_ptt.dao.MsgDaoHelp;
@@ -36,7 +41,6 @@ public class ChatListFragment extends ListFragment{
         super.onStart();
         refreshData();
     }
-
 
     @Override
     protected void initData() {
@@ -78,6 +82,14 @@ public class ChatListFragment extends ListFragment{
             Collections.sort(convList,new MsgConvBeanComp());
         }
         mAdapter.setData(convList);
+        int unReadMsgNum = 0;
+        for (MsgConversationPojo msgConversationPojo : convList) {
+            unReadMsgNum += msgConversationPojo.getMsgUnReadCnt();
+        }
+        MainActivity main = (MainActivity) getActivity();
+        if (main != null) {
+            main.updateNewMsgFlag(unReadMsgNum);
+        }
         swipeRefreshLayout.setRefreshing(false);
         checkDataEmpty();
     }

@@ -34,12 +34,14 @@ import com.gwsd.open_ptt.activity.VideoCallActivity;
 import com.gwsd.open_ptt.bean.ExitTmpGroupEventBean;
 import com.gwsd.open_ptt.bean.GWPttUserInfo;
 import com.gwsd.open_ptt.bean.LoginEventBean;
+import com.gwsd.open_ptt.bean.NotifiDataBean;
 import com.gwsd.open_ptt.bean.OfflineEventBean;
 import com.gwsd.open_ptt.config.DeviceConfig;
 import com.gwsd.open_ptt.config.ServerAddressConfig;
 import com.gwsd.open_ptt.dao.MsgDaoHelp;
 import com.gwsd.open_ptt.dao.pojo.MsgContentPojo;
 import com.gwsd.open_ptt.dao.pojo.MsgConversationPojo;
+import com.gwsd.open_ptt.service.MainService;
 import com.gwsd.rtc.view.GWRtcSurfaceVideoRender;
 
 import org.greenrobot.eventbus.EventBus;
@@ -522,6 +524,14 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
                     MsgConversationPojo msgConversationPojo = MsgDaoHelp.saveOrUpdateConv(msgContentPojo);
                     EventBus.getDefault().post(msgContentPojo);
                     EventBus.getDefault().post(msgConversationPojo);
+                    NotifiDataBean notifiDataBean = new NotifiDataBean();
+                    notifiDataBean.setSendNm(msgContentPojo.getSenderNm());
+                    notifiDataBean.setRecvNm(msgContentPojo.getRecvNm());
+                    notifiDataBean.setRecvId(msgContentPojo.getConvId());
+                    notifiDataBean.setMsgType(msgContentPojo.getMsgType());
+                    notifiDataBean.setContent(msgContentPojo.getContent());
+                    notifiDataBean.setRecvType(msgContentPojo.getRecvType());
+                    MainService.startServerWithData(AppManager.getApp(), notifiDataBean);
                 }
             }
         }

@@ -74,6 +74,16 @@ public class ChatActivity extends BaseActivity implements ChatInputView.OnInputV
         context.startActivity(intent);
     }
 
+    public static Intent getStartIntent(Context context, int convid, String convnm, int type) {
+        Intent intent = new Intent(context, ChatActivity.class);
+        ChatParam chatParam=new ChatParam();
+        chatParam.setConvId(convid);
+        chatParam.setConvName(convnm);
+        chatParam.setConvType(type);
+        intent.putExtra("param", chatParam);
+        return intent;
+    }
+
     private String getUid() {
         String uid = String.valueOf(GWSDKManager.getSdkManager().getUserInfo().getId());
         return uid;
@@ -87,8 +97,8 @@ public class ChatActivity extends BaseActivity implements ChatInputView.OnInputV
     @Override
     protected void initData() {
         EventBus.getDefault().register(this);
-        Bundle bundle = getIntent().getExtras();
-        chatParam = (ChatParam) bundle.getSerializable("param");
+        chatParam = (ChatParam)getIntent().getParcelableExtra("param");
+        log(chatParam.toString());
         mAdapter = new ChatAdapter(getUid());
         mData=new ArrayList<>();
     }

@@ -23,6 +23,7 @@ import com.gwsd.open_ptt.adapter.ChatAdapter;
 import com.gwsd.open_ptt.bean.ChatParam;
 import com.gwsd.open_ptt.bean.ExitTmpGroupEventBean;
 import com.gwsd.open_ptt.bean.FileSendParam;
+import com.gwsd.open_ptt.comm_ui.voice.PlayVoice;
 import com.gwsd.open_ptt.dao.MsgDaoHelp;
 import com.gwsd.open_ptt.dao.pojo.MsgContentPojo;
 import com.gwsd.open_ptt.manager.AppManager;
@@ -96,6 +97,7 @@ public class ChatActivity extends BaseActivity implements ChatInputView.OnInputV
     protected void release() {
         super.release();
         EventBus.getDefault().unregister(this);
+        PlayVoice.getInstance().release();
     }
 
     @Override
@@ -147,6 +149,10 @@ public class ChatActivity extends BaseActivity implements ChatInputView.OnInputV
 
     @Override
     public void onSendTxt(String str) {
+        if (!GWSDKManager.getSdkManager().hasMsgPermission()) {
+            showToast(R.string.hint_notPermission);
+            return;
+        }
         GWMsgBean gwMsgBean = GWSDKManager.getSdkManager().createMsgBean(chatParam.getConvType(),  chatParam.getConvId(), chatParam.getConvName(), GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_TEXT);
         gwMsgBean.getData().setContent(str);
         GWSDKManager.getSdkManager().sendMsg(gwMsgBean);
@@ -255,6 +261,10 @@ public class ChatActivity extends BaseActivity implements ChatInputView.OnInputV
 
     @Override
     public void onBtnVoiceCall() {
+        if (!GWSDKManager.getSdkManager().hasDuplexCallPermission()) {
+            showToast(R.string.hint_notPermission);
+            return;
+        }
         if (chatParam.getConvType() == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER) {
             CallManager.getManager().enterAudioVideoCall(0, (canswitch, oldstate, newstate) -> {
                 if (canswitch) {
@@ -279,6 +289,10 @@ public class ChatActivity extends BaseActivity implements ChatInputView.OnInputV
 
     @Override
     public void onBtnVideoCall() {
+        if (!GWSDKManager.getSdkManager().hasVideoPermission()) {
+            showToast(R.string.hint_notPermission);
+            return;
+        }
         if (chatParam.getConvType() == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER) {
             CallManager.getManager().enterAudioVideoCall(1, (canswitch, oldstate, newstate) -> {
                 if (canswitch) {
@@ -391,6 +405,10 @@ public class ChatActivity extends BaseActivity implements ChatInputView.OnInputV
 
     private void handleActivityResult(FileSelectData filedata) {
         if (filedata == null) {
+            return;
+        }
+        if (!GWSDKManager.getSdkManager().hasMsgPermission()) {
+            showToast(R.string.hint_notPermission);
             return;
         }
         log("select file="+filedata.type+" path="+filedata.path);

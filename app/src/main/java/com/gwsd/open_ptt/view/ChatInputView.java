@@ -64,7 +64,7 @@ public class ChatInputView extends RelativeLayout implements View.OnClickListene
 
     ImageView viewChangeEtType;
     Button viewSend;
-    Button viewShowAttach;
+    ImageView viewShowAttach;
     EditText viewEtInput;
     Button viewVoiceRecord;
 

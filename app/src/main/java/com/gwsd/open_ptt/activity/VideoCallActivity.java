@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 
 import com.gwsd.GWVideoEngine;
 import com.gwsd.open_ptt.R;
+import com.gwsd.open_ptt.bean.OfflineEventBean;
 import com.gwsd.open_ptt.bean.VideoStateParam;
 import com.gwsd.open_ptt.manager.CallManager;
 import com.gwsd.open_ptt.manager.GWSDKManager;
@@ -19,7 +20,7 @@ import com.gwsd.open_ptt.view.ChatVideoContentView;
 import com.gwsd.open_ptt.view.ChatVideoViewContracts;
 import com.gwsd.rtc.view.GWRtcSurfaceVideoRender;
 
-public class VideoCallActivity extends BaseActivity implements ChatVideoViewContracts.OnVideoBtnCallback {
+public class VideoCallActivity extends CommBusiActivity implements ChatVideoViewContracts.OnVideoBtnCallback {
 
     protected RelativeLayout viewSurfaceGroup;
     protected GWRtcSurfaceVideoRender viewRenderLocal;
@@ -279,5 +280,11 @@ public class VideoCallActivity extends BaseActivity implements ChatVideoViewCont
         if(videoContentView!=null){
             videoContentView.setUpdateVideoVTime(Utils.intToTimer(ts));
         }
+    }
+
+    @Override
+    protected void processOffline(OfflineEventBean bean) {
+        super.processOffline(bean);
+        sendVideoHangup();
     }
 }

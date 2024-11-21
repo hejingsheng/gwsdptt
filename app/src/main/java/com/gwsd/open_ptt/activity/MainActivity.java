@@ -60,7 +60,7 @@ public class MainActivity extends CommBusiActivity {
         super.processLogin(bean);
         log("login:"+bean.getLoginResult());
         if (bean.getLoginResult() == 0) {
-            showToast(R.string.hint_login_succeed);
+            //showToast(R.string.hint_login_succeed);
             viewAppTop.setTopRightImgGone();
         } else if (bean.getLoginResult() < 0) {
             showToast(R.string.hint_login_failure);

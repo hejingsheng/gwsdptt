@@ -56,6 +56,12 @@ public class MemberListActivity extends BaseActivity implements SwipeRefreshLayo
     }
 
     @Override
+    protected void release() {
+        super.release();
+        GWSDKManager.getSdkManager().registerPttObserver(null);
+    }
+
+    @Override
     protected void initData() {
         gid = getIntent().getLongExtra("queryMemGid", -1);
         mData = new ArrayList<>();

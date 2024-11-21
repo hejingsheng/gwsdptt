@@ -82,11 +82,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected void showToast(int id) {
-        Toast.makeText(this, AppManager.getApp().getString(id), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, AppManager.getApp().getString(id), Toast.LENGTH_SHORT).show();
     }
 
     protected void showToast(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
     protected void showAlert(String message) {

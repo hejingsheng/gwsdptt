@@ -103,6 +103,7 @@ public class MainService extends Service {
     private void showNotification(NotifiDataBean notifiDataBean) {
         String title = "";
         String content = "";
+        String convNm = "";
         if (notifiDataBean.getRecvType() == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER) {
             title = notifiDataBean.getSendNm();
             if (notifiDataBean.getMsgType() == GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_TEXT) {
@@ -116,6 +117,7 @@ public class MainService extends Service {
             } else {
                 content = notifiDataBean.getContent();
             }
+            convNm = notifiDataBean.getSendNm();
         } else {
             title = notifiDataBean.getRecvNm();
             if (notifiDataBean.getMsgType() == GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_TEXT) {
@@ -129,8 +131,9 @@ public class MainService extends Service {
             } else {
                 content = notifiDataBean.getSendNm() + ":" + notifiDataBean.getContent();
             }
+            convNm = notifiDataBean.getRecvNm();
         }
-        Intent intent = ChatActivity.getStartIntent(this, notifiDataBean.getRecvId(), notifiDataBean.getSendNm(), notifiDataBean.getRecvType());
+        Intent intent = ChatActivity.getStartIntent(this, notifiDataBean.getRecvId(), convNm, notifiDataBean.getRecvType());
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID_STRING)

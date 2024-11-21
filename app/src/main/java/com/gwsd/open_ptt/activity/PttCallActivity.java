@@ -15,13 +15,14 @@ import com.gwsd.bean.GWTempGroupBean;
 import com.gwsd.bean.GWTempGroupNotifyBean;
 import com.gwsd.bean.GWType;
 import com.gwsd.open_ptt.R;
+import com.gwsd.open_ptt.bean.OfflineEventBean;
 import com.gwsd.open_ptt.manager.CallManager;
 import com.gwsd.open_ptt.manager.GWSDKManager;
 import com.gwsd.open_ptt.view.AppTopView;
 import com.gwsd.open_ptt.view.SpeakerVoiceDBAnimView;
 import com.gwsd.open_ptt.view.VoiceSendingView;
 
-public class PttCallActivity extends BaseActivity implements View.OnTouchListener{
+public class PttCallActivity extends CommBusiActivity implements View.OnTouchListener{
 
     AppTopView aTHalfDuplex;
     SpeakerVoiceDBAnimView viewSpeakerAnim;
@@ -62,6 +63,7 @@ public class PttCallActivity extends BaseActivity implements View.OnTouchListene
             ids[0] = 0;
             GWSDKManager.getSdkManager().tempGroup(ids, 1);
         }
+        GWSDKManager.getSdkManager().registerPttObserver(null);
     }
 
     @Override
@@ -212,4 +214,9 @@ public class PttCallActivity extends BaseActivity implements View.OnTouchListene
         }
     }
 
+    @Override
+    protected void processOffline(OfflineEventBean bean) {
+        super.processOffline(bean);
+        finish();
+    }
 }

@@ -11,11 +11,12 @@ import com.alibaba.fastjson.JSON;
 import com.gwsd.bean.GWDuplexBean;
 import com.gwsd.bean.GWType;
 import com.gwsd.open_ptt.R;
+import com.gwsd.open_ptt.bean.OfflineEventBean;
 import com.gwsd.open_ptt.manager.CallManager;
 import com.gwsd.open_ptt.manager.GWSDKManager;
 import com.gwsd.open_ptt.utils.Utils;
 
-public class AudioCallActivity extends BaseActivity{
+public class AudioCallActivity extends CommBusiActivity{
 
     TextView tVCallUser;
     TextView tVTimer;
@@ -140,6 +141,7 @@ public class AudioCallActivity extends BaseActivity{
         super.release();
         stopTimer();
         CallManager.getManager().exitAudioVideoCall();
+        GWSDKManager.getSdkManager().registerPttObserver(null);
     }
 
     @Override
@@ -149,5 +151,10 @@ public class AudioCallActivity extends BaseActivity{
         }
     }
 
+    @Override
+    protected void processOffline(OfflineEventBean bean) {
+        super.processOffline(bean);
+        finish();
+    }
 }
 

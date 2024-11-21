@@ -22,14 +22,23 @@
 
         <TextView
             android:id="@+id/viewGroupName"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:layout_marginStart="@dimen/dimen10dp"
             android:layout_marginTop="@dimen/item_height_ss"
             android:text="@string/hint_poc_current_group"
-            android:textSize="@dimen/textSize_large"
-            android:textColor="@color/color_white"/>
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/textSize_nromlX" />
+
+        <ImageView
+            android:id="@+id/viewVoiceCtrl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/item_height_ss"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/dimen10dp"
+            android:background="@mipmap/ic_open_voice"/>
 
         <TextView
             android:id="@+id/viewGroupId"

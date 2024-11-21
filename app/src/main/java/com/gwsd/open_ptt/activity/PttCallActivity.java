@@ -30,12 +30,14 @@ public class PttCallActivity extends CommBusiActivity implements View.OnTouchLis
     TextView viewGroupId;
     TextView viewSpeakStatus;
     ImageView viewSpeakLed;
+    ImageView viewVoiceCtrl;
     VoiceSendingView viewVoiceSendingView;
 
     private long id;
     private String name;
     private int type;
     private boolean create;
+    private boolean voiceOpen = true;
 
     private boolean speakSucc = false;
 
@@ -163,6 +165,7 @@ public class PttCallActivity extends CommBusiActivity implements View.OnTouchLis
         viewSpeakerAnim.setVisibility(View.VISIBLE);
         viewSpeakStatus = findViewById(R.id.viewSpeakStatus);
         viewSpeakLed = findViewById(R.id.viewSpeakLed);
+        viewVoiceCtrl = findViewById(R.id.viewVoiceCtrl);
         viewSpeakStatus.setText("");
         viewGroupName.setText(String.format(getString(R.string.hint_poc_current_group), name));
         viewGroupId.setText(String.valueOf(id));
@@ -177,7 +180,16 @@ public class PttCallActivity extends CommBusiActivity implements View.OnTouchLis
         aTHalfDuplex.setLeftClick(v ->{
             finish();
         });
-
+        viewVoiceCtrl.setOnClickListener(v -> {
+            if (voiceOpen) {
+                viewVoiceCtrl.setBackgroundResource(R.mipmap.ic_close_voice);
+                GWSDKManager.getSdkManager().mutePttSpk(true);
+            } else {
+                viewVoiceCtrl.setBackgroundResource(R.mipmap.ic_open_voice);
+                GWSDKManager.getSdkManager().mutePttSpk(false);
+            }
+            voiceOpen = !voiceOpen;
+        });
     }
 
     private void updateSpeaker(int state, String txt) {

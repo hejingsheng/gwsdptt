@@ -125,6 +125,10 @@ public class ChatActivity extends BaseActivity implements ChatInputView.OnInputV
         viewVoiceAnimPanel.setVisibility(View.GONE);
         viewVoiceAnimPanel.showCancel();
 
+        if (chatParam.getConvType() != GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER) {
+            viewChatInputView.hideAudioVideoBtn();
+        }
+
         setConvUnReadNone();
         refreshData();
     }

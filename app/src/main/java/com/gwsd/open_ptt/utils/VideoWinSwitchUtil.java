@@ -13,7 +13,7 @@ import com.gwsd.open_ptt.R;
 import com.gwsd.rtc.view.GWRtcSurfaceVideoRender;
 
 
-public class VideoWinSwitchUtil {
+public class VideoWinSwitchUtil implements View.OnTouchListener {
     final int VIEW_ID_None=-1;
     final int VIEW_ID_Remote=1;
     final int VIEW_ID_Local=2;
@@ -23,9 +23,7 @@ public class VideoWinSwitchUtil {
         int smallViewHeight;
         int srceenW;
         int srceenH;
-        int offsetTop=0;
         int offsetLeft=0;
-        int offsetRight=0;
         int offsetBottom=0;
     }
     private VideoViewParam param;
@@ -56,9 +54,9 @@ public class VideoWinSwitchUtil {
         DisplayMetrics dm = resources.getDisplayMetrics();
         param.srceenW =dm.widthPixels>dm.heightPixels?dm.heightPixels:dm.widthPixels;
         param.srceenH=dm.widthPixels>dm.heightPixels?dm.widthPixels:dm.heightPixels;
-        param.smallViewWidth = param.srceenW  /4;
+        param.smallViewWidth = param.srceenW  /3;
         param.smallViewHeight = param.smallViewWidth +50;
-        param.offsetBottom= (int) context.getResources().getDimension(R.dimen.item_height);
+        param.offsetBottom = (int) context.getResources().getDimension(R.dimen.dimen5dp);
 
 //        log("==calculationSmallSize="+curSmallId+",srceen w:"+param.srceenW+",h:"+param.srceenH+","+param.smallViewWidth);
 //        if(curSmallId==VIEW_ID_Remote){
@@ -87,9 +85,13 @@ public class VideoWinSwitchUtil {
         if(curSmallId!=VIEW_ID_Local){
             changeVideoView(viewSurfaceGroup, localView, remoteView);
             curSmallId=VIEW_ID_Local;
+            localView.setOnTouchListener(this);
+            remoteView.setOnTouchListener(null);
         }else if(curSmallId!=VIEW_ID_Remote) {
             changeVideoView(viewSurfaceGroup, remoteView, localView);
             curSmallId=VIEW_ID_Remote;
+            remoteView.setOnTouchListener(this);
+            localView.setOnTouchListener(null);
         }
     }
     private void changeVideoView(RelativeLayout viewSurfaceGroup,GWRtcSurfaceVideoRender smallVideoV, GWRtcSurfaceVideoRender bigVideoV) {
@@ -103,6 +105,7 @@ public class VideoWinSwitchUtil {
             linearParams.leftMargin=0;
             linearParams.topMargin=0;
             linearParams.bottomMargin=0;
+            linearParams.rightMargin=0;
             bigVideoV.setLayoutParams(linearParams);
         }
         if(smallVideoV!=null){
@@ -110,8 +113,8 @@ public class VideoWinSwitchUtil {
             RelativeLayout.LayoutParams linearParams = (RelativeLayout.LayoutParams) smallVideoV.getLayoutParams();
             linearParams.width = param.smallViewWidth;
             linearParams.height = param.smallViewHeight;
-            linearParams.leftMargin=10;
-            linearParams.bottomMargin=param.offsetBottom+30;
+            linearParams.leftMargin=0;
+            linearParams.bottomMargin=param.offsetBottom;
             linearParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             linearParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
             smallVideoV.setZOrderOnTop(true);
@@ -119,8 +122,13 @@ public class VideoWinSwitchUtil {
             smallVideoV.setLayoutParams(linearParams);
             log("linearParams.leftMargin=:"+linearParams.leftMargin);
         }
-        if(smallVideoV!=null)viewSurfaceGroup.addView(smallVideoV);
         if(bigVideoV!=null)viewSurfaceGroup.addView(bigVideoV);
+        if(smallVideoV!=null)viewSurfaceGroup.addView(smallVideoV);
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        return dispatchTouchEvent(event);
     }
 
     int oldX;
@@ -128,7 +136,6 @@ public class VideoWinSwitchUtil {
     long oldTime;
     boolean isDownTouchSmall=false;
     public boolean dispatchTouchEvent(MotionEvent event){
-
         if(viewSurfaceGroup==null)return false;
 
         if(event.getAction()==MotionEvent.ACTION_DOWN){
@@ -137,11 +144,11 @@ public class VideoWinSwitchUtil {
             oldTime=System.currentTimeMillis();
             isDownTouchSmall=isTouchSmalVideo(event);
         }else if(event.getAction()==MotionEvent.ACTION_MOVE){
-//            if(Math.abs(event.getX()-oldX)>10 || Math.abs(event.getY()-oldY)>10){
-//                if(isDownTouchSmall){
-//                    touchMoveSmallView(event);
-//                }
-//            }
+            if(Math.abs(event.getX()-oldX)>10 || Math.abs(event.getY()-oldY)>10){
+                if(isDownTouchSmall){
+                    touchMoveSmallView(event);
+                }
+            }
         }else if(event.getAction()==MotionEvent.ACTION_UP
                 || event.getAction()==MotionEvent.ACTION_CANCEL){
             long newTime=System.currentTimeMillis();
@@ -150,11 +157,10 @@ public class VideoWinSwitchUtil {
             if(Math.abs(event.getX()-oldX)<10 && Math.abs(event.getY()-oldY)<10 && newTime-oldTime<500){
                 if(tempIsTouchSmall){
                     changeSmallAuto();
-                    return true;
                 }
             }
         }
-        return false;
+        return true;
     }
     /**
      * 判断当前触摸的位置是不是小窗口上,
@@ -191,29 +197,34 @@ public class VideoWinSwitchUtil {
         if(ev.getAction()==MotionEvent.ACTION_MOVE){
             int x= (int) ev.getRawX();
             int y= (int) ev.getRawY();
-            int finalX=x-param.smallViewWidth/2;
-            int finalY=y-param.smallViewHeight/2;
+            int left=x-param.smallViewWidth/2;
+            int bottom=param.srceenH-(y+param.smallViewHeight/2);
+
+            if(left<0){
+                left=0;
+            }else if(left>param.srceenW-param.smallViewWidth){
+                left=param.srceenW-param.smallViewWidth;
+            }
             //上下边距
-            if(finalY<param.offsetTop){
-                finalY=param.offsetTop;
-            }else if(finalY>param.srceenH-param.smallViewHeight-param.offsetBottom){
-                finalY=param.srceenH-param.smallViewHeight-param.offsetBottom;
+            if(bottom<0){
+                bottom=0;
+            }else if(bottom>param.srceenH-param.smallViewHeight){
+                bottom=param.srceenH-param.smallViewHeight;
             }
-            if(finalX<param.offsetLeft){
-                finalX=param.offsetLeft;
-            }else if(finalX>param.srceenW-param.smallViewWidth-param.offsetRight){
-                finalX=param.srceenW-param.smallViewWidth-param.offsetRight;
-            }
-            log("finalX:"+finalX+",finalY:"+finalY);
+            //log("finalX:"+left+",finalY:"+bottom);
             if(curSmallId== VIEW_ID_Local){
                 RelativeLayout.LayoutParams layoutParams= (RelativeLayout.LayoutParams) localView.getLayoutParams();
-                layoutParams.leftMargin=finalX;
-                layoutParams.topMargin=finalY;
+                layoutParams.leftMargin=left;
+                layoutParams.bottomMargin=bottom;
+                localView.setZOrderOnTop(true);
+                localView.setZOrderMediaOverlay(true);
                 localView.setLayoutParams(layoutParams);
             }else if(curSmallId== VIEW_ID_Remote){
                 RelativeLayout.LayoutParams layoutParams= (RelativeLayout.LayoutParams) remoteView.getLayoutParams();
-                layoutParams.leftMargin=finalX;
-                layoutParams.topMargin=finalY;
+                layoutParams.leftMargin=left;
+                layoutParams.bottomMargin=bottom;
+                remoteView.setZOrderOnTop(true);
+                remoteView.setZOrderMediaOverlay(true);
                 remoteView.setLayoutParams(layoutParams);
             }
         }

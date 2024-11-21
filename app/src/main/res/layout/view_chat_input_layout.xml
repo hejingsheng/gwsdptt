@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dimen35dp"
             android:layout_alignParentLeft="true"
-            android:src="@drawable/yida_ic_keyboard"
+            android:src="@mipmap/ic_keyboard"
             android:visibility="visible" />
 
         <RelativeLayout
@@ -105,7 +105,7 @@
                 android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:drawableTop="@drawable/yida_selector_btn_file"
+                android:drawableTop="@drawable/selector_btn_file"
                 android:gravity="center"
                 android:text="@string/file"
                 android:textSize="@dimen/dimen18sp"
@@ -117,7 +117,7 @@
                 android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:drawableTop="@drawable/yida_selector_btn_video"
+                android:drawableTop="@drawable/selector_btn_video"
                 android:gravity="center"
                 android:text="@string/video"
                 android:textSize="@dimen/dimen18sp"
@@ -128,7 +128,7 @@
                 android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:drawableTop="@drawable/yida_selector_btn_location"
+                android:drawableTop="@drawable/selector_btn_location"
                 android:gravity="center"
                 android:text="@string/location"
                 android:textSize="@dimen/dimen18sp"

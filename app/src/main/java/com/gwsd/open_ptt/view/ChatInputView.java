@@ -5,7 +5,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -116,7 +115,7 @@ public class ChatInputView extends RelativeLayout implements View.OnClickListene
         viewBtnPttCall.setOnClickListener(this::onClick);
 
         viewChangeEtType.setSelected(false);
-        viewChangeEtType.setImageResource(R.drawable.yida_ic_voice);
+        viewChangeEtType.setImageResource(R.mipmap.ic_voice_send);
         viewVoiceRecord.setVisibility(GONE);
         viewEtInput.setVisibility(VISIBLE);
         showAttach = false;
@@ -136,17 +135,26 @@ public class ChatInputView extends RelativeLayout implements View.OnClickListene
         }
     }
 
+    public void hideAudioVideoBtn() {
+        if (viewBtnVideoCall!=null) {
+            viewBtnVideoCall.setVisibility(INVISIBLE);
+        }
+        if (viewBtnVoiceCall!=null) {
+            viewBtnVoiceCall.setVisibility(INVISIBLE);
+        }
+    }
+
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.viewChangeEtType) {
             if (view.isSelected()) {
                 view.setSelected(false);
-                viewChangeEtType.setImageResource(R.drawable.yida_selector_input_key_voice);
+                viewChangeEtType.setImageResource(R.drawable.selector_input_key_voice);
                 viewVoiceRecord.setVisibility(GONE);
                 viewEtInput.setVisibility(VISIBLE);
             } else {
                 view.setSelected(true);
-                viewChangeEtType.setImageResource(R.drawable.yida_selector_input_keyboard);
+                viewChangeEtType.setImageResource(R.drawable.selector_input_keyboard);
                 viewVoiceRecord.setVisibility(VISIBLE);
                 viewEtInput.setVisibility(GONE);
             }

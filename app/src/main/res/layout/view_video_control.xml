@@ -78,7 +78,7 @@
             style="@style/TextSuper"
             android:layout_width="@dimen/item_height"
             android:layout_height="@dimen/item_height"
-            android:src="@drawable/yida_chatvideo_changecamera"/>
+            android:src="@drawable/chatvideo_changecamera"/>
 
         <ImageView
             android:id="@+id/viewHangup"

@@ -10,9 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
+
     <com.gwsd.rtc.view.GWRtcSurfaceVideoRender
         android:id="@+id/viewRenderLocal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="match_parent" />
 </RelativeLayout>

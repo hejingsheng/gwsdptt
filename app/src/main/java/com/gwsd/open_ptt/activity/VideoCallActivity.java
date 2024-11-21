@@ -19,12 +19,6 @@ import com.gwsd.open_ptt.view.ChatVideoContentView;
 import com.gwsd.open_ptt.view.ChatVideoViewContracts;
 import com.gwsd.rtc.view.GWRtcSurfaceVideoRender;
 
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-
 public class VideoCallActivity extends BaseActivity implements ChatVideoViewContracts.OnVideoBtnCallback {
 
     protected RelativeLayout viewSurfaceGroup;

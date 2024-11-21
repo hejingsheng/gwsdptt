@@ -1,2 +1,2 @@
 # gwsdptt
-gwsd ptt example
+gwsd ptt example support message,video/audio call, ptt call

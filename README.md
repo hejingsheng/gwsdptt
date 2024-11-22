@@ -33,19 +33,20 @@ frgp|Set|Functions
 
 ## Equipment configuration
 ### DeviceConfig.java
-DEVICE_KEY_BROADCAST：Configure device key broadcasting
+1. DEVICE_KEY_BROADCAST：Configure device key broadcasting
 Broadcast receiver KeyReceiver，Add business logic to this class that handles specific keystroke broadcasts
-DEVICE_CAMERA_ORIENTATION：Configure the rotation Angle of the front and rear cameras
-getDeviceImei：To obtain the imei of the device for remote number allocation on the imei platform, a unique identifier needs to be obtained. If the imei cannot be obtained because the android version is too high, androidID can also be used, and a fixed value can be returned when it is not needed
-getDeviceIccid：Obtain iccid for platform iccid remote number allocation, it is necessary to obtain a unique ID, if the android version is too high to obtain the imei delivery date androidID can also be used, it can return a fixed value when not needed
-getDeviceBattery：The system can also return a fixed value
-getDeviceNetwork：Get network modes such as (4g, 5g, wifi, etc.)
+2. DEVICE_CAMERA_ORIENTATION：Configure the rotation Angle of the front and rear cameras
+3. getDeviceImei：To obtain the imei of the device for remote number allocation on the imei platform, a unique identifier needs to be obtained. If the imei cannot be obtained because the android version is too high, androidID can also be used, and a fixed value can be returned when it is not needed
+4. getDeviceIccid：Obtain iccid for platform iccid remote number allocation, it is necessary to obtain a unique ID, if the android version is too high to obtain the imei delivery date androidID can also be used, it can return a fixed value when not needed
+5. getDeviceBattery：The system can also return a fixed value
+6. getDeviceNetwork：Get network modes such as (4g, 5g, wifi, etc.)
 
 ## Server address setting
-PTT_SERVER_ADDRESS：Intercom server
-MSG_SERVER_ADDRESS：Message server
-DISPATCH_SERVER_ADDRESS：Scheduling server
-VIDEO_SERVER_ADDRESS：Video server
-FILE_SERVER_ADDRESS：Upload file address
+1. PTT_SERVER_ADDRESS：Intercom server
+2. MSG_SERVER_ADDRESS：Message server
+3. DISPATCH_SERVER_ADDRESS：Scheduling server
+4. VIDEO_SERVER_ADDRESS：Video server
+5. FILE_SERVER_ADDRESS：Upload file address
+
 If you need to use the GWSD platform intercom server, message server, scheduling server, video server, upload file address do not need to change the demo
 Contact O&M for private deployment

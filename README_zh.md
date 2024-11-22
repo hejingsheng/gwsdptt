@@ -33,19 +33,20 @@ frgp|套餐|功能描述
 
 ## 设备配置
 ### DeviceConfig.java
-DEVICE_KEY_BROADCAST：配置设备按键广播
+1. DEVICE_KEY_BROADCAST：配置设备按键广播
 广播接收器为KeyReceiver，在该类中添加处理具体按键广播的业务逻辑
-DEVICE_CAMERA_ORIENTATION：配置前置后置摄像头的翻转角度
-getDeviceImei：进行获取设备的imei用于imei平台上远程放号使用，需要获取一个唯一标识即可，如果因为android版本过高无法获取imei使用androidID也可以，不需要时可以返回固定值
-getDeviceIccid：获取iccid用于平台iccid远程放号，需要获取一个唯一标识即可，如果因为android版本过高无法获取imei货期androidID也可以，不需要时可返回固定值
-getDeviceBattery：系统获取电量也可返回固定值
-getDeviceNetwork：获取网络模式如（4g，5g，wifi等）
+2. DEVICE_CAMERA_ORIENTATION：配置前置后置摄像头的翻转角度
+3. getDeviceImei：进行获取设备的imei用于imei平台上远程放号使用，需要获取一个唯一标识即可，如果因为android版本过高无法获取imei使用androidID也可以，不需要时可以返回固定值
+4. getDeviceIccid：获取iccid用于平台iccid远程放号，需要获取一个唯一标识即可，如果因为android版本过高无法获取imei货期androidID也可以，不需要时可返回固定值
+5. getDeviceBattery：系统获取电量也可返回固定值
+6. getDeviceNetwork：获取网络模式如（4g，5g，wifi等）
 
 ## 服务器地址配置
-PTT_SERVER_ADDRESS：对讲服务器
-MSG_SERVER_ADDRESS：消息服务器
-DISPATCH_SERVER_ADDRESS：调度服务器
-VIDEO_SERVER_ADDRESS：视频服务器
-FILE_SERVER_ADDRESS：上传文件地址
+1. PTT_SERVER_ADDRESS：对讲服务器
+2. MSG_SERVER_ADDRESS：消息服务器
+3. DISPATCH_SERVER_ADDRESS：调度服务器
+4. VIDEO_SERVER_ADDRESS：视频服务器
+5. FILE_SERVER_ADDRESS：上传文件地址
+
 如果需要上公网时代平台对讲服务器，消息服务器，调度服务器，视频服务器，上传文件地址都不需要更改用demo中的即可
 如果需要私有化部署请联系运维

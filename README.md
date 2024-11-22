@@ -19,9 +19,12 @@ Gwsd Open PTT support message,video/audio call, ptt call
 
 ## Package description
 The package type corresponds to the fgrp parameter in the web api interface for creating an account
-34		Set A		basic intercom + positioning
-43		Set B 		Basic intercom + location + message + full-duplex voice
-33		Set C		Basic intercom + positioning + messaging + full-duplex voice + video call
+
+frgp|Set|Functions
+----|---|--------
+34|Set A|basic intercom + positioning
+43|Set B|Basic intercom + location + message + full-duplex voice
+33|Set C|Basic intercom + positioning + messaging + full-duplex voice + video call
 
 ## Matters needing attention
 1. Full-duplex voice calls require an account with full-duplex rights. Select Package B or C when creating an account

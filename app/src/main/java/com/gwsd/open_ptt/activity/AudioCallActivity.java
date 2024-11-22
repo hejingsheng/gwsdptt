@@ -9,9 +9,12 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.gwsd.bean.GWDuplexBean;
+import com.gwsd.bean.GWMsgBean;
 import com.gwsd.bean.GWType;
 import com.gwsd.open_ptt.R;
 import com.gwsd.open_ptt.bean.OfflineEventBean;
+import com.gwsd.open_ptt.dao.MsgDaoHelp;
+import com.gwsd.open_ptt.dao.pojo.MsgContentPojo;
 import com.gwsd.open_ptt.manager.CallManager;
 import com.gwsd.open_ptt.manager.GWSDKManager;
 import com.gwsd.open_ptt.utils.Utils;
@@ -28,6 +31,7 @@ public class AudioCallActivity extends CommBusiActivity{
     int remoteid;
     String remoteNm;
     boolean caller;
+    int calltime;
 
     public static void startAct(Context context, int remoteid, String remotenm, boolean caller) {
         Intent intent = new Intent(context, AudioCallActivity.class);
@@ -36,6 +40,15 @@ public class AudioCallActivity extends CommBusiActivity{
         intent.putExtra("caller", caller);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
         context.startActivity(intent);
+    }
+
+    private String getUid() {
+        String uid = String.valueOf(GWSDKManager.getSdkManager().getUserInfo().getId());
+        return uid;
+    }
+
+    private String getUnm() {
+        return GWSDKManager.getSdkManager().getUserInfo().getName();
     }
 
     @Override
@@ -61,6 +74,7 @@ public class AudioCallActivity extends CommBusiActivity{
     }
 
     protected void initData(){
+        calltime = -1;
         Bundle bundle = getIntent().getExtras();
         remoteid = bundle.getInt("remoteid");
         remoteNm = bundle.getString("remotenm");
@@ -79,6 +93,7 @@ public class AudioCallActivity extends CommBusiActivity{
                                 iVBullhorn.setSelected(true);
                                 iVAccept.setVisibility(View.GONE);
                                 CallManager.getManager().changeToHandset();
+                                calltime = 1;
                             });
                         }else if (gwDuplexBean.getStatus() == GWType.GW_DUPLEX_STATUS.GW_PTT_DUPLEX_STATUS_END){
                             runOnUiThread(()->{
@@ -142,12 +157,31 @@ public class AudioCallActivity extends CommBusiActivity{
         stopTimer();
         CallManager.getManager().exitAudioVideoCall();
         GWSDKManager.getSdkManager().registerPttObserver(null);
+        saveCallRecord();
+    }
+
+    private void saveCallRecord() {
+        GWMsgBean gwMsgBean = null;
+        if (caller) {
+            gwMsgBean = GWSDKManager.getSdkManager().createMsgBean(GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER, remoteid, remoteNm, 0);
+            gwMsgBean.getData().setContent(String.valueOf(calltime));
+            MsgContentPojo msgContentPojo = MsgDaoHelp.saveMsgContent(getUid(), gwMsgBean);
+            MsgDaoHelp.saveOrUpdateConv(msgContentPojo);
+        } else {
+            gwMsgBean = GWSDKManager.getSdkManager().createMsgBean1(String.valueOf(remoteid), remoteNm, GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER, getUid(), getUnm(), 0);
+            gwMsgBean.getData().setContent(String.valueOf(calltime));
+            MsgContentPojo msgContentPojo = MsgDaoHelp.saveMsgContent(getUid(), gwMsgBean);
+            MsgDaoHelp.saveOrUpdateConv(msgContentPojo);
+        }
     }
 
     @Override
     protected void onTimer(int ts) {
         if(tVTimer!=null){
             tVTimer.setText(Utils.intToTimer(ts));
+        }
+        if (calltime != -1) {
+            calltime++;
         }
     }
 

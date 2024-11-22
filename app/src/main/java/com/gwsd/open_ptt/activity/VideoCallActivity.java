@@ -9,9 +9,13 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import com.gwsd.GWVideoEngine;
+import com.gwsd.bean.GWMsgBean;
+import com.gwsd.bean.GWType;
 import com.gwsd.open_ptt.R;
 import com.gwsd.open_ptt.bean.OfflineEventBean;
 import com.gwsd.open_ptt.bean.VideoStateParam;
+import com.gwsd.open_ptt.dao.MsgDaoHelp;
+import com.gwsd.open_ptt.dao.pojo.MsgContentPojo;
 import com.gwsd.open_ptt.manager.CallManager;
 import com.gwsd.open_ptt.manager.GWSDKManager;
 import com.gwsd.open_ptt.utils.Utils;
@@ -33,6 +37,7 @@ public class VideoCallActivity extends CommBusiActivity implements ChatVideoView
     private String remoteNm;
     private boolean caller;
     private boolean record;
+    int calltime;
     private VideoStateParam videoStateParam;
 
     private Handler handler = new Handler() {
@@ -57,6 +62,15 @@ public class VideoCallActivity extends CommBusiActivity implements ChatVideoView
         intent.putExtra("record", record);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
         context.startActivity(intent);
+    }
+
+    private String getUid() {
+        String uid = String.valueOf(GWSDKManager.getSdkManager().getUserInfo().getId());
+        return uid;
+    }
+
+    private String getUnm() {
+        return GWSDKManager.getSdkManager().getUserInfo().getName();
     }
 
     @Override
@@ -93,6 +107,7 @@ public class VideoCallActivity extends CommBusiActivity implements ChatVideoView
 
     @Override
     protected void initData() {
+        calltime = -1;
         Bundle bundle = getIntent().getExtras();
         remoteid = bundle.getString("remoteid");
         remoteNm = bundle.getString("remotenm");
@@ -173,6 +188,7 @@ public class VideoCallActivity extends CommBusiActivity implements ChatVideoView
                         videoContentView.setUpdateVideoVState(videoStateParam);
                         GWSDKManager.getSdkManager().attachRemoteVideoView(viewRenderRemote, uid);
                         CallManager.getManager().changeToSpeaker();
+                        calltime = 1;
                     } else {
                         //showToast("remote stream ready not have video");
                     }
@@ -241,6 +257,27 @@ public class VideoCallActivity extends CommBusiActivity implements ChatVideoView
         videoStateParam = null;
         GWSDKManager.getSdkManager().registerVideoObserver(null);
         CallManager.getManager().exitAudioVideoCall();
+        saveCallRecord();
+    }
+
+    private void saveCallRecord() {
+        GWMsgBean gwMsgBean = null;
+        if (calltime < 0) {
+            calltime = 0;
+        }
+        if (caller) {
+            int id;
+            id = Integer.valueOf(remoteid);
+            gwMsgBean = GWSDKManager.getSdkManager().createMsgBean(GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER, id, remoteNm, 1);
+            gwMsgBean.getData().setContent(String.valueOf(calltime));
+            MsgContentPojo msgContentPojo = MsgDaoHelp.saveMsgContent(getUid(), gwMsgBean);
+            MsgDaoHelp.saveOrUpdateConv(msgContentPojo);
+        } else {
+            gwMsgBean = GWSDKManager.getSdkManager().createMsgBean1(remoteid, remoteNm, GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER, getUid(), getUnm(), 1);
+            gwMsgBean.getData().setContent(String.valueOf(calltime));
+            MsgContentPojo msgContentPojo = MsgDaoHelp.saveMsgContent(getUid(), gwMsgBean);
+            MsgDaoHelp.saveOrUpdateConv(msgContentPojo);
+        }
     }
 
     @Override
@@ -279,6 +316,9 @@ public class VideoCallActivity extends CommBusiActivity implements ChatVideoView
     protected void onTimer(int ts) {
         if(videoContentView!=null){
             videoContentView.setUpdateVideoVTime(Utils.intToTimer(ts));
+        }
+        if (calltime != -1) {
+            calltime++;
         }
     }
 

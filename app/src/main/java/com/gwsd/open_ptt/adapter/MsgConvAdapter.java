@@ -30,7 +30,7 @@ public class MsgConvAdapter extends RecyclerView.Adapter<MsgConvAdapter.ImConver
     List<MsgConversationPojo> mData;
     LayoutInflater layoutInflater;
     String userId;
-    String voiceStr,videoStr,photoStr,locationStr;
+    String voiceStr,videoStr,photoStr,locationStr,voiceCallStr,videoCallStr;
     OnItemClick onItemClick;
 
     private void log(String msg){
@@ -44,6 +44,8 @@ public class MsgConvAdapter extends RecyclerView.Adapter<MsgConvAdapter.ImConver
         videoStr=context.getResources().getString(R.string.chat_imtype_video);
         photoStr=context.getResources().getString(R.string.chat_imtype_img);
         locationStr=context.getResources().getString(R.string.chat_imtype_location);
+        voiceCallStr=context.getResources().getString(R.string.chat_type_voice);
+        videoCallStr=context.getResources().getString(R.string.chat_type_video);
     }
     public void setData(List<MsgConversationPojo> data){
         this.mData.clear();
@@ -127,6 +129,10 @@ public class MsgConvAdapter extends RecyclerView.Adapter<MsgConvAdapter.ImConver
             holder.viewLastMsg.setText(voiceStr);
         }else if(convBean.getLastMsgType()==GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_VIDEO){
             holder.viewLastMsg.setText(videoStr);
+        }else if(convBean.getLastMsgType()==0){
+            holder.viewLastMsg.setText(voiceCallStr);
+        }else if(convBean.getLastMsgType()==1){
+            holder.viewLastMsg.setText(videoCallStr);
         }else {
             holder.viewLastMsg.setText("");
         }

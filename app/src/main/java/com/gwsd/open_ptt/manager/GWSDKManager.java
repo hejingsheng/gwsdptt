@@ -273,6 +273,25 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
             haveStartMsgService = true;
         }
     }
+    public GWMsgBean createMsgBean1(String sendId, String sendNm, int recvtype, String remoteid, String remoteNm, int msgtype) {
+        GWMsgBean gwMsgBean = new GWMsgBean();
+        gwMsgBean.setFrom(sendId);
+        gwMsgBean.setType(msgtype);
+        long tm = System.currentTimeMillis();
+        gwMsgBean.setTime((int)(tm/1000));
+        GWMsgBean.MsgContent msgContent = new GWMsgBean.MsgContent();
+        msgContent.setContent("");
+        msgContent.setSendId(sendId);
+        msgContent.setSendName(sendNm);
+        msgContent.setSendUType(GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER);
+        msgContent.setReceiveId(remoteid);
+        msgContent.setReceiveName(remoteNm);
+        msgContent.setReceiveUType(recvtype);
+        msgContent.setTime((int)(tm/1000));
+        msgContent.setMsgType(msgtype);
+        gwMsgBean.setData(msgContent);
+        return gwMsgBean;
+    }
     public GWMsgBean createMsgBean(int recvtype, int remoteid, String remoteNm, int msgtype) {
         GWMsgBean gwMsgBean = new GWMsgBean();
         gwMsgBean.setFrom(String.valueOf(userInfo.getId()));

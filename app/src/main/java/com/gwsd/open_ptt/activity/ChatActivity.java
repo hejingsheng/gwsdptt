@@ -167,7 +167,7 @@ public class ChatActivity extends BaseActivity implements ChatInputView.OnInputV
             showToast(R.string.hint_notPermission);
             return;
         }
-        GWMsgBean gwMsgBean = GWSDKManager.getSdkManager().createMsgBean(chatParam.getConvType(),  chatParam.getConvId(), chatParam.getConvName(), GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_TEXT);
+        GWMsgBean gwMsgBean = GWSDKManager.getSdkManager().createMsgBean(chatParam.getConvType(), chatParam.getConvId(), chatParam.getConvName(), GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_TEXT);
         gwMsgBean.getData().setContent(str);
         GWSDKManager.getSdkManager().sendMsg(gwMsgBean);
         MsgContentPojo msgContentPojo = MsgDaoHelp.saveMsgContent(getUid(), gwMsgBean);

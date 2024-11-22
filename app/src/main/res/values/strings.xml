@@ -686,8 +686,8 @@
 
 
     <!-- chat type-->
-    <string name="chat_type_video">【视频聊天】</string>
-    <string name="chat_type_voice">【语音聊天】</string>
+    <string name="chat_type_video">【视频通话】</string>
+    <string name="chat_type_voice">【语音通话】</string>
     <string name="chat_imtype_video">【视频】</string>
     <string name="chat_imtype_img">【图片】</string>
     <string name="chat_imtype_voice">【语音】</string>
@@ -939,6 +939,8 @@
     <string name="addr_port">地址端口:</string>
     <string name="mac_addr">MAC地址:</string>
 
+    <string name="not_connected">未接通</string>
+    <string name="talk_time">通话时长:%1$s</string>
     <string name="send_msg">发消息</string>
     <string name="del_msg">清空消息</string>
     <string name="half_duplex">对讲</string>

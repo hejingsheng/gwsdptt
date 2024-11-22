@@ -1,12 +1,7 @@
 package com.gwsd.open_ptt.fragment;
 
-import android.app.Activity;
-import android.content.Context;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-
-import com.gwsd.open_ptt.R;
 import com.gwsd.open_ptt.activity.ChatActivity;
 import com.gwsd.open_ptt.activity.MainActivity;
 import com.gwsd.open_ptt.adapter.MsgConvAdapter;

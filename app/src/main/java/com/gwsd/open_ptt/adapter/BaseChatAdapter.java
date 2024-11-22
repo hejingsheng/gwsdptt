@@ -20,12 +20,15 @@ public abstract class BaseChatAdapter<T extends RecyclerView.ViewHolder> extends
     protected final int TYPE_TO_Img=GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_PHOTO;
     protected final int TYPE_TO_Video=GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_VIDEO;
     protected final int TYPE_TO_Voice=GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_VOICE;
+    protected final int TYPE_TO_VoiceCall=0;
+    protected final int TYPE_TO_VideoCall=1;
 
     protected final int TYPE_From_Txt=TYPE_TO_Txt+FACTOR;
     protected final int TYPE_From_Img=TYPE_TO_Img+FACTOR;
     protected final int TYPE_From_Video=TYPE_TO_Video+FACTOR;
     protected final int TYPE_From_Voice=TYPE_TO_Voice+FACTOR;
-
+    protected final int TYPE_From_VoiceCall=TYPE_TO_VoiceCall+FACTOR;
+    protected final int TYPE_From_VideoCall=TYPE_TO_VideoCall+FACTOR;
 
     protected List<Object> mData=new ArrayList<>();
     String userId;

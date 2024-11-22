@@ -50,6 +50,8 @@ public class ChatAdapter extends BaseChatAdapter<ChatAdapter.GWChatHodler> {
             return new GWChatHodler(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_chat_record_to_video,viewGroup,false));
         }else if(type==TYPE_TO_Voice){
             return new GWChatHodler(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_chat_record_to_voice,viewGroup,false));
+        }else if(type==TYPE_TO_VoiceCall || type==TYPE_TO_VideoCall){
+            return new GWChatHodler(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_chat_record_to_avcall,viewGroup,false));
         }else if(type==TYPE_From_Txt){
             return new GWChatHodler(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_chat_record_from_txt,viewGroup,false));
         }else if(type==TYPE_From_Img){
@@ -58,6 +60,8 @@ public class ChatAdapter extends BaseChatAdapter<ChatAdapter.GWChatHodler> {
             return new GWChatHodler(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_chat_record_from_video,viewGroup,false));
         }else if(type==TYPE_From_Voice){
             return new GWChatHodler(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_chat_record_from_voice,viewGroup,false));
+        }else if(type==TYPE_From_VoiceCall || type==TYPE_From_VideoCall){
+            return new GWChatHodler(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_chat_record_from_avcall,viewGroup,false));
         }
         return new GWChatHodler(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_chat_record_to_txt,viewGroup,false));
     }

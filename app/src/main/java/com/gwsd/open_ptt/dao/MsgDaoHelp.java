@@ -61,7 +61,9 @@ public class MsgDaoHelp {
             msgContentPojo.setContent(bean.getData().getContent());
             msgContentPojo.setUrl("");
             msgContentPojo.setThumburl("");
-        } else {
+        } else if (msgtype == GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_VIDEO
+                || msgtype == GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_VOICE
+                || msgtype == GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_PHOTO) {
             msgContentPojo.setContent("");
             msgContentPojo.setUrl(bean.getData().getUrl());
             if (msgtype == GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_VIDEO) {
@@ -69,6 +71,10 @@ public class MsgDaoHelp {
             } else {
                 msgContentPojo.setThumburl("");
             }
+        } else {
+            msgContentPojo.setContent(bean.getData().getContent());
+            msgContentPojo.setUrl("");
+            msgContentPojo.setThumburl("");
         }
         msgContentPojo.setTime(Long.valueOf(bean.getTime()));
         if (bean.getData().getReceiveUType() == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER

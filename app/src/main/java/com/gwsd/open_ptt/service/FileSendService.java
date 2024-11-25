@@ -85,7 +85,7 @@ public class FileSendService extends Service {
             mediaType = MediaType.parse("image/jpg");
         }
         MultipartBody.Builder builder = new MultipartBody.Builder()
-                .addFormDataPart("file", mainfile.getName(), RequestBody.create(mediaType, mainfile));
+                .addFormDataPart("file1", mainfile.getName(), RequestBody.create(mediaType, mainfile));
         builder.setType(MultipartBody.FORM);
         if (thumbfile != null) {
             builder.addFormDataPart("file2", thumbfile.getName(), RequestBody.create(MediaType.parse("image/jpg"), thumbfile));

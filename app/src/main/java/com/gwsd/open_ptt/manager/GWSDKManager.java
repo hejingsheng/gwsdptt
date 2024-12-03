@@ -31,6 +31,7 @@ import com.gwsd.open_ptt.MyApp;
 import com.gwsd.open_ptt.activity.AudioCallActivity;
 import com.gwsd.open_ptt.activity.PttCallActivity;
 import com.gwsd.open_ptt.activity.VideoCallActivity;
+import com.gwsd.open_ptt.activity.VideoMeetingActivity;
 import com.gwsd.open_ptt.activity.VideoViewActivity;
 import com.gwsd.open_ptt.bean.ExitTmpGroupEventBean;
 import com.gwsd.open_ptt.bean.GWPttUserInfo;
@@ -648,6 +649,10 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         gwVideoEngine.switchCamera();
     }
 
+    public void updateBitrate(int kbps) {
+        gwVideoEngine.updateBitrate(kbps);
+    }
+
     @Override
     public void onVideoEvent(String s) {
         // not process
@@ -690,6 +695,7 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         if (videoObserver != null) {
             videoObserver.onVideoMeetingInvite(s, s1);
         }
+        VideoMeetingActivity.navToAct(AppManager.getApp(), s, s1);
     }
 
     @Override

@@ -20,6 +20,16 @@ public class VideoViewActivity extends VideoCommBaseActivity {
         context.startActivity(intent);
     }
 
+    public static Intent getStartIntent(Context context, String remoteid, String remotenm, boolean record) {
+        Intent intent = new Intent(context, VideoViewActivity.class);
+        intent.putExtra("remoteid", remoteid);
+        intent.putExtra("remotenm", remotenm);
+        intent.putExtra("caller", false);
+        intent.putExtra("record", record);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        return intent;
+    }
+
     @Override
     protected void doInitVideoParam() {
         videoStateParam.setDuplex(false);

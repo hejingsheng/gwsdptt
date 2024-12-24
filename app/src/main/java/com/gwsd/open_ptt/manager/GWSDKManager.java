@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
+import android.telecom.Call;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
@@ -430,8 +431,8 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_TMP_GROUP_PASSIVE) {
             GWTempGroupNotifyBean gwTempGroupNotifyBean = JSON.parseObject(data, GWTempGroupNotifyBean.class);
             if (gwTempGroupNotifyBean.getName() != null && gwTempGroupNotifyBean.getName() != "") {
-                CallManager.getManager().enterPttTmpGroupCall((canswitch, oldstate, newstate) -> {
-                    if (canswitch) {
+                CallManager.getManager().checkCallStateSwitch(CallManager.CALL_STATE_PTT_TMP_GROUP_CALL, (notice, caninterrupt, currentstate, nextstate) -> {
+                    if (caninterrupt) {
                         PttCallActivity.startAct(AppManager.getApp(), gwTempGroupNotifyBean.getUid(), gwTempGroupNotifyBean.getName(), GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER ,false);
                     } else {
                         int[] ids = new int[1];
@@ -447,26 +448,40 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
             if (gwDuplexBean.getResult() == 0) {
                 if (gwDuplexBean.getStatus() == GWType.GW_DUPLEX_STATUS.GW_PTT_DUPLEX_STATUS_INVIET) {
                     if (gwDuplexBean.getUid() != 0) {
-                        CallManager.getManager().enterAudioVideoCall(0, (canswitch, oldstate, newstate) -> {
-                            if (canswitch) {
+                        CallManager.getManager().checkCallStateSwitch(CallManager.CALL_STATE_AUDIO_VIDEO_CALL, (notice, caninterrupt, currentstate, nextstate) -> {
+                            if (notice) {
                                 ScreenWakeUtils.getInstace(AppManager.getApp()).openScreenAndUnLockOnly(true);
-                                if (oldstate == CallManager.CALL_STATE_PTT_TMP_GROUP_CALL) {
-                                    EventBus.getDefault().post(new ExitTmpGroupEventBean());
-                                    Observable.timer(500,TimeUnit.MILLISECONDS)
-                                            .observeOn(AndroidSchedulers.mainThread())
-                                            .subscribe(aLong -> {
-                                                AudioCallActivity.startAct(AppManager.getApp(), gwDuplexBean.getUid(), gwDuplexBean.getName(), false);
-                                            });
-                                } else {
-                                    AudioCallActivity.startAct(AppManager.getApp(), gwDuplexBean.getUid(), gwDuplexBean.getName(), false);
-                                }
+                                NotifiDataBean notifiDataBean = new NotifiDataBean();
+                                notifiDataBean.setRecvNm(gwDuplexBean.getName());
+                                notifiDataBean.setRecvId(gwDuplexBean.getUid());
+                                notifiDataBean.setType(NotifiDataBean.NOTIFI_TYPE_AUDIO_CALL);
+                                MainService.startServerWithData(AppManager.getApp(), notifiDataBean);
                             } else {
-                                fullDuplex(gwDuplexBean.getUid(), GWType.GW_DUPLEX_TYPE.GW_PTT_DUPLEX_ACTION_HANGUP);
+                                if (caninterrupt) {
+                                    if (currentstate == CallManager.CALL_STATE_PTT_TMP_GROUP_CALL) {
+                                        EventBus.getDefault().post(new ExitTmpGroupEventBean());
+                                        Observable.timer(500, TimeUnit.MILLISECONDS)
+                                                .observeOn(AndroidSchedulers.mainThread())
+                                                .subscribe(aLong -> {
+                                                    AudioCallActivity.startAct(AppManager.getApp(), gwDuplexBean.getUid(), gwDuplexBean.getName(), false);
+                                                });
+                                    } else {
+                                        AudioCallActivity.startAct(AppManager.getApp(), gwDuplexBean.getUid(), gwDuplexBean.getName(), false);
+                                    }
+                                } else {
+                                    // need notice
+                                    NotifiDataBean notifiDataBean = new NotifiDataBean();
+                                    notifiDataBean.setRecvNm(gwDuplexBean.getName());
+                                    notifiDataBean.setRecvId(gwDuplexBean.getUid());
+                                    notifiDataBean.setType(NotifiDataBean.NOTIFI_TYPE_AUDIO_CALL);
+                                    notifiDataBean.setForceNotice(true);
+                                    MainService.startServerWithData(AppManager.getApp(), notifiDataBean);
+                                }
                             }
                         });
                     }
                 } else if (gwDuplexBean.getStatus() == GWType.GW_DUPLEX_STATUS.GW_PTT_DUPLEX_STATUS_END) {
-                    CallManager.getManager().exitAudioVideoCall(0);
+
                 }
             }
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_LOGOUT) {
@@ -668,10 +683,46 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
             videoObserver.onVideoPull(remoteid, remotenm, remotetype, silent);
         }
         if (silent) {
-            acceptPullVideo(2, false);
+            if (CallManager.getManager().getCallState() < CallManager.CALL_STATE_AUDIO_VIDEO_CALL) {
+                acceptPullVideo(2, false);
+            } else {
+                log("device is busy");
+            }
         } else {
             ScreenWakeUtils.getInstace(AppManager.getApp()).openScreenAndUnLockOnly(true);
-            VideoViewActivity.startAct(AppManager.getApp(), remoteid, remotenm, false, false);
+            CallManager.getManager().checkCallStateSwitch(CallManager.CALL_STATE_AUDIO_VIDEO_CALL, ((notice, caninterrupt, currentstate, nextstate) -> {
+                if (notice) {
+                    ScreenWakeUtils.getInstace(AppManager.getApp()).openScreenAndUnLockOnly(true);
+                    NotifiDataBean notifiDataBean = new NotifiDataBean();
+                    notifiDataBean.setRecvNm(remotenm);
+                    notifiDataBean.setRecvIdStr(remoteid);
+                    notifiDataBean.setRecord(false);
+                    notifiDataBean.setType(NotifiDataBean.NOTIFI_TYPE_VIDEO_PULL);
+                    MainService.startServerWithData(AppManager.getApp(), notifiDataBean);
+                } else {
+                    if (caninterrupt) {
+                        if (currentstate == CallManager.CALL_STATE_PTT_TMP_GROUP_CALL) {
+                            EventBus.getDefault().post(new ExitTmpGroupEventBean());
+                            Observable.timer(500, TimeUnit.MILLISECONDS)
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(aLong -> {
+                                        VideoViewActivity.startAct(AppManager.getApp(), remoteid, remotenm, false, false);
+                                    });
+                        } else {
+                            VideoViewActivity.startAct(AppManager.getApp(), remoteid, remotenm, false, false);
+                        }
+                    } else {
+                        // need notice
+                        NotifiDataBean notifiDataBean = new NotifiDataBean();
+                        notifiDataBean.setRecvNm(remotenm);
+                        notifiDataBean.setRecvIdStr(remoteid);
+                        notifiDataBean.setRecord(false);
+                        notifiDataBean.setType(NotifiDataBean.NOTIFI_TYPE_VIDEO_PULL);
+                        notifiDataBean.setForceNotice(true);
+                        MainService.startServerWithData(AppManager.getApp(), notifiDataBean);
+                    }
+                }
+            }));
         }
     }
 
@@ -680,32 +731,79 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         if (videoObserver != null) {
             videoObserver.onVideoCall(s, s1);
         }
-        CallManager.getManager().enterAudioVideoCall(1, (canswitch, oldstate, newstate) -> {
-            if (canswitch) {
+        CallManager.getManager().checkCallStateSwitch(CallManager.CALL_STATE_AUDIO_VIDEO_CALL, (notice, caninterrupt, currentstate, nextstate) -> {
+            if (notice) {
                 ScreenWakeUtils.getInstace(AppManager.getApp()).openScreenAndUnLockOnly(true);
-                if (oldstate == CallManager.CALL_STATE_PTT_TMP_GROUP_CALL) {
-                    EventBus.getDefault().post(new ExitTmpGroupEventBean());
-                    Observable.timer(500,TimeUnit.MILLISECONDS)
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(aLong -> {
-                                VideoCallActivity.startAct(AppManager.getApp(), s, s1, false, false);
-                            });
-                } else {
-                    VideoCallActivity.startAct(AppManager.getApp(), s, s1, false, false);
-                }
+                NotifiDataBean notifiDataBean = new NotifiDataBean();
+                notifiDataBean.setRecvNm(s1);
+                notifiDataBean.setRecvIdStr(s);
+                notifiDataBean.setRecord(false);
+                notifiDataBean.setType(NotifiDataBean.NOTIFI_TYPE_VIDEO_CALL);
+                MainService.startServerWithData(AppManager.getApp(), notifiDataBean);
             } else {
-                hangupVideo(s);
+                if (caninterrupt) {
+                    if (currentstate == CallManager.CALL_STATE_PTT_TMP_GROUP_CALL) {
+                        EventBus.getDefault().post(new ExitTmpGroupEventBean());
+                        Observable.timer(500, TimeUnit.MILLISECONDS)
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(aLong -> {
+                                    VideoCallActivity.startAct(AppManager.getApp(), s, s1, false, false);
+                                });
+                    } else {
+                        VideoCallActivity.startAct(AppManager.getApp(), s, s1, false, false);
+                    }
+                } else {
+                    // need notice
+                    NotifiDataBean notifiDataBean = new NotifiDataBean();
+                    notifiDataBean.setRecvNm(s1);
+                    notifiDataBean.setRecvIdStr(s);
+                    notifiDataBean.setRecord(false);
+                    notifiDataBean.setType(NotifiDataBean.NOTIFI_TYPE_VIDEO_CALL);
+                    notifiDataBean.setForceNotice(true);
+                    MainService.startServerWithData(AppManager.getApp(), notifiDataBean);
+                }
             }
         });
-
     }
 
     @Override
-    public void onVideoMeetingInvite(String s, String s1) {
+    public void onVideoMeetingInvite(String creater, String topic) {
         if (videoObserver != null) {
-            videoObserver.onVideoMeetingInvite(s, s1);
+            videoObserver.onVideoMeetingInvite(creater, topic);
         }
-        VideoMeetingActivity.navToAct(AppManager.getApp(), s, s1);
+        CallManager.getManager().checkCallStateSwitch(CallManager.CALL_STATE_AUDIO_VIDEO_CALL, (notice, caninterrupt, currentstate, nextstate) -> {
+            if (notice) {
+                ScreenWakeUtils.getInstace(AppManager.getApp()).openScreenAndUnLockOnly(true);
+                NotifiDataBean notifiDataBean = new NotifiDataBean();
+                notifiDataBean.setRecvNm(topic);
+                notifiDataBean.setRecvIdStr(creater);
+                notifiDataBean.setRecord(false);
+                notifiDataBean.setType(NotifiDataBean.NOTIFI_TYPE_VIDEO_MEETING);
+                MainService.startServerWithData(AppManager.getApp(), notifiDataBean);
+            } else {
+                if (caninterrupt) {
+                    if (currentstate == CallManager.CALL_STATE_PTT_TMP_GROUP_CALL) {
+                        EventBus.getDefault().post(new ExitTmpGroupEventBean());
+                        Observable.timer(500, TimeUnit.MILLISECONDS)
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(aLong -> {
+                                    VideoMeetingActivity.navToAct(AppManager.getApp(), creater, topic);
+                                });
+                    } else {
+                        VideoMeetingActivity.navToAct(AppManager.getApp(), creater, topic);
+                    }
+                } else {
+                    // need notice
+                    NotifiDataBean notifiDataBean = new NotifiDataBean();
+                    notifiDataBean.setRecvNm(topic);
+                    notifiDataBean.setRecvIdStr(creater);
+                    notifiDataBean.setRecord(false);
+                    notifiDataBean.setType(NotifiDataBean.NOTIFI_TYPE_VIDEO_MEETING);
+                    notifiDataBean.setForceNotice(true);
+                    MainService.startServerWithData(AppManager.getApp(), notifiDataBean);
+                }
+            }
+        });
     }
 
     @Override
@@ -797,7 +895,6 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         if (videoObserver != null) {
             videoObserver.onHangup(s);
         }
-        CallManager.getManager().exitAudioVideoCall(1);
     }
 
     @Override
@@ -805,7 +902,6 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         if (videoObserver != null) {
             videoObserver.onError(i, s);
         }
-        CallManager.getManager().exitAudioVideoCall(1);
     }
 
     private void startTimer() {

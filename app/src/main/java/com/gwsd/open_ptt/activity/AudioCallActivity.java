@@ -41,20 +41,12 @@ public class AudioCallActivity extends CommBusiActivity{
     int calltime;
 
     public static void startAct(Context context, int remoteid, String remotenm, boolean caller) {
-        if (!AppManager.getInstance().isForeground()) {
-            NotifiDataBean notifiDataBean = new NotifiDataBean();
-            notifiDataBean.setRecvNm(remotenm);
-            notifiDataBean.setRecvId(remoteid);
-            notifiDataBean.setType(NotifiDataBean.NOTIFI_TYPE_AUDIO_CALL);
-            MainService.startServerWithData(AppManager.getApp(), notifiDataBean);
-        } else {
-            Intent intent = new Intent(context, AudioCallActivity.class);
-            intent.putExtra("remoteid", remoteid);
-            intent.putExtra("remotenm", remotenm);
-            intent.putExtra("caller", caller);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-        }
+        Intent intent = new Intent(context, AudioCallActivity.class);
+        intent.putExtra("remoteid", remoteid);
+        intent.putExtra("remotenm", remotenm);
+        intent.putExtra("caller", caller);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
     public static Intent getStartIntent(Context context, int remoteid, String remotenm) {
@@ -151,6 +143,7 @@ public class AudioCallActivity extends CommBusiActivity{
         } else {
             log("recv user:"+remoteNm+" voice call request");
         }
+        CallManager.getManager().enterAudioVideoCall();
     }
 
     protected void initEvent(){

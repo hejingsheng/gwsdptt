@@ -28,6 +28,8 @@ import com.gwsd.open_ptt.R;
 import com.gwsd.open_ptt.activity.AudioCallActivity;
 import com.gwsd.open_ptt.activity.ChatActivity;
 import com.gwsd.open_ptt.activity.VideoCallActivity;
+import com.gwsd.open_ptt.activity.VideoMeetingActivity;
+import com.gwsd.open_ptt.activity.VideoViewActivity;
 import com.gwsd.open_ptt.bean.NotifiDataBean;
 import com.gwsd.open_ptt.broadcast.KeyReceiver;
 import com.gwsd.open_ptt.config.DeviceConfig;
@@ -130,7 +132,7 @@ public class MainService extends Service {
             if (data != null) {
                 NotifiDataBean notifiDataBean = (NotifiDataBean) data.getSerializable("notifidata");
                 if (notifiDataBean != null) {
-                    if (!AppManager.getInstance().isForeground()) {
+                    if (!AppManager.getInstance().isForeground() || notifiDataBean.isForceNotice()) {
                         log("app is background");
                         showNotification(notifiDataBean);
                     } else {
@@ -148,6 +150,7 @@ public class MainService extends Service {
         String convNm = "";
         Intent intent = null;
         String channelid;
+        boolean loop = false;
         int type = notifiDataBean.getType();
         if (type == NotifiDataBean.NOTIFI_TYPE_MSG) {
             if (notifiDataBean.getRecvType() == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER) {
@@ -190,30 +193,51 @@ public class MainService extends Service {
             if (type == NotifiDataBean.NOTIFI_TYPE_AUDIO_CALL) {
                 content = getString(R.string.invite_to_voice_call);
                 intent = AudioCallActivity.getStartIntent(this, remoteid, remotenm);
-            } else {
+            } else if (type == NotifiDataBean.NOTIFI_TYPE_VIDEO_CALL) {
                 content = getString(R.string.invite_to_video_call);
                 intent = VideoCallActivity.getStartIntent(this, remoteidStr, remotenm, record);
+            } else if (type == NotifiDataBean.NOTIFI_TYPE_VIDEO_MEETING) {
+                title = remoteidStr;
+                content = getString(R.string.create_meeting);
+                intent = VideoMeetingActivity.getStartIntent(this, remoteidStr, remotenm);
+            } else {
+                content = getString(R.string.request_to_video_pull);
+                intent = VideoViewActivity.getStartIntent(this, remoteidStr, remotenm, record);
             }
             channelid = CALL_CHANNEL_ID_STRING;
         }
-        int flag;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            flag = PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE;
-        } else {
-            flag = PendingIntent.FLAG_UPDATE_CURRENT;
-        }
         log("send notice");
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, flag);
+        PendingIntent pendingIntent = null;
+        if (!notifiDataBean.isForceNotice()) {
+            int flag;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                flag = PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE;
+            } else {
+                flag = PendingIntent.FLAG_UPDATE_CURRENT;
+            }
+            pendingIntent = PendingIntent.getActivity(this, 0, intent, flag);
+            loop = true;
+        } else {
+            intent = null;
+            pendingIntent = null;
+        }
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelid)
                 .setSmallIcon(R.mipmap.ic_logo_gw_desktop)
                 .setLargeIcon(((BitmapDrawable) getResources().getDrawable(R.mipmap.ic_logo_gw_desktop)).getBitmap())
                 .setContentTitle(title)
                 .setContentText(content)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
-        notificationManager.notify(2, builder.build());
+        if (pendingIntent == null) {
+            builder.setTimeoutAfter(5000);
+        }
+        Notification notification = builder.build();
+        if (loop) {
+            notification.flags |= Notification.FLAG_INSISTENT;
+        }
+        notificationManager.notify(2, notification);
     }
 
     private void release(){

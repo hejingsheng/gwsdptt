@@ -200,9 +200,12 @@ public class MainService extends Service {
                 title = remoteidStr;
                 content = getString(R.string.create_meeting);
                 intent = VideoMeetingActivity.getStartIntent(this, remoteidStr, remotenm);
-            } else {
+            } else if (type == NotifiDataBean.NOTIFI_TYPE_VIDEO_PULL) {
                 content = getString(R.string.request_to_video_pull);
                 intent = VideoViewActivity.getStartIntent(this, remoteidStr, remotenm, record);
+            } else {
+                title = getString(R.string.hint_talkback_state_hanup);
+                content = getString(R.string.hint_talkback_state_opposite_hangup);
             }
             channelid = CALL_CHANNEL_ID_STRING;
         }

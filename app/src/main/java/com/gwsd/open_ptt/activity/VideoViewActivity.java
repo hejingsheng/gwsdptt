@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.View;
 
 import com.gwsd.GWVideoEngine;
+import com.gwsd.open_ptt.manager.CallManager;
 import com.gwsd.open_ptt.manager.GWSDKManager;
 import com.gwsd.open_ptt.view.ChatVideoViewContracts;
 
@@ -33,6 +34,7 @@ public class VideoViewActivity extends VideoCommBaseActivity {
     @Override
     protected void doInitVideoParam() {
         videoStateParam.setDuplex(false);
+        CallManager.getManager().enterAudioVideoCall();
     }
 
     @Override
@@ -78,5 +80,11 @@ public class VideoViewActivity extends VideoCommBaseActivity {
     @Override
     protected void doMute(boolean mute, boolean local) {
         log("mute="+mute+",local="+local);
+    }
+
+    @Override
+    protected void release() {
+        super.release();
+        CallManager.getManager().exitAudioVideoCall(1);
     }
 }

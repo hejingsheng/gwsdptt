@@ -9,6 +9,7 @@ public class NotifiDataBean implements Serializable {
     public static final int NOTIFI_TYPE_VIDEO_CALL = 2;
     public static final int NOTIFI_TYPE_VIDEO_PULL = 3;
     public static final int NOTIFI_TYPE_VIDEO_MEETING = 4;
+    public static final int NOTIFI_TYPE_CALL_END = 5;
 
     private String sendNm;
     private int recvType;  // user msg or group msg

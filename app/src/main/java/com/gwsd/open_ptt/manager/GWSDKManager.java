@@ -481,7 +481,12 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
                         });
                     }
                 } else if (gwDuplexBean.getStatus() == GWType.GW_DUPLEX_STATUS.GW_PTT_DUPLEX_STATUS_END) {
-
+                    if (CallManager.getManager().getCallState() != CallManager.CALL_STATE_AUDIO_VIDEO_CALL) {
+                        NotifiDataBean notifiDataBean = new NotifiDataBean();
+                        notifiDataBean.setType(NotifiDataBean.NOTIFI_TYPE_CALL_END);
+                        notifiDataBean.setForceNotice(true);
+                        MainService.startServerWithData(AppManager.getApp(), notifiDataBean);
+                    }
                 }
             }
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_LOGOUT) {
@@ -894,6 +899,12 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
     public void onHangup(String s) {
         if (videoObserver != null) {
             videoObserver.onHangup(s);
+        }
+        if (CallManager.getManager().getCallState() != CallManager.CALL_STATE_AUDIO_VIDEO_CALL) {
+            NotifiDataBean notifiDataBean = new NotifiDataBean();
+            notifiDataBean.setType(NotifiDataBean.NOTIFI_TYPE_CALL_END);
+            notifiDataBean.setForceNotice(true);
+            MainService.startServerWithData(AppManager.getApp(), notifiDataBean);
         }
     }
 

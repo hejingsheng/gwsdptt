@@ -324,7 +324,7 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         }
         log(msg.toString());
         gwPttEngine.pttSendMsg(userInfo.getId(), userInfo.getName(), msg.getData().getReceiveUType(), Integer.valueOf(msg.getData().getReceiveId()),
-                msg.getData().getReceiveName(), msg.getType(), content, msg.getData().getThumbUrl(), 0, "", (char)0, ts, (char)1, (char)1);
+                msg.getData().getReceiveName(), msg.getType(), content, msg.getData().getThumbUrl(), ts, (char)1);
     }
     public String createThumb(String video) {
         String thumb = gwPttEngine.pttCreateThumbForVideo(video);
@@ -375,9 +375,7 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
                 groupBeanList.clear();
                 groupBeanList.addAll(groups);
                 for (GWGroupListBean.GWGroupBean gwGroupBean : groupBeanList) {
-                    if (gwGroupBean.getType() != GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_SELFGROUP) {
-                        gwGroupBean.setType(GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_GROUP);
-                    }
+                    gwGroupBean.setType(GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_GROUP);
                 }
                 int[] msg_groups = new int[groups.size()];
                 int[] msg_groups_type = new int[groups.size()];
@@ -516,16 +514,8 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
             return;
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_LOSTMIC) {
             log("speak too long time stop record");
-        } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_GROUP_OPERATE) {
-            GWGroupOperateBean gwGroupOperateBean = JSON.parseObject(data, GWGroupOperateBean.class);
         } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_QUERY_DISPATCH) {
             GWMemberInfoBean gwMemberInfoBean = JSON.parseObject(data, GWMemberInfoBean.class);
-        } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_FRIEND_OPERATE) {
-            GWMemberInfoBean gwMemberInfoBean = JSON.parseObject(data, GWMemberInfoBean.class);
-        } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_QUERY_CHAT_GRP) {
-            GWGroupListBean gwGroupListBean = JSON.parseObject(data, GWGroupListBean.class);
-        } else if (event == GWType.GW_PTT_EVENT.GW_PTT_EVENT_CHAT_GRP_DETAIL) {
-            GWChatGroupDetailBean gwChatGroupDetailBean = JSON.parseObject(data, GWChatGroupDetailBean.class);
         } else {
             log("error happen");
             offline(OfflineEventBean.OFFLINE_REASON_ERROR_CODE, null);

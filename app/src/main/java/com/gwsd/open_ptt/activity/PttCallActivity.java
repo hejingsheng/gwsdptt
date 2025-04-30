@@ -75,8 +75,7 @@ public class PttCallActivity extends CommBusiActivity implements View.OnTouchLis
         name = getIntent().getStringExtra("pttName");
         type = getIntent().getIntExtra("pttType", 0);
         create = getIntent().getBooleanExtra("pttCreate" , false);
-        if (type == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_GROUP
-                || type == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_SELFGROUP) {
+        if (type == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_GROUP) {
             log("ptt call group");
             GWSDKManager.getSdkManager().joinGroup(id,type);
         } else if (type == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER) {

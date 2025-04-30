@@ -106,8 +106,7 @@ public class MsgConvAdapter extends RecyclerView.Adapter<MsgConvAdapter.ImConver
         String timestr = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss").format(convBean.getLastMsgTime()*1000);
         holder.viewLastMsgTimer.setText(timestr);
 
-        if (convBean.getConvType() == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_GROUP
-            ||convBean.getConvType() == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_SELFGROUP) {
+        if (convBean.getConvType() == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_GROUP) {
             holder.viewItemLeftGrp.setBackgroundResource(R.color.color_transparent);
             holder.viewIVHead.setImageResource(R.mipmap.ic_group_p_blue);
         } else if (convBean.getConvType() == GWType.GW_MSG_RECV_TYPE.GW_PTT_MSG_RECV_TYPE_USER) {

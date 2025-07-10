@@ -9,7 +9,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson.JSON;
 import com.gwsd.bean.GWMsgBean;
 import com.gwsd.open_ptt.MyApp;
 import com.gwsd.open_ptt.bean.FileSendParam;

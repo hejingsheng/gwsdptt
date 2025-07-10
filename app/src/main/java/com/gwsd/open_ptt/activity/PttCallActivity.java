@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson.JSON;
 import com.gwsd.bean.GWJoinGroupBean;
 import com.gwsd.bean.GWRequestSpeakBean;
 import com.gwsd.bean.GWSpeakNotifyBean;

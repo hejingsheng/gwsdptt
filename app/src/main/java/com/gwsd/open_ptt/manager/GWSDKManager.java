@@ -543,8 +543,20 @@ public class GWSDKManager implements GWPttApi.GWPttObserver, GWVideoEngine.GWVid
         log("recv msg event="+i+" data="+s);
         if (i == GWType.GW_MSG_STATUS.GW_MSG_STATUS_ERROR) {
             haveStartMsgService = false;
-        }
-        if (i == GWType.GW_MSG_STATUS.GW_MSG_STATUS_DATA) {
+            int[] msg_groups = new int[groupBeanList.size()];
+            int[] msg_groups_type = new int[groupBeanList.size()];
+            int index = 0;
+            for (GWGroupListBean.GWGroupBean group : groupBeanList) {
+                msg_groups[index] = (int)group.getGid();
+                msg_groups_type[index] = group.getType();
+                index++;
+            }
+            if (userInfo.isMessage() || userInfo.isVideo() || userInfo.isSilent()) {
+                startMsgService(msg_groups, msg_groups_type, groupBeanList.size());
+            }
+        } else if (i == GWType.GW_MSG_STATUS.GW_MSG_STATUS_SUCC) {
+            log("msg register success");
+        } else if (i == GWType.GW_MSG_STATUS.GW_MSG_STATUS_DATA) {
             GWMsgBaseBean gwMsgBaseBean = JSON.parseObject(s, GWMsgBaseBean.class);
             if (gwMsgBaseBean.getType() == GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_TEXT
                 || gwMsgBaseBean.getType() == GWType.GW_MSG_TYPE.GW_PTT_MSG_TYPE_PHOTO
